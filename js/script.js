@@ -288,60 +288,93 @@ function validateForm(formId){
 
     requiredFields.forEach(field => {
 
-    field.classList.remove("input-error");
+        field.classList.remove("input-error");
 
-    // ======================================
-    // SMART VALIDATION - REPORT NUMBER
-    // ======================================
+        // ===============================
+        // SMART VALIDATION REPORT NUMBER
+        // ===============================
 
-    if(field.id === "ft_reportNo"){
+        if(field.id === "ft_reportNo"){
 
-        const reason = document.getElementById("ft_reason").value;
+            const reason = document.getElementById("ft_reason").value;
 
-        if(reason === "Ot Capped"){
-
-            // Report Number tidak wajib
-            return;
+            if(reason === "Ot Capped") return;
 
         }
 
-    }
+        if(field.id === "pt_reportNo"){
 
-    if(field.id === "pt_reportNo"){
+            const reason = document.getElementById("pt_reason").value;
 
-        const reason = document.getElementById("pt_reason").value;
-
-        if(reason === "Ot Capped"){
-
-            return;
+            if(reason === "Ot Capped") return;
 
         }
 
-    }
+        if(field.id === "fw_reportNo"){
 
-    if(field.id === "fw_reportNo"){
+            const reason = document.getElementById("fw_reason").value;
 
-        const reason = document.getElementById("fw_reason").value;
-
-        if(reason === "Ot Capped"){
-
-            return;
+            if(reason === "Ot Capped") return;
 
         }
 
+        const value = (field.value || "").trim();
+
+        if(value === ""){
+
+            valid = false;
+
+            field.classList.add("input-error");
+
+            missingFields.push(field.dataset.label);
+
+        }
+
+    });
+
+    if(!valid){
+
+        Swal.fire({
+
+            icon:"error",
+
+            title:"Validation Failed",
+
+            html: `
+            <div style="text-align:left;font-size:15px;line-height:1.8">
+
+                <b>Please complete the following field(s):</b>
+
+                <br><br>
+
+                ${missingFields.map(item => `
+                    <div style="
+                        padding:8px;
+                        margin-bottom:6px;
+                        background:#fff5f5;
+                        border-left:5px solid #dc3545;
+                        border-radius:6px;
+                    ">
+                        ❌ ${item}
+                    </div>
+                `).join("")}
+
+            </div>
+            `,
+
+            confirmButtonText:"OK",
+
+            confirmButtonColor:"#dc3545",
+
+            allowOutsideClick:false
+
+        });
+
     }
 
-    const value = (field.value || "").trim();
+    return valid;
 
-    if(value === ""){
-
-        valid = false;
-
-        field.classList.add("input-error");
-
-        missingFields.push(field.dataset.label);
-
-    }
+}
 
 });
 /* ==========================================
