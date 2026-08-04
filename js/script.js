@@ -101,11 +101,44 @@ async function loadComponent(file, target){
 }
 
 /* ==========================================
-   INITIALIZE
+   SHOW / HIDE FORM
+========================================== */
+
+function showForm(type){
+
+    const ft=document.getElementById("fullTimerForm");
+    const pt=document.getElementById("partTimerForm");
+    const fw=document.getElementById("foreignWorkerForm");
+
+    if(ft) ft.style.display="none";
+    if(pt) pt.style.display="none";
+    if(fw) fw.style.display="none";
+
+    switch(type){
+
+        case "Full Timer":
+            if(ft) ft.style.display="block";
+            break;
+
+        case "Part Timer":
+            if(pt) pt.style.display="block";
+            break;
+
+        case "Foreign Worker":
+            if(fw) fw.style.display="block";
+            break;
+
+    }
+
+}
+
+/* ==========================================
+   INITIALIZE APPLICATION
 ========================================== */
 
 document.addEventListener("DOMContentLoaded", async () => {
 
+    // Load semua component dahulu
     await loadComponent(
         "components/fulltimer.html",
         "fullTimerContainer"
@@ -120,5 +153,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         "components/foreignworker.html",
         "foreignWorkerContainer"
     );
+
+    // Hide semua form
+    showForm("");
+
+    // Employee Type Event
+    document.getElementById("employeeType")
+        .addEventListener("change", function(){
+
+            showForm(this.value);
+
+        });
 
 });
