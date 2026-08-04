@@ -286,58 +286,64 @@ function validateForm(formId){
 
     const requiredFields = form.querySelectorAll("[data-required='true']");
 
-    requiredFields.forEach(field=>{
+    requiredFields.forEach(field => {
 
-        field.classList.remove("input-error");
+    field.classList.remove("input-error");
 
-        const value = (field.value || "").trim();
+    // ======================================
+    // SMART VALIDATION - REPORT NUMBER
+    // ======================================
 
-        if(value===""){
+    if(field.id === "ft_reportNo"){
 
-            valid = false;
+        const reason = document.getElementById("ft_reason").value;
 
-            field.classList.add("input-error");
+        if(reason === "Ot Capped"){
 
-            missingFields.push(field.dataset.label);
+            // Report Number tidak wajib
+            return;
 
         }
 
-    });
+    }
 
-    if(!valid){
+    if(field.id === "pt_reportNo"){
 
-        Swal.fire({
+        const reason = document.getElementById("pt_reason").value;
 
-            icon: "error",
+        if(reason === "Ot Capped"){
 
-            title: "Validation Failed",
+            return;
 
-            html:
-            "<div style='text-align:left'>" +
-            "<b>Please complete the following field(s):</b><br><br>" +
-
-            missingFields.map(item=>
-
-                "&#8226; " + item
-
-            ).join("<br>") +
-
-            "</div>",
-
-            confirmButtonText:"OK",
-
-            confirmButtonColor:"#d33",
-
-            allowOutsideClick:false
-
-        });
+        }
 
     }
 
-    return valid;
+    if(field.id === "fw_reportNo"){
 
-}
+        const reason = document.getElementById("fw_reason").value;
 
+        if(reason === "Ot Capped"){
+
+            return;
+
+        }
+
+    }
+
+    const value = (field.value || "").trim();
+
+    if(value === ""){
+
+        valid = false;
+
+        field.classList.add("input-error");
+
+        missingFields.push(field.dataset.label);
+
+    }
+
+});
 /* ==========================================
    CALCULATE FULL TIMER
 ========================================== */
