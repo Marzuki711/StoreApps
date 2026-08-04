@@ -560,7 +560,7 @@ async function saveFullTimer() {
 
     } else {
 
-        alert(result?.message || "Save Failed");
+        showError(result.message);
 
     }
 
