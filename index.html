@@ -2,48 +2,167 @@
 <html>
 
 <head>
-    <meta charset="UTF-8">
-    <title>Manual OT Claim API Test</title>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Manual OT Claim</title>
+
+<link rel="stylesheet" href="css/style.css">
+
 </head>
 
 <body>
 
-<h1>Manual OT Claim</h1>
+<!-- ==========================
+     Loading
+=========================== -->
 
-<button onclick="testAPI()">
-    Test API
-</button>
+<div id="loading" class="overlay">
 
-<p id="result"></p>
+    <div class="loader"></div>
 
-<script>
+</div>
 
-const WEB_APP_URL =
-"https://script.google.com/macros/s/AKfycbxU7UJJZZm-VAX7jgkba9d0QfZ93hvJs_Z9OIcIeo0H1Aza7OQUacHjo1L_RzQc9DIj4g/exec";
+<!-- ==========================
+     Main Container
+=========================== -->
 
-function testAPI(){
+<div class="container">
 
-    fetch(WEB_APP_URL,{
-        method:"POST"
-    })
+    <!-- Header -->
 
-    .then(response=>response.json())
+    <div class="header">
 
-    .then(data=>{
+        <h1>MANUAL OT CLAIM</h1>
 
-        document.getElementById("result").innerHTML=data.message;
+        <p>Overtime Claim Management System</p>
 
-    })
+    </div>
 
-    .catch(error=>{
+    <!-- Employee Type -->
 
-        document.getElementById("result").innerHTML=error;
+    <div class="card">
 
-    });
+        <div class="row">
 
-}
+            <div class="col-12">
 
-</script>
+                <label>Employee Type</label>
+
+                <select id="employeeType">
+
+                    <option value="">Select Employee Type</option>
+
+                    <option value="Full Timer">
+                        Full Timer
+                    </option>
+
+                    <option value="Part Timer">
+                        Part Timer
+                    </option>
+
+                    <option value="Foreign Worker">
+                        Foreign Worker
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- FULL TIMER -->
+    <div id="fullTimerContainer"></div>
+
+    <!-- PART TIMER -->
+    <div id="partTimerContainer"></div>
+
+    <!-- FOREIGN WORKER -->
+    <div id="foreignWorkerContainer"></div>
+
+</div>
+
+<!-- Success Modal -->
+
+<div id="successModal" class="modal">
+
+    <div class="modal-box">
+
+        <div class="modal-icon">
+
+            ✓
+
+        </div>
+
+        <div class="modal-title">
+
+            Success
+
+        </div>
+
+        <div class="modal-text" id="successText">
+
+            Saved Successfully
+
+        </div>
+
+        <button
+        class="btn btn-success"
+        onclick="closeSuccess()">
+
+            OK
+
+        </button>
+
+    </div>
+
+</div>
+
+<!-- Validation Modal -->
+
+<div id="validationModal" class="modal">
+
+    <div class="modal-box">
+
+        <div
+        class="modal-icon"
+        style="background:#F59E0B;">
+
+            !
+
+        </div>
+
+        <div class="modal-title">
+
+            Required Fields
+
+        </div>
+
+        <div
+        id="validationList"
+        class="modal-text"
+        style="text-align:left;margin-top:20px;">
+
+        </div>
+
+        <button
+        class="btn btn-success"
+        onclick="closeValidation()">
+
+            OK
+
+        </button>
+
+    </div>
+
+</div>
+
+<script src="js/script.js"></script>
 
 </body>
 
