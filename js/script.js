@@ -1149,15 +1149,24 @@ if ("serviceWorker" in navigator) {
 
 function showHome(){
 
+    // Paparkan Home
     document.getElementById("homeContainer").style.display = "block";
+
+    // Sembunyikan Modul OT
     document.getElementById("otModule").style.display = "none";
 
 }
 
 function openManualOT(){
 
+    // Sembunyikan Home
     document.getElementById("homeContainer").style.display = "none";
+
+    // Paparkan Modul OT
     document.getElementById("otModule").style.display = "block";
+
+    // Reset paparan borang
+    document.getElementById("employeeType").value = "";
 
     showForm("");
 
