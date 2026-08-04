@@ -62,13 +62,15 @@ async function callAPI(action, data = {}) {
 
 async function searchEmployee(employeeId){
 
-   console.log("searchEmployee()", employeeId);
+    console.log("searchEmployee()", employeeId);
 
     if(!employeeId) return;
 
     const result = await callAPI("searchEmployee",{
         employeeId: employeeId
     });
+
+    console.log("API RESULT:", result);
 
     if(!result.status){
 
