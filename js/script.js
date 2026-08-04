@@ -32,13 +32,11 @@ async function callAPI(action, data = {}) {
 
 });
 
-const text = await response.text();
+const result = await response.json();
 
-console.log("========== API RESPONSE ==========");
-console.log(text);
-console.log("==================================");
+hideLoading();
 
-const result = JSON.parse(text);
+return result;
 
 hideLoading();
 
