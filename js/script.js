@@ -865,6 +865,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
 
     showHome();
+    document.querySelector(".card").style.display = "none";
 
     await loadComponent(
         "components/parttimer.html",
