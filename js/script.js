@@ -238,3 +238,41 @@ function resetForm(formId){
     });
 
 }
+
+/* ==========================================
+   VALIDATE FORM
+========================================== */
+
+function validateForm(formId){
+
+    const form = document.getElementById(formId);
+
+    if(!form) return false;
+
+    let valid = true;
+
+    const requiredFields = form.querySelectorAll("[data-required='true']");
+
+    requiredFields.forEach(field=>{
+
+        field.classList.remove("input-error");
+
+        if(field.value.trim()===""){
+
+            valid=false;
+
+            field.classList.add("input-error");
+
+        }
+
+    });
+
+    if(!valid){
+
+        alert("Please complete all required fields.");
+
+    }
+
+    return valid;
+
+}
