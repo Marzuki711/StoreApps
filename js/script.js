@@ -912,88 +912,64 @@ document.getElementById("fw_lastOut")
     document.getElementById("btnSaveFW")
     ?.addEventListener("click", saveForeignWorker);
 
-});
+// ==========================
+    // EMPLOYEE SEARCH
+    // ==========================
 
-/* ==========================================
-   EMPLOYEE SEARCH
-========================================== */
+    let searchTimer;
 
-// Full Timer
-document.getElementById("ft_employeeId")
-?.addEventListener("input", function(){
+    function autoSearchEmployee(employeeId){
 
-    const id = this.value.trim();
+        clearTimeout(searchTimer);
 
-    if(id.length >= 8){
+        searchTimer = setTimeout(() => {
 
-        searchEmployee(id);
+            searchEmployee(employeeId);
 
-    }
-
-});
-
-document.getElementById("pt_employeeId")
-?.addEventListener("input", function(){
-
-    const id = this.value.trim();
-
-    if(id.length >= 8){
-
-        searchEmployee(id);
+        },300);
 
     }
 
-});
+    // Full Timer
+    document.getElementById("ft_employeeId")
+    ?.addEventListener("input", function(){
 
-// Foreign Worker
-document.getElementById("fw_employeeId")
-?.addEventListener("input", function(){
+        const id = this.value.trim();
 
-    const id = this.value.trim();
+        if(id.length >= 8){
 
-    if(id.length >= 8){
+            autoSearchEmployee(id);
 
-        searchEmployee(id);
+        }
 
-    }
+    });
 
-});
+    // Part Timer
+    document.getElementById("pt_employeeId")
+    ?.addEventListener("input", function(){
 
-/* ==========================================
-   DEBOUNCE
-========================================== */
+        const id = this.value.trim();
 
-let searchTimer;
+        if(id.length >= 8){
 
-function autoSearchEmployee(employeeId){
+            autoSearchEmployee(id);
 
-    console.log("Auto Search:", employeeId);
+        }
 
-    clearTimeout(searchTimer);
+    });
 
-    searchTimer = setTimeout(() => {
+    // Foreign Worker
+    document.getElementById("fw_employeeId")
+    ?.addEventListener("input", function(){
 
-        console.log("Calling API...");
+        const id = this.value.trim();
 
-        searchEmployee(employeeId);
+        if(id.length >= 8){
 
-    },300);
+            autoSearchEmployee(id);
 
-}
+        }
 
-document.getElementById("ft_employeeId")
-?.addEventListener("input", function(){
-
-    console.log("Typing:", this.value);
-
-    const id = this.value.trim();
-
-    if(id.length >= 8){
-
-        console.log("Searching:", id);
-
-        autoSearchEmployee(id);
-
-    }
+    });
 
 });
