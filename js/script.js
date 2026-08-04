@@ -73,3 +73,52 @@ function hideLoading() {
         loading.style.display = "none";
 
 }
+
+/* ==========================================
+   LOAD HTML COMPONENT
+========================================== */
+
+async function loadComponent(file, target){
+
+    try{
+
+        const response = await fetch(file);
+
+        if(!response.ok){
+            throw new Error("Unable to load " + file);
+        }
+
+        const html = await response.text();
+
+        document.getElementById(target).innerHTML = html;
+
+    }catch(err){
+
+        console.error(err);
+
+    }
+
+}
+
+/* ==========================================
+   INITIALIZE PAGE
+========================================== */
+
+document.addEventListener("DOMContentLoaded", async () => {
+
+    await loadComponent(
+        "components/fulltimer.html",
+        "fullTimerContainer"
+    );
+
+    await loadComponent(
+        "components/parttimer.html",
+        "partTimerContainer"
+    );
+
+    await loadComponent(
+        "components/foreignworker.html",
+        "foreignWorkerContainer"
+    );
+
+});
