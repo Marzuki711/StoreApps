@@ -876,6 +876,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         "foreignWorkerContainer"
     );
 
+   document
+   .getElementById("btnHome")
+   ?.addEventListener("click",showHome);
+
     // ==========================
     // SHOW HOME
     // ==========================
