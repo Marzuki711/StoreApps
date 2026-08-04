@@ -864,7 +864,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         "fullTimerContainer"
     );
 
+    await loadComponent("components/home.html","homeContainer");
+    await loadComponent("components/fulltimer.html","fullTimerContainer");
+    await loadComponent("components/parttimer.html","partTimerContainer");
+    await loadComponent("components/foreignworker.html","foreignWorkerContainer");
+
     showHome();
+   
     document.querySelector(".card").style.display = "none";
 
     await loadComponent(
