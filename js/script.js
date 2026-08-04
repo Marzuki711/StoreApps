@@ -164,6 +164,28 @@ document.addEventListener("DOMContentLoaded", async () => {
         "foreignWorkerContainer"
     );
 
+    // RESET BUTTON
+    document.getElementById("btnResetFT")
+    ?.addEventListener("click", () => {
+
+        resetForm("fullTimerForm");
+
+    });
+
+    document.getElementById("btnResetPT")
+    ?.addEventListener("click", () => {
+
+        resetForm("partTimerForm");
+
+    });
+
+    document.getElementById("btnResetFW")
+    ?.addEventListener("click", () => {
+
+        resetForm("foreignWorkerForm");
+
+    });
+
     // Hide semua form
     showForm("");
 
@@ -212,46 +234,6 @@ function resetForm(formId){
     form.querySelectorAll("select").forEach(select=>{
 
         select.selectedIndex=0;
-
-    });
-
-}
-
-// ===============================
-// RESET BUTTON
-// ===============================
-
-const btnResetFT=document.getElementById("btnResetFT");
-
-if(btnResetFT){
-
-    btnResetFT.addEventListener("click",()=>{
-
-        resetForm("fullTimerForm");
-
-    });
-
-}
-
-const btnResetPT=document.getElementById("btnResetPT");
-
-if(btnResetPT){
-
-    btnResetPT.addEventListener("click",()=>{
-
-        resetForm("partTimerForm");
-
-    });
-
-}
-
-const btnResetFW=document.getElementById("btnResetFW");
-
-if(btnResetFW){
-
-    btnResetFW.addEventListener("click",()=>{
-
-        resetForm("foreignWorkerForm");
 
     });
 
