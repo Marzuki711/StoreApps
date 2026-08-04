@@ -24,19 +24,25 @@ async function callAPI(action, data = {}) {
             })
         );
 
-        const response = await fetch(CONFIG.WEB_APP_URL, {
+       const response = await fetch(CONFIG.WEB_APP_URL, {
 
-            method: "POST",
+    method: "POST",
 
-            body: formData
+    body: formData
 
-        });
+});
 
-        const result = await response.json();
+const text = await response.text();
 
-        hideLoading();
+console.log("========== API RESPONSE ==========");
+console.log(text);
+console.log("==================================");
 
-        return result;
+const result = JSON.parse(text);
+
+hideLoading();
+
+return result;
 
     } catch (err) {
 
