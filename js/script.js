@@ -275,27 +275,29 @@ function validateForm(formId){
 // SAVE BUTTON
 // ===============================
 
-document.getElementById("btnSaveFT")
-?.addEventListener("click",saveFullTimer);
+    // SAVE BUTTON
+    document.getElementById("btnSaveFT")
+    ?.addEventListener("click", saveFullTimer);
 
+    document.getElementById("btnSavePT")
+    ?.addEventListener("click", () => {
 
-document.getElementById("btnSavePT")
-?.addEventListener("click", () => {
+        if (!validateForm("partTimerForm")) return;
 
-    if (!validateForm("partTimerForm")) return;
+        alert("Validation Success");
 
-    alert("Validation Success");
+    });
 
-});
+    document.getElementById("btnSaveFW")
+    ?.addEventListener("click", () => {
 
-document.getElementById("btnSaveFW")
-?.addEventListener("click", () => {
+        if (!validateForm("foreignWorkerForm")) return;
 
-    if (!validateForm("foreignWorkerForm")) return;
+        alert("Validation Success");
 
-    alert("Validation Success");
+    });
 
-});
+});   // <-- TUTUP DOMContentLoaded DI SINI
    
 /* ==========================================
    SAVE FULL TIMER
