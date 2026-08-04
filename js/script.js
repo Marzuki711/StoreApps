@@ -78,11 +78,19 @@ function hideLoading() {
    LOAD HTML COMPONENT
 ========================================== */
 
+/* ==========================================
+   LOAD HTML COMPONENT
+========================================== */
+
 async function loadComponent(file, target){
 
     try{
 
+        console.log("Loading:", file);
+
         const response = await fetch(file);
+
+        console.log("Status:", response.status);
 
         if(!response.ok){
             throw new Error(file + " not found");
@@ -90,11 +98,13 @@ async function loadComponent(file, target){
 
         const html = await response.text();
 
+        console.log("Loaded:", file);
+
         document.getElementById(target).innerHTML = html;
 
     }catch(err){
 
-        console.error(err);
+        console.error("Load Error:", file, err);
 
     }
 
