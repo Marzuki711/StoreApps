@@ -469,3 +469,126 @@ function closeValidation() {
     const validationModal = document.getElementById("validationModal");
     if (validationModal) validationModal.style.display = "none";
 }
+
+/* ==========================================
+    UI TAB & NAVIGATION CONTROLS
+========================================== */
+
+document.addEventListener("DOMContentLoaded", () => {
+    const navButtons = document.querySelectorAll(".nav-tab-btn");
+    
+    navButtons.forEach(btn => {
+        btn.addEventListener("click", (e) => {
+            const targetTab = e.currentTarget.getAttribute("data-target");
+            switchTab(targetTab);
+        });
+    });
+});
+
+function switchTab(tabId) {
+    const tabs = document.querySelectorAll(".tab-content");
+    tabs.forEach(tab => {
+        tab.style.display = "none";
+    });
+
+    const activeTab = document.getElementById(tabId);
+    if (activeTab) {
+        activeTab.style.display = "block";
+    }
+
+    const navButtons = document.querySelectorAll(".nav-tab-btn");
+    navButtons.forEach(btn => {
+        btn.classList.remove("active");
+        if (btn.getAttribute("data-target") === tabId) {
+            btn.classList.add("active");
+        }
+    });
+}
+
+/* ==========================================
+    DYNAMIC HISTORY & TABLE LOADER
+========================================== */
+
+function loadClaimHistory() {
+    showLoading();
+
+    if (typeof google !== 'undefined' && google.script) {
+        google.script.run
+            .withSuccessHandler(data => {
+                hideLoading();
+                renderHistoryTable(data);
+            })
+            .withFailureHandler(err => {
+                hideLoading();
+                alert("Gagal memuatkan sejarah: " + err.message);
+            })
+            .getClaimHistory();
+    } else {
+        hideLoading();
+        console.log("Simulated: Load claim history called.");
+        renderHistoryTable([]);
+    }
+}
+
+function renderHistoryTable(data) {
+    const tbody = document.getElementById("historyTableBody");
+    if (!tbody) return;
+
+    tbody.innerHTML = "";
+
+    if (!data || data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #666;">Tiada rekod ditemui.</td></tr>`;
+        return;
+    }
+
+    data.forEach((row, index) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${row.actualDate || ''}</td>
+            <td>${row.employeeId || ''}</td>
+            <td>${row.employeeName || ''}</td>
+            <td>${row.employeeType || ''}</td>
+            <td>${row.unit || ''}</td>
+            <td>${row.approvedOT || row.firstFour || '0'}</td>
+            <td><span class="status-badge success">Berjaya</span></td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+/* ==========================================
+    EXPORT & UTILITY FUNCTIONS
+========================================== */
+
+function exportDataToCSV() {
+    if (typeof google !== 'undefined' && google.script) {
+        google.script.run
+            .withSuccessHandler(url => {
+                if (url) {
+                    window.open(url, '_blank');
+                } else {
+                    alert("Tiada pautan fail dijana.");
+                }
+            })
+            .withFailureHandler(err => {
+                alert("Ralat eksport: " + err.message);
+            })
+            .exportToCSV();
+    } else {
+        console.log("Simulated: Export to CSV triggered.");
+        alert("Eksport CSV disimulasi untuk persekitaran tempatan.");
+    }
+}
+
+window.addEventListener("load", () => {
+    const loadHistoryBtn = document.getElementById("loadHistoryBtn");
+    if (loadHistoryBtn) {
+        loadHistoryBtn.addEventListener("click", loadClaimHistory);
+    }
+
+    const exportCsvBtn = document.getElementById("exportCsvBtn");
+    if (exportCsvBtn) {
+        exportCsvBtn.addEventListener("click", exportDataToCSV);
+    }
+});
