@@ -534,3 +534,194 @@ opacity:1;
     font-weight:bold;
 
 }
+
+/* ==========================================
+   STOREHOME V4
+========================================== */
+
+.welcome-card{
+
+    background:#fff;
+
+    border-radius:20px;
+
+    padding:25px 30px;
+
+    margin-bottom:25px;
+
+    box-shadow:0 8px 30px rgba(0,0,0,.08);
+
+}
+
+.welcome-card h2{
+
+    color:#C1121F;
+
+    margin-bottom:8px;
+
+    font-size:30px;
+
+}
+
+.welcome-card p{
+
+    color:#666;
+
+    font-size:15px;
+
+}
+
+/* ========================= */
+
+.module-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(250px,1fr));
+
+    gap:25px;
+
+}
+
+/* ========================= */
+
+.module-card{
+
+    background:#fff;
+
+    border-radius:22px;
+
+    padding:30px;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+
+    transition:.35s;
+
+    text-align:center;
+
+    border:2px solid transparent;
+
+}
+
+/* ========================= */
+
+.module-card:hover{
+
+    transform:translateY(-8px);
+
+    border-color:#C1121F;
+
+    box-shadow:0 18px 40px rgba(0,0,0,.15);
+
+}
+
+/* ========================= */
+
+.module-card.active{
+
+    cursor:pointer;
+
+}
+
+/* ========================= */
+
+.module-icon{
+
+    font-size:58px;
+
+    margin-bottom:18px;
+
+}
+
+/* ========================= */
+
+.module-card h3{
+
+    font-size:24px;
+
+    margin-bottom:15px;
+
+}
+
+/* ========================= */
+
+.module-card p{
+
+    color:#666;
+
+    line-height:1.7;
+
+    min-height:55px;
+
+}
+
+/* ========================= */
+
+.module-btn{
+
+    margin-top:25px;
+
+    width:100%;
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#C1121F;
+
+    color:#fff;
+
+    font-size:15px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+/* ========================= */
+
+.module-btn:hover{
+
+    background:#8B0000;
+
+}
+
+/* ========================= */
+
+.coming{
+
+    display:inline-block;
+
+    margin-top:22px;
+
+    padding:8px 18px;
+
+    border-radius:25px;
+
+    background:#f1f1f1;
+
+    color:#777;
+
+    font-size:13px;
+
+}
+
+/* ========================= */
+
+.footer-version{
+
+    margin-top:45px;
+
+    text-align:center;
+
+    color:#888;
+
+    font-size:13px;
+
+}
