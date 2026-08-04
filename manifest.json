@@ -1,6 +1,7 @@
 {
-  "name": "Manual OT Claim",
-  "short_name": "OT Claim",
+  "name": "StoreHub",
+  "short_name": "StoreHub",
+  "description": "Store Operations Platform",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#ffffff",
