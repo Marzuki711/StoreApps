@@ -871,6 +871,36 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     }
 
+// ============================
+// NUMBER ONLY
+// ============================
+
+const ftUnit = document.getElementById("ft_unit");
+const ftEmployeeId = document.getElementById("ft_employeeId");
+
+const ptUnit = document.getElementById("pt_unit");
+const ptEmployeeId = document.getElementById("pt_employeeId");
+
+const fwUnit = document.getElementById("fw_unit");
+const fwEmployeeId = document.getElementById("fw_employeeId");
+
+if (ftUnit) numberOnly(ftUnit, 4);
+if (ftEmployeeId) numberOnly(ftEmployeeId, 8);
+
+if (ptUnit) numberOnly(ptUnit, 4);
+if (ptEmployeeId) numberOnly(ptEmployeeId, 8);
+
+if (fwUnit) numberOnly(fwUnit, 4);
+if (fwEmployeeId) numberOnly(fwEmployeeId, 8);
+
+// ============================
+// EMPLOYEE ID FORMAT
+// ============================
+
+if (ftEmployeeId) formatEmployeeID(ftEmployeeId);
+if (ptEmployeeId) formatEmployeeID(ptEmployeeId);
+if (fwEmployeeId) formatEmployeeID(fwEmployeeId);
+
 /* ==========================================
    FULL TIMER AUTO CALCULATE
 ========================================== */
@@ -1020,3 +1050,45 @@ document.getElementById("fw_lastOut")
 });
 
 });
+
+/* ==========================================
+   NUMBER ONLY
+========================================== */
+
+function numberOnly(input, maxLength){
+
+    input.addEventListener("input", function(){
+
+        // Buang semua selain nombor
+        this.value = this.value.replace(/\D/g,"");
+
+        // Had maksimum digit
+        if(this.value.length > maxLength){
+
+            this.value = this.value.substring(0,maxLength);
+
+        }
+
+    });
+
+}
+
+/* ==========================================
+   EMPLOYEE ID FORMAT
+========================================== */
+
+function formatEmployeeID(input){
+
+    input.addEventListener("blur", function(){
+
+        let value = this.value.replace(/\D/g,"");
+
+        if(value !== ""){
+
+            this.value = value.padStart(8,"0");
+
+        }
+
+    });
+
+}
