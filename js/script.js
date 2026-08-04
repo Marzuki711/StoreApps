@@ -852,26 +852,19 @@ async function saveForeignWorker() {
 
 document.addEventListener("DOMContentLoaded", async () => {
 
+    // ==========================
+    // LOAD COMPONENT
+    // ==========================
+
     await loadComponent(
         "components/home.html",
         "homeContainer"
-       
     );
-   
-    // Load HTML Components
+
     await loadComponent(
         "components/fulltimer.html",
         "fullTimerContainer"
     );
-
-    await loadComponent("components/home.html","homeContainer");
-    await loadComponent("components/fulltimer.html","fullTimerContainer");
-    await loadComponent("components/parttimer.html","partTimerContainer");
-    await loadComponent("components/foreignworker.html","foreignWorkerContainer");
-
-    showHome();
-   
-    document.querySelector(".card").style.display = "none";
 
     await loadComponent(
         "components/parttimer.html",
@@ -883,124 +876,104 @@ document.addEventListener("DOMContentLoaded", async () => {
         "foreignWorkerContainer"
     );
 
-    // Hide semua form
-    showForm("");
+    // ==========================
+    // SHOW HOME
+    // ==========================
 
-    // Employee Type
+    showHome();
+
+    // ==========================
+    // EMPLOYEE TYPE
+    // ==========================
+
     const employeeType = document.getElementById("employeeType");
 
-    if (employeeType) {
+    employeeType.addEventListener("change", function () {
 
-        employeeType.addEventListener("change", function () {
+        showForm(this.value);
 
-            showForm(this.value);
+    });
 
-        });
+    // ==========================
+    // NUMBER ONLY
+    // ==========================
 
-    }
+    numberOnly(document.getElementById("ft_unit"),4);
+    numberOnly(document.getElementById("pt_unit"),4);
+    numberOnly(document.getElementById("fw_unit"),4);
 
-// ============================
-// NUMBER ONLY
-// ============================
+    numberOnly(document.getElementById("ft_employeeId"),8);
+    numberOnly(document.getElementById("pt_employeeId"),8);
+    numberOnly(document.getElementById("fw_employeeId"),8);
 
-const ftUnit = document.getElementById("ft_unit");
-const ftEmployeeId = document.getElementById("ft_employeeId");
+    // ==========================
+    // FORMAT EMPLOYEE ID
+    // ==========================
 
-const ptUnit = document.getElementById("pt_unit");
-const ptEmployeeId = document.getElementById("pt_employeeId");
+    formatEmployeeID(document.getElementById("ft_employeeId"));
+    formatEmployeeID(document.getElementById("pt_employeeId"));
+    formatEmployeeID(document.getElementById("fw_employeeId"));
 
-const fwUnit = document.getElementById("fw_unit");
-const fwEmployeeId = document.getElementById("fw_employeeId");
+    // ==========================
+    // FULL TIMER
+    // ==========================
 
-if (ftUnit) numberOnly(ftUnit, 4);
-if (ftEmployeeId) numberOnly(ftEmployeeId, 8);
+    document.getElementById("ft_position")
+        ?.addEventListener("change",calculateFullTimer);
 
-if (ptUnit) numberOnly(ptUnit, 4);
-if (ptEmployeeId) numberOnly(ptEmployeeId, 8);
+    document.getElementById("ft_firstIn")
+        ?.addEventListener("change",calculateFullTimer);
 
-if (fwUnit) numberOnly(fwUnit, 4);
-if (fwEmployeeId) numberOnly(fwEmployeeId, 8);
+    document.getElementById("ft_lastOut")
+        ?.addEventListener("change",calculateFullTimer);
 
-// ============================
-// EMPLOYEE ID FORMAT
-// ============================
+    // ==========================
+    // PART TIMER
+    // ==========================
 
-if (ftEmployeeId) formatEmployeeID(ftEmployeeId);
-if (ptEmployeeId) formatEmployeeID(ptEmployeeId);
-if (fwEmployeeId) formatEmployeeID(fwEmployeeId);
+    document.getElementById("pt_firstIn")
+        ?.addEventListener("change",calculatePartTimer);
 
-/* ==========================================
-   FULL TIMER AUTO CALCULATE
-========================================== */
+    document.getElementById("pt_lastOut")
+        ?.addEventListener("change",calculatePartTimer);
 
-document.getElementById("ft_position")
-?.addEventListener("change", calculateFullTimer);
+    // ==========================
+    // FOREIGN WORKER
+    // ==========================
 
-document.getElementById("ft_firstIn")
-?.addEventListener("change", calculateFullTimer);
+    document.getElementById("fw_firstIn")
+        ?.addEventListener("change",calculateForeignWorker);
 
-document.getElementById("ft_lastOut")
-?.addEventListener("change", calculateFullTimer);
-
-/* ==========================================
-   PART TIMER AUTO CALCULATE
-========================================== */
-
-document.getElementById("pt_firstIn")
-?.addEventListener("change", calculatePartTimer);
-
-document.getElementById("pt_lastOut")
-?.addEventListener("change", calculatePartTimer);
-
-/* ==========================================
-   FOREIGN WORKER AUTO CALCULATE
-========================================== */
-
-document.getElementById("fw_firstIn")
-?.addEventListener("change", calculateForeignWorker);
-
-document.getElementById("fw_lastOut")
-?.addEventListener("change", calculateForeignWorker);
+    document.getElementById("fw_lastOut")
+        ?.addEventListener("change",calculateForeignWorker);
 
     // ==========================
     // RESET BUTTON
     // ==========================
 
     document.getElementById("btnResetFT")
-    ?.addEventListener("click", () => {
-
-        resetForm("fullTimerForm");
-
-    });
+        ?.addEventListener("click",()=>resetForm("fullTimerForm"));
 
     document.getElementById("btnResetPT")
-    ?.addEventListener("click", () => {
-
-        resetForm("partTimerForm");
-
-    });
+        ?.addEventListener("click",()=>resetForm("partTimerForm"));
 
     document.getElementById("btnResetFW")
-    ?.addEventListener("click", () => {
-
-        resetForm("foreignWorkerForm");
-
-    });
+        ?.addEventListener("click",()=>resetForm("foreignWorkerForm"));
 
     // ==========================
     // SAVE BUTTON
     // ==========================
 
     document.getElementById("btnSaveFT")
-    ?.addEventListener("click", saveFullTimer);
+        ?.addEventListener("click",saveFullTimer);
 
     document.getElementById("btnSavePT")
-    ?.addEventListener("click", savePartTimer);
+        ?.addEventListener("click",savePartTimer);
 
     document.getElementById("btnSaveFW")
-    ?.addEventListener("click", saveForeignWorker);
+        ?.addEventListener("click",saveForeignWorker);
 
-// ==========================
+    // ==========================
     // EMPLOYEE SEARCH
     // ==========================
 
@@ -1010,7 +983,7 @@ document.getElementById("fw_lastOut")
 
         clearTimeout(searchTimer);
 
-        searchTimer = setTimeout(() => {
+        searchTimer = setTimeout(()=>{
 
             searchEmployee(employeeId);
 
@@ -1020,62 +993,61 @@ document.getElementById("fw_lastOut")
 
     // Full Timer
     document.getElementById("ft_employeeId")
-?.addEventListener("input", function(){
+    ?.addEventListener("input",function(){
 
-    const id = this.value.trim();
+        const id=this.value.trim();
 
-    // Jika kosong atau kurang 8 digit, clear semua
-    if(id.length < 8){
+        if(id.length<8){
 
-        document.getElementById("ft_unit").value = "";
-        document.getElementById("ft_employeeName").value = "";
-        document.getElementById("ft_position").selectedIndex = 0;
+            document.getElementById("ft_unit").value="";
+            document.getElementById("ft_employeeName").value="";
+            document.getElementById("ft_position").selectedIndex=0;
+            return;
 
-        return;
-    }
+        }
 
-    autoSearchEmployee(id);
+        autoSearchEmployee(id);
 
-});
+    });
 
     // Part Timer
     document.getElementById("pt_employeeId")
-?.addEventListener("input", function(){
+    ?.addEventListener("input",function(){
 
-    const id = this.value.trim();
+        const id=this.value.trim();
 
-    if(id.length < 8){
+        if(id.length<8){
 
-        document.getElementById("pt_unit").value = "";
-        document.getElementById("pt_employeeName").value = "";
+            document.getElementById("pt_unit").value="";
+            document.getElementById("pt_employeeName").value="";
+            return;
 
-        return;
-    }
+        }
 
-    autoSearchEmployee(id);
+        autoSearchEmployee(id);
 
-});
+    });
 
     // Foreign Worker
     document.getElementById("fw_employeeId")
-?.addEventListener("input", function(){
+    ?.addEventListener("input",function(){
 
-    const id = this.value.trim();
+        const id=this.value.trim();
 
-    if(id.length < 8){
+        if(id.length<8){
 
-        document.getElementById("fw_unit").value = "";
-        document.getElementById("fw_employeeName").value = "";
-        document.getElementById("fw_position").selectedIndex = 0;
-        document.getElementById("fw_om").value = "";
-        document.getElementById("fw_fm").value = "";
+            document.getElementById("fw_unit").value="";
+            document.getElementById("fw_employeeName").value="";
+            document.getElementById("fw_position").selectedIndex=0;
+            document.getElementById("fw_om").value="";
+            document.getElementById("fw_fm").value="";
+            return;
 
-        return;
-    }
+        }
 
-    autoSearchEmployee(id);
+        autoSearchEmployee(id);
 
-});
+    });
 
 });
 
@@ -1165,15 +1137,12 @@ function showHome(){
 
 function openManualOT(){
 
-    // Sembunyikan Home
-    document.getElementById("homeContainer").style.display = "none";
+    document.getElementById("homeContainer").style.display="none";
 
-    // Paparkan Modul OT
-    document.getElementById("otModule").style.display = "block";
+    document.getElementById("otModule").style.display="block";
 
-    // Reset paparan borang
-    document.getElementById("employeeType").value = "";
+    document.getElementById("employeeType").value="Full Timer";
 
-    showForm("");
+    showForm("Full Timer");
 
 }
