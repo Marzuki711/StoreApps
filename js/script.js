@@ -62,52 +62,60 @@ async function callAPI(action, data = {}) {
 
 async function searchEmployee(employeeId){
 
+    if(!employeeId) return;
+
     const result = await callAPI("searchEmployee",{
-
         employeeId: employeeId
-
     });
 
     if(!result.status){
 
         showError(result.message);
-
         return;
 
     }
 
-    // Full Timer
-    if(document.getElementById("ft_employeeId")){
+    const employeeType =
+        document.getElementById("employeeType").value;
 
-        document.getElementById("ft_unit").value = result.unit || "";
+    // ==========================
+    // FULL TIMER
+    // ==========================
 
-        document.getElementById("ft_employeeName").value = result.employeeName || "";
+    if(employeeType === "Full Timer"){
 
-        document.getElementById("ft_position").value = result.position || "";
+        document.getElementById("ft_unit").value = result.unit;
+        document.getElementById("ft_employeeName").value = result.employeeName;
+        document.getElementById("ft_position").value = result.position;
 
-    }
-
-    // Part Timer
-    if(document.getElementById("pt_employeeId")){
-
-        document.getElementById("pt_unit").value = result.unit || "";
-
-        document.getElementById("pt_employeeName").value = result.employeeName || "";
+        calculateFullTimer();
 
     }
 
-    // Foreign Worker
-    if(document.getElementById("fw_employeeId")){
+    // ==========================
+    // PART TIMER
+    // ==========================
 
-        document.getElementById("fw_unit").value = result.unit || "";
+    else if(employeeType === "Part Timer"){
 
-        document.getElementById("fw_employeeName").value = result.employeeName || "";
+        document.getElementById("pt_unit").value = result.unit;
+        document.getElementById("pt_employeeName").value = result.employeeName;
 
-        document.getElementById("fw_position").value = result.position || "";
+    }
 
-        document.getElementById("fw_om").value = result.om || "";
+    // ==========================
+    // FOREIGN WORKER
+    // ==========================
 
-        document.getElementById("fw_fm").value = result.fm || "";
+    else if(employeeType === "Foreign Worker"){
+
+        document.getElementById("fw_unit").value = result.unit;
+        document.getElementById("fw_employeeName").value = result.employeeName;
+        document.getElementById("fw_position").value = result.position;
+        document.getElementById("fw_om").value = result.om;
+        document.getElementById("fw_fm").value = result.fm;
+
+        calculateForeignWorker();
 
     }
 
@@ -901,5 +909,81 @@ document.getElementById("fw_lastOut")
 
     document.getElementById("btnSaveFW")
     ?.addEventListener("click", saveForeignWorker);
+
+});
+
+/* ==========================================
+   EMPLOYEE SEARCH
+========================================== */
+
+// Full Timer
+document.getElementById("ft_employeeId")
+?.addEventListener("input", function(){
+
+    const id = this.value.trim();
+
+    if(id.length >= 8){
+
+        searchEmployee(id);
+
+    }
+
+});
+
+document.getElementById("pt_employeeId")
+?.addEventListener("input", function(){
+
+    const id = this.value.trim();
+
+    if(id.length >= 8){
+
+        searchEmployee(id);
+
+    }
+
+});
+
+// Foreign Worker
+document.getElementById("fw_employeeId")
+?.addEventListener("input", function(){
+
+    const id = this.value.trim();
+
+    if(id.length >= 8){
+
+        searchEmployee(id);
+
+    }
+
+});
+
+/* ==========================================
+   DEBOUNCE
+========================================== */
+
+let searchTimer;
+
+function autoSearchEmployee(employeeId){
+
+    clearTimeout(searchTimer);
+
+    searchTimer = setTimeout(() => {
+
+        searchEmployee(employeeId);
+
+    },300);
+
+}
+
+document.getElementById("ft_employeeId")
+?.addEventListener("input", function(){
+
+    const id = this.value.trim();
+
+    if(id.length >= 8){
+
+        autoSearchEmployee(id);
+
+    }
 
 });
