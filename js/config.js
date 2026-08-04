@@ -11,7 +11,7 @@ const CONFIG = {
     // ==========================================
 
     WEB_APP_URL:
-    "https://script.google.com/macros/s/AKfycbxU7UJJZZm-VAX7jgkba9d0QfZ93hvJs_Z9OIcIeo0H1Aza7OQUacHjo1L_RzQc9DIj4g/exec",
+    "https://script.google.com/macros/s/AKfycbwgxK9FiVbmPBFHpvc3MgdEbpR5-BdsQ7x34oSjidnKGhmQoGBrPiwLFVhoUcJrx5AzVA/exec",
 
     // ==========================================
     // Application
