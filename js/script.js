@@ -282,11 +282,7 @@ function validateForm(formId){
 // ===============================
 
 document.getElementById("btnSaveFT")
-?.addEventListener("click", () => {
-
-    if (!validateForm("fullTimerForm")) return;
-
-    alert("Validation Success");
+?.addEventListener("click",saveFullTimer);
 
 });
 
@@ -307,3 +303,67 @@ document.getElementById("btnSaveFW")
     alert("Validation Success");
 
 });
+
+/* ==========================================
+   SAVE FULL TIMER
+========================================== */
+
+async function saveFullTimer(){
+
+    if(!validateForm("fullTimerForm")) return;
+
+    const data={
+
+        employeeType:"Full Timer",
+
+        unit:document.getElementById("ft_unit").value,
+
+        employeeId:document.getElementById("ft_employeeId").value,
+
+        employeeName:document.getElementById("ft_employeeName").value,
+
+        position:document.getElementById("ft_position").value,
+
+        actualDate:document.getElementById("ft_actualDate").value,
+
+        firstIn:document.getElementById("ft_firstIn").value,
+
+        lastOut:document.getElementById("ft_lastOut").value,
+
+        workHours:document.getElementById("ft_workHours").value,
+
+        appHours:document.getElementById("ft_appHours").value,
+
+        approvedOT:document.getElementById("ft_approvedOT").value,
+
+        publicHoliday:document.getElementById("ft_publicHoliday").value,
+
+        restDay:document.getElementById("ft_restDay").value,
+
+        nightShift:document.getElementById("ft_nightShift").value,
+
+        reason:document.getElementById("ft_reason").value,
+
+        reportNo:document.getElementById("ft_reportNo").value,
+
+        reasonOT:document.getElementById("ft_reasonOT").value,
+
+        remark:document.getElementById("ft_remark").value
+
+    };
+
+    const result=await callAPI("saveData",data);
+
+    if(result.status){
+
+        alert(result.message);
+
+        resetForm("fullTimerForm");
+
+    }else{
+
+        alert(result.message);
+
+    }
+
+}
