@@ -274,3 +274,171 @@ opacity:1;
     background:#FEF2F2 !important;
 
 }
+
+/* =====================================================
+   STOREHUB HOME
+===================================================== */
+
+.home-page{
+
+    padding:25px;
+
+}
+
+.home-header{
+
+    background:linear-gradient(135deg,#C1121F,#8B0000);
+
+    color:#fff;
+
+    border-radius:20px;
+
+    padding:35px;
+
+    text-align:center;
+
+    margin-bottom:25px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
+
+}
+
+.home-header h1{
+
+    font-size:34px;
+
+    font-weight:700;
+
+    margin-bottom:8px;
+
+}
+
+.home-header p{
+
+    opacity:.9;
+
+    font-size:15px;
+
+}
+
+.welcome-box{
+
+    background:#fff;
+
+    border-radius:18px;
+
+    padding:25px;
+
+    margin-bottom:25px;
+
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+
+}
+
+.welcome-box h2{
+
+    color:#C1121F;
+
+    margin-bottom:8px;
+
+}
+
+.menu-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+
+    gap:20px;
+
+}
+
+.menu-card{
+
+    background:#fff;
+
+    border-radius:18px;
+
+    padding:30px;
+
+    text-align:center;
+
+    cursor:pointer;
+
+    transition:.30s;
+
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+
+}
+
+.menu-card:hover{
+
+    transform:translateY(-6px);
+
+    box-shadow:0 15px 30px rgba(0,0,0,.15);
+
+}
+
+.menu-icon{
+
+    font-size:48px;
+
+    margin-bottom:15px;
+
+}
+
+.menu-card h3{
+
+    color:#222;
+
+    margin-bottom:10px;
+
+}
+
+.menu-card p{
+
+    color:#777;
+
+}
+
+.menu-card span{
+
+    display:inline-block;
+
+    margin-top:10px;
+
+    padding:5px 12px;
+
+    border-radius:30px;
+
+    background:#ececec;
+
+    font-size:12px;
+
+}
+
+.menu-card.active{
+
+    border:3px solid #C1121F;
+
+}
+
+.menu-card.disabled{
+
+    opacity:.6;
+
+    cursor:not-allowed;
+
+}
+
+.version{
+
+    text-align:center;
+
+    margin-top:35px;
+
+    color:#999;
+
+    font-size:13px;
+
+}
