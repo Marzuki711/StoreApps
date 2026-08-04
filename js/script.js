@@ -852,11 +852,19 @@ async function saveForeignWorker() {
 
 document.addEventListener("DOMContentLoaded", async () => {
 
+    await loadComponent(
+        "components/home.html",
+        "homeContainer"
+       
+    );
+   
     // Load HTML Components
     await loadComponent(
         "components/fulltimer.html",
         "fullTimerContainer"
     );
+
+    showHome();
 
     await loadComponent(
         "components/parttimer.html",
@@ -1135,5 +1143,15 @@ if ("serviceWorker" in navigator) {
             });
 
     });
+
+}
+
+function showHome(){
+
+    document.getElementById("homeContainer").style.display = "block";
+
+    document.getElementById("fullTimerContainer").style.display = "none";
+    document.getElementById("partTimerContainer").style.display = "none";
+    document.getElementById("foreignWorkerContainer").style.display = "none";
 
 }
