@@ -968,44 +968,61 @@ document.getElementById("fw_lastOut")
 
     // Full Timer
     document.getElementById("ft_employeeId")
-    ?.addEventListener("input", function(){
+?.addEventListener("input", function(){
 
-        const id = this.value.trim();
+    const id = this.value.trim();
 
-        if(id.length >= 8){
+    // Jika kosong atau kurang 8 digit, clear semua
+    if(id.length < 8){
 
-            autoSearchEmployee(id);
+        document.getElementById("ft_unit").value = "";
+        document.getElementById("ft_employeeName").value = "";
+        document.getElementById("ft_position").selectedIndex = 0;
 
-        }
+        return;
+    }
 
-    });
+    autoSearchEmployee(id);
+
+});
 
     // Part Timer
     document.getElementById("pt_employeeId")
-    ?.addEventListener("input", function(){
+?.addEventListener("input", function(){
 
-        const id = this.value.trim();
+    const id = this.value.trim();
 
-        if(id.length >= 8){
+    if(id.length < 8){
 
-            autoSearchEmployee(id);
+        document.getElementById("pt_unit").value = "";
+        document.getElementById("pt_employeeName").value = "";
 
-        }
+        return;
+    }
 
-    });
+    autoSearchEmployee(id);
+
+});
 
     // Foreign Worker
     document.getElementById("fw_employeeId")
-    ?.addEventListener("input", function(){
+?.addEventListener("input", function(){
 
-        const id = this.value.trim();
+    const id = this.value.trim();
 
-        if(id.length >= 8){
+    if(id.length < 8){
 
-            autoSearchEmployee(id);
+        document.getElementById("fw_unit").value = "";
+        document.getElementById("fw_employeeName").value = "";
+        document.getElementById("fw_position").selectedIndex = 0;
+        document.getElementById("fw_om").value = "";
+        document.getElementById("fw_fm").value = "";
 
-        }
+        return;
+    }
 
-    });
+    autoSearchEmployee(id);
+
+});
 
 });
