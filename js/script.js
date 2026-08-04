@@ -251,6 +251,58 @@ function validateForm(formId) {
 }
 
 /* ==========================================
+   CALCULATE FULL TIMER
+========================================== */
+
+function calculateFullTimer() {
+
+    const firstIn = document.getElementById("ft_firstIn").value;
+    const lastOut = document.getElementById("ft_lastOut").value;
+    const position = document.getElementById("ft_position").value;
+
+    if (!firstIn || !lastOut) return;
+
+    const start = new Date("2000-01-01 " + firstIn);
+    let end = new Date("2000-01-01 " + lastOut);
+
+    if (end < start) {
+        end.setDate(end.getDate() + 1);
+    }
+
+    // Work Hours
+    const workHours = (end - start) / 3600000;
+
+    document.getElementById("ft_workHours").value =
+        workHours.toFixed(2);
+
+    // App Work Hours
+    let appHours = 0;
+
+    if (["Sm","Asm","Sc"].includes(position)) {
+
+        appHours = 8;
+
+    } else if (["Sv1","Sv2","Asv","Cm","Fc"].includes(position)) {
+
+        appHours = 8.5;
+
+    }
+
+    document.getElementById("ft_appHours").value = appHours;
+
+    // Approved OT
+    let ot = workHours - appHours;
+
+    if (ot < 0) ot = 0;
+
+    ot = Math.floor(ot) + ((ot % 1) >= 0.5 ? 0.5 : 0);
+
+    document.getElementById("ft_approvedOT").value =
+        ot.toFixed(1);
+
+}
+
+/* ==========================================
    SAVE FULL TIMER
 ========================================== */
 
@@ -483,6 +535,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
     }
+
+/* ==========================================
+   FULL TIMER AUTO CALCULATE
+========================================== */
+
+document.getElementById("ft_position")
+?.addEventListener("change", calculateFullTimer);
+
+document.getElementById("ft_firstIn")
+?.addEventListener("change", calculateFullTimer);
+
+document.getElementById("ft_lastOut")
+?.addEventListener("change", calculateFullTimer);
 
     // ==========================
     // RESET BUTTON
