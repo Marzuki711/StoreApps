@@ -5,7 +5,7 @@
  *************************************************/
 
 /* ==========================================
-   API CALL
+   API CALL (No CORS Preflight)
 ========================================== */
 
 async function callAPI(action, data = {}) {
@@ -14,26 +14,23 @@ async function callAPI(action, data = {}) {
 
         showLoading();
 
+        const formData = new URLSearchParams();
+
+        formData.append(
+            "payload",
+            JSON.stringify({
+                action: action,
+                data: data
+            })
+        );
+
         const response = await fetch(CONFIG.WEB_APP_URL, {
 
             method: "POST",
 
-            headers: {
-                "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify({
-                action: action,
-                data: data
-            })
+            body: formData
 
         });
-
-        if (!response.ok) {
-
-            throw new Error("HTTP " + response.status);
-
-        }
 
         const result = await response.json();
 
@@ -45,7 +42,7 @@ async function callAPI(action, data = {}) {
 
         hideLoading();
 
-        console.error("API ERROR :", err);
+        console.error(err);
 
         return {
 
