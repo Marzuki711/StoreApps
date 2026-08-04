@@ -262,3 +262,15 @@ opacity:1;
 }
 
 }
+
+/* ===============================
+   Validation
+=============================== */
+
+.input-error{
+
+    border:2px solid #DC2626 !important;
+
+    background:#FEF2F2 !important;
+
+}
