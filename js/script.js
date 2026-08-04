@@ -1,7 +1,6 @@
 /* ==========================================
     MANUAL OT CLAIM SYSTEM
-    Script.html
-    PART 1
+    Script.html - Gabungan Penuh (Part 1 & Part 2)
 ========================================== */
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -265,9 +264,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (btnResetFT) btnResetFT.addEventListener("click", () => resetForm("fullTimerForm"));
     if (btnResetPT) btnResetPT.addEventListener("click", () => resetForm("partTimerForm"));
-    if (btnResetFW) btnResetFW.addEventListener("click", () => resetForm] ? resetForm("foreignWorkerForm") : document.getElementById("btnResetFW").addEventListener("click", () => resetForm("foreignWorkerForm"))); // diselaraskan bawah
-
     if (btnResetFW) btnResetFW.addEventListener("click", () => resetForm("foreignWorkerForm"));
+    
     if (btnSaveFT) btnSaveFT.addEventListener("click", saveFullTimer);
     if (btnSavePT) btnSavePT.addEventListener("click", savePartTimer);
     if (btnSaveFW) btnSaveFW.addEventListener("click", saveForeignWorker);
@@ -427,7 +425,7 @@ function saveForeignWorker() {
         publicHoliday: document.getElementById("fw_publicHoliday")?.value || "",
         restDay: document.getElementById("fw_restDay")?.value || "",
         replacementLeave: document.getElementById("fw_replacementLeave")?.value || "",
-        reason: document.getElementById("fw_reportNo")?.value || "", // diselaraskan
+        reason: document.getElementById("fw_reason")?.value || "",
         reportNo: document.getElementById("fw_reportNo")?.value || "",
         reasonOT: document.getElementById("fw_reasonOT")?.value || "",
         remark: document.getElementById("fw_remark")?.value || ""
@@ -471,7 +469,7 @@ function closeValidation() {
 }
 
 /* ==========================================
-    UI TAB & NAVIGATION CONTROLS
+    UI TAB & NAVIGATION CONTROLS (PART 2)
 ========================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -580,6 +578,10 @@ function exportDataToCSV() {
         alert("Eksport CSV disimulasi untuk persekitaran tempatan.");
     }
 }
+
+/* ==========================================
+    INITIALIZATION HOOKS FOR PART 2
+========================================== */
 
 window.addEventListener("load", () => {
     const loadHistoryBtn = document.getElementById("loadHistoryBtn");
