@@ -1155,3 +1155,22 @@ function showHome(){
     document.getElementById("foreignWorkerContainer").style.display = "none";
 
 }
+
+function openManualOT() {
+
+    // Hide Home
+    document.getElementById("homeContainer").style.display = "none";
+
+    // Show Employee Type Card
+    document.querySelector(".card").style.display = "block";
+
+    // Show Form ikut Employee Type yang dipilih
+    const employeeType = document.getElementById("employeeType").value;
+
+    if (employeeType) {
+
+        showForm(employeeType);
+
+    }
+
+}
