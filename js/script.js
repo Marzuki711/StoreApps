@@ -192,6 +192,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             showForm(this.value);
 
         });
+   });
 
 /* ==========================================
    RESET FORM
