@@ -85,7 +85,7 @@ async function loadComponent(file, target){
         const response = await fetch(file);
 
         if(!response.ok){
-            throw new Error("Unable to load " + file);
+            throw new Error(file + " not found");
         }
 
         const html = await response.text();
@@ -101,7 +101,7 @@ async function loadComponent(file, target){
 }
 
 /* ==========================================
-   INITIALIZE PAGE
+   INITIALIZE
 ========================================== */
 
 document.addEventListener("DOMContentLoaded", async () => {
