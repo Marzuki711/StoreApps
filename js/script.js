@@ -5,69 +5,54 @@
  *************************************************/
 
 /* ==========================================
-   WEB API
+   API CALL (No CORS Preflight)
 ========================================== */
 
-function doPost(e){
+async function callAPI(action, data = {}) {
 
-  try{
+    try {
 
-    const payload = e.parameter.payload;
+        showLoading();
 
-    if(!payload){
+        const formData = new URLSearchParams();
 
-      return ContentService
-      .createTextOutput(
-        JSON.stringify({
-          status:false,
-          message:"Payload not found"
-        })
-      )
-      .setMimeType(ContentService.MimeType.JSON);
+        formData.append(
+            "payload",
+            JSON.stringify({
+                action: action,
+                data: data
+            })
+        );
+
+        const response = await fetch(CONFIG.WEB_APP_URL, {
+
+            method: "POST",
+
+            body: formData
+
+        });
+
+        const result = await response.json();
+
+        hideLoading();
+
+        return result;
+
+    } catch (err) {
+
+        hideLoading();
+
+        console.error(err);
+
+        return {
+
+            status: false,
+
+            message: err.message
+
+        };
 
     }
-
-    const request = JSON.parse(payload);
-
-    switch(request.action){
-
-      case "saveData":
-
-        return ContentService
-        .createTextOutput(
-          JSON.stringify(
-            saveData(request.data)
-          )
-        )
-        .setMimeType(ContentService.MimeType.JSON);
-
-      default:
-
-        return ContentService
-        .createTextOutput(
-          JSON.stringify({
-            status:false,
-            message:"Invalid Action"
-          })
-        )
-        .setMimeType(ContentService.MimeType.JSON);
-
-    }
-
-  }
-
-  catch(err){
-
-    return ContentService
-    .createTextOutput(
-      JSON.stringify({
-        status:false,
-        message:err.toString()
-      })
-    )
-    .setMimeType(ContentService.MimeType.JSON);
-
-  }
 
 }
 
