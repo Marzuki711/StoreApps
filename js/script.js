@@ -276,3 +276,34 @@ function validateForm(formId){
     return valid;
 
 }
+
+// ===============================
+// SAVE BUTTON
+// ===============================
+
+document.getElementById("btnSaveFT")
+?.addEventListener("click", () => {
+
+    if (!validateForm("fullTimerForm")) return;
+
+    alert("Validation Success");
+
+});
+
+document.getElementById("btnSavePT")
+?.addEventListener("click", () => {
+
+    if (!validateForm("partTimerForm")) return;
+
+    alert("Validation Success");
+
+});
+
+document.getElementById("btnSaveFW")
+?.addEventListener("click", () => {
+
+    if (!validateForm("foreignWorkerForm")) return;
+
+    alert("Validation Success");
+
+});
