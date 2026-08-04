@@ -628,9 +628,19 @@ opacity:1;
 
 .module-icon{
 
-    font-size:58px;
+    font-size:54px;
+
+    color:#C1121F;
 
     margin-bottom:18px;
+
+    transition:.3s;
+
+}
+
+.module-card:hover .module-icon{
+
+    transform:scale(1.15) rotate(-5deg);
 
 }
 
