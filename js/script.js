@@ -624,7 +624,7 @@ async function savePartTimer() {
 
     } else {
 
-        showError(result.message); || "Save Failed");
+        showError(result.message);
 
     }
 
