@@ -176,3 +176,83 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
 });
+
+/* ==========================================
+   RESET FORM
+========================================== */
+
+function resetForm(formId){
+
+    const form = document.getElementById(formId);
+
+    if(!form) return;
+
+    // Reset semua input dalam form
+    form.querySelectorAll("input").forEach(input=>{
+
+        if(input.type==="text" ||
+           input.type==="date" ||
+           input.type==="time" ||
+           input.type==="number"){
+
+            input.value="";
+
+        }
+
+    });
+
+    // Reset semua textarea
+    form.querySelectorAll("textarea").forEach(textarea=>{
+
+        textarea.value="";
+
+    });
+
+    // Reset semua select
+    form.querySelectorAll("select").forEach(select=>{
+
+        select.selectedIndex=0;
+
+    });
+
+}
+
+// ===============================
+// RESET BUTTON
+// ===============================
+
+const btnResetFT=document.getElementById("btnResetFT");
+
+if(btnResetFT){
+
+    btnResetFT.addEventListener("click",()=>{
+
+        resetForm("fullTimerForm");
+
+    });
+
+}
+
+const btnResetPT=document.getElementById("btnResetPT");
+
+if(btnResetPT){
+
+    btnResetPT.addEventListener("click",()=>{
+
+        resetForm("partTimerForm");
+
+    });
+
+}
+
+const btnResetFW=document.getElementById("btnResetFW");
+
+if(btnResetFW){
+
+    btnResetFW.addEventListener("click",()=>{
+
+        resetForm("foreignWorkerForm");
+
+    });
+
+}
