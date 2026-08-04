@@ -1177,5 +1177,3 @@ function openManualOT(){
     showForm("");
 
 }
-
-}
