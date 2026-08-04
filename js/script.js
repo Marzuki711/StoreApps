@@ -74,10 +74,38 @@ async function searchEmployee(employeeId){
 
     if(!result.status){
 
-        showError(result.message);
-        return;
+    const employeeType = document.getElementById("employeeType").value;
+
+    if(employeeType === "Full Timer"){
+
+        document.getElementById("ft_unit").value = "";
+        document.getElementById("ft_employeeName").value = "";
+        document.getElementById("ft_position").selectedIndex = 0;
 
     }
+
+    else if(employeeType === "Part Timer"){
+
+        document.getElementById("pt_unit").value = "";
+        document.getElementById("pt_employeeName").value = "";
+
+    }
+
+    else if(employeeType === "Foreign Worker"){
+
+        document.getElementById("fw_unit").value = "";
+        document.getElementById("fw_employeeName").value = "";
+        document.getElementById("fw_position").selectedIndex = 0;
+        document.getElementById("fw_om").value = "";
+        document.getElementById("fw_fm").value = "";
+
+    }
+
+    showError(result.message);
+
+    return;
+
+}
 
     const employeeType =
         document.getElementById("employeeType").value;
