@@ -1,383 +1,471 @@
-/*************************************************
- * Manual OT Claim System
- * script.js
- * GitHub Version
- *************************************************/
-
 /* ==========================================
-   API CALL
+    MANUAL OT CLAIM SYSTEM
+    Script.html
+    PART 1
 ========================================== */
 
-async function callAPI(action, data = {}) {
+document.addEventListener("DOMContentLoaded", function() {
+    init();
+});
 
-    try {
+function init() {
+    hideLoading();
 
-        showLoading();
-
-        const response = await fetch(CONFIG.WEB_APP_URL, {
-
-            method: "POST",
-
-            headers: {
-                "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify({
-                action: action,
-                data: data
-            })
-
-        });
-
-        const result = await response.json();
-
-        hideLoading();
-
-        return result;
-
-    } catch (err) {
-
-        hideLoading();
-
-        console.error(err);
-
-        alert("Unable to connect server.");
-
-        return {
-            status: false,
-            message: err.message
-        };
-
+    const employeeType = document.getElementById('employeeType');
+    if (employeeType) {
+        employeeType.addEventListener('change', showForm);
     }
-
 }
 
-/* ==========================================
-   Loading
-========================================== */
-
 function showLoading() {
-
     const loading = document.getElementById("loading");
-
-    if (loading)
+    if (loading) {
         loading.style.display = "flex";
-
+    }
 }
 
 function hideLoading() {
-
     const loading = document.getElementById("loading");
-
-    if (loading)
+    if (loading) {
         loading.style.display = "none";
-
-}
-
-/* ==========================================
-   LOAD HTML COMPONENT
-========================================== */
-
-/* ==========================================
-   LOAD HTML COMPONENT
-========================================== */
-
-async function loadComponent(file, target){
-
-    try{
-
-        console.log("Loading:", file);
-
-        const response = await fetch(file);
-
-        console.log("Status:", response.status);
-
-        if(!response.ok){
-            throw new Error(file + " not found");
-        }
-
-        const html = await response.text();
-
-        console.log("Loaded:", file);
-
-        document.getElementById(target).innerHTML = html;
-
-    }catch(err){
-
-        console.error("Load Error:", file, err);
-
     }
-
 }
 
-/* ==========================================
-   SHOW / HIDE FORM
-========================================== */
+function hideAllForms() {
+    const fullTimerForm = document.getElementById('fullTimerForm');
+    const partTimerForm = document.getElementById('partTimerForm');
+    const foreignWorkerForm = document.getElementById('foreignWorkerForm');
 
-function showForm(type){
+    if (fullTimerForm) fullTimerForm.style.display = "none";
+    if (partTimerForm) partTimerForm.style.display = "none";
+    if (foreignWorkerForm) foreignWorkerForm.style.display = "none";
+}
 
-    const ft=document.getElementById("fullTimerForm");
-    const pt=document.getElementById("partTimerForm");
-    const fw=document.getElementById("foreignWorkerForm");
+function showForm() {
+    hideAllForms();
+    const employeeType = document.getElementById('employeeType');
+    if (!employeeType) return;
 
-    if(ft) ft.style.display="none";
-    if(pt) pt.style.display="none";
-    if(fw) fw.style.display="none";
+    const fullTimerForm = document.getElementById('fullTimerForm');
+    const partTimerForm = document.getElementById('partTimerForm');
+    const foreignWorkerForm = document.getElementById('foreignWorkerForm');
 
-    switch(type){
-
+    switch (employeeType.value) {
         case "Full Timer":
-            if(ft) ft.style.display="block";
+            if (fullTimerForm) fullTimerForm.style.display = "block";
             break;
-
         case "Part Timer":
-            if(pt) pt.style.display="block";
+            if (partTimerForm) partTimerForm.style.display = "block";
             break;
-
         case "Foreign Worker":
-            if(fw) fw.style.display="block";
+            if (foreignWorkerForm) foreignWorkerForm.style.display = "block";
             break;
+        default:
+            break;
+    }
+}
 
+/* ==========================================
+    TIME CALCULATION
+========================================== */
+
+function timeToHours(timeString) {
+    if (!timeString) return 0;
+    const p = timeString.split(":");
+    return Number(p[0]) + Number(p[1]) / 60;
+}
+
+function calculateWorkHours(start, end) {
+    if (!start || !end) return "";
+    let diff = timeToHours(end) - timeToHours(start);
+    if (diff < 0) {
+        diff += 24;
+    }
+    return Number(diff.toFixed(2));
+}
+
+function roundHalf(value) {
+    return Math.floor(value * 2) / 2;
+}
+
+/* ==========================================
+    FULL TIMER CALCULATION
+========================================== */
+
+document.addEventListener("DOMContentLoaded", () => {
+    const ftFirstIn = document.getElementById("ft_firstIn");
+    const ftLastOut = document.getElementById("ft_lastOut");
+    const ftPosition = document.getElementById("ft_position");
+
+    if (ftFirstIn) ftFirstIn.addEventListener("change", calculateFullTimer);
+    if (ftLastOut) ftLastOut.addEventListener("change", calculateFullTimer);
+    if (ftPosition) ftPosition.addEventListener("change", calculateFullTimer);
+});
+
+function calculateFullTimer() {
+    const ftFirstIn = document.getElementById("ft_firstIn");
+    const ftLastOut = document.getElementById("ft_lastOut");
+    const ftPosition = document.getElementById("ft_position");
+
+    if (!ftFirstIn || !ftLastOut || !ftPosition) return;
+
+    const workHours = calculateWorkHours(ftFirstIn.value, ftLastOut.value);
+    document.getElementById("ft_workHours").value = workHours;
+
+    let appHours = "";
+    switch (ftPosition.value) {
+        case "Sm":
+        case "Asm":
+        case "Sc":
+            appHours = 8;
+            break;
+        case "Sv1":
+        case "Sv2":
+        case "Asv":
+        case "Cm":
+        case "Fc":
+            appHours = 8.5;
+            break;
+        default:
+            appHours = "";
+            break;
     }
 
-}
+    document.getElementById("ft_appHours").value = appHours;
 
-/* ==========================================
-   INITIALIZE APPLICATION
-========================================== */
-
-document.addEventListener("DOMContentLoaded", async () => {
-
-    // Load semua component dahulu
-    await loadComponent(
-        "components/fulltimer.html",
-        "fullTimerContainer"
-    );
-
-    await loadComponent(
-        "components/parttimer.html",
-        "partTimerContainer"
-    );
-
-    await loadComponent(
-        "components/foreignworker.html",
-        "foreignWorkerContainer"
-    );
-
-    // RESET BUTTON
-    document.getElementById("btnResetFT")
-    ?.addEventListener("click", () => {
-
-        resetForm("fullTimerForm");
-
-    });
-
-    document.getElementById("btnResetPT")
-    ?.addEventListener("click", () => {
-
-        resetForm("partTimerForm");
-
-    });
-
-    document.getElementById("btnResetFW")
-    ?.addEventListener("click", () => {
-
-        resetForm("foreignWorkerForm");
-
-    });
-
-    // Hide semua form
-    showForm("");
-
-    // Employee Type Event
-    document.getElementById("employeeType")
-        .addEventListener("change", function(){
-
-            showForm(this.value);
-
-        });
-
-});
-
-/* ==========================================
-   RESET FORM
-========================================== */
-
-function resetForm(formId){
-
-    const form = document.getElementById(formId);
-
-    if(!form) return;
-
-    // Reset semua input dalam form
-    form.querySelectorAll("input").forEach(input=>{
-
-        if(input.type==="text" ||
-           input.type==="date" ||
-           input.type==="time" ||
-           input.type==="number"){
-
-            input.value="";
-
-        }
-
-    });
-
-    // Reset semua textarea
-    form.querySelectorAll("textarea").forEach(textarea=>{
-
-        textarea.value="";
-
-    });
-
-    // Reset semua select
-    form.querySelectorAll("select").forEach(select=>{
-
-        select.selectedIndex=0;
-
-    });
-
-}
-
-/* ==========================================
-   VALIDATE FORM
-========================================== */
-
-function validateForm(formId){
-
-    const form = document.getElementById(formId);
-
-    if(!form) return false;
-
-    let valid = true;
-
-    const requiredFields = form.querySelectorAll("[data-required='true']");
-
-    requiredFields.forEach(field=>{
-
-        field.classList.remove("input-error");
-
-        if(field.value.trim()===""){
-
-            valid=false;
-
-            field.classList.add("input-error");
-
-        }
-
-    });
-
-    if(!valid){
-
-        alert("Please complete all required fields.");
-
+    let approved = 0;
+    if (appHours !== "" && workHours > appHours) {
+        let diff = workHours - appHours;
+        approved = Math.floor(diff) + ((diff % 1) >= 0.5 ? 0.5 : 0);
     }
 
-    return valid;
-
+    document.getElementById("ft_approvedOT").value = approved;
 }
 
-// ===============================
-// SAVE BUTTON
-// ===============================
+/* ==========================================
+    PART TIMER CALCULATION
+========================================== */
 
-document.getElementById("btnSaveFT")
-?.addEventListener("click",saveFullTimer);
+document.addEventListener("DOMContentLoaded", () => {
+    const ptFirstIn = document.getElementById("pt_firstIn");
+    const ptLastOut = document.getElementById("pt_lastOut");
 
-
-document.getElementById("btnSavePT")
-?.addEventListener("click", () => {
-
-    if (!validateForm("partTimerForm")) return;
-
-    alert("Validation Success");
-
+    if (ptFirstIn) ptFirstIn.addEventListener("input", calculatePartTimer);
+    if (ptLastOut) ptLastOut.addEventListener("input", calculatePartTimer);
 });
 
-document.getElementById("btnSaveFW")
-?.addEventListener("click", () => {
+function calculatePartTimer() {
+    const ptFirstIn = document.getElementById("pt_firstIn");
+    const ptLastOut = document.getElementById("pt_lastOut");
 
-    if (!validateForm("foreignWorkerForm")) return;
+    if (!ptFirstIn || !ptLastOut) return;
 
-    alert("Validation Success");
+    const workHours = calculateWorkHours(ptFirstIn.value, ptLastOut.value);
+    document.getElementById("pt_workHours").value = workHours;
 
+    if (workHours === "") {
+        document.getElementById("pt_floorHours").value = "";
+        document.getElementById("pt_firstFour").value = "";
+        document.getElementById("pt_secondFour").value = "";
+        document.getElementById("pt_afterEight").value = "";
+        return;
+    }
+
+    const floorHours = Math.floor(workHours * 2) / 2;
+    document.getElementById("pt_floorHours").value = floorHours;
+
+    const firstFour = Math.min(floorHours, 4);
+    document.getElementById("pt_firstFour").value = firstFour;
+
+    const secondFour = Math.max(Math.min(floorHours - 4, 4), 0);
+    document.getElementById("pt_secondFour").value = secondFour;
+
+    const afterEight = Math.max(floorHours - 8, 0);
+    document.getElementById("pt_afterEight").value = afterEight;
+}
+
+/* ==========================================
+    FOREIGN WORKER CALCULATION
+========================================== */
+
+document.addEventListener("DOMContentLoaded", () => {
+    const fwFirstIn = document.getElementById("fw_firstIn");
+    const fwLastOut = document.getElementById("fw_lastOut");
+    const fwPosition = document.getElementById("fw_position");
+
+    if (fwFirstIn) fwFirstIn.addEventListener("input", calculateForeignWorker);
+    if (fwLastOut) fwLastOut.addEventListener("input", calculateForeignWorker);
+    if (fwPosition) fwPosition.addEventListener("change", calculateForeignWorker);
 });
 
-    // Hide semua form
-    showForm("");
+function calculateForeignWorker() {
+    const fwFirstIn = document.getElementById("fw_firstIn");
+    const fwLastOut = document.getElementById("fw_lastOut");
+    const fwPosition = document.getElementById("fw_position");
 
-    // Employee Type
-    document.getElementById("employeeType")
-        .addEventListener("change", function () {
+    if (!fwFirstIn || !fwLastOut || !fwPosition) return;
 
-            showForm(this.value);
+    const workHours = calculateWorkHours(fwFirstIn.value, fwLastOut.value);
+    document.getElementById("fw_workHours").value = workHours;
 
-        });
+    let appHours = "";
+    if (fwPosition.value === "FW") {
+        appHours = 12;
+    }
+    document.getElementById("fw_appHours").value = appHours;
 
+    let approved = 0;
+    if (appHours !== "" && workHours > appHours) {
+        const diff = workHours - appHours;
+        approved = Math.floor(diff) + ((diff % 1) >= 0.5 ? 0.5 : 0);
+    }
+
+    document.getElementById("fw_approvedOT").value = approved;
+}
+
+/* ==========================================
+    UNIVERSAL RESET
+========================================== */
+
+function resetForm(formId) {
+    const form = document.getElementById(formId);
+    if (!form) return;
+
+    form.querySelectorAll("input").forEach(el => {
+        switch (el.type) {
+            case "text":
+            case "date":
+            case "time":
+            case "number":
+                el.value = "";
+                break;
+        }
+    });
+
+    form.querySelectorAll("textarea").forEach(el => {
+        el.value = "";
+    });
+
+    form.querySelectorAll("select").forEach(el => {
+        el.selectedIndex = 0;
+    });
+}
+
+/* ==========================================
+    BUTTON RESET & SAVE LISTENERS
+========================================== */
+
+document.addEventListener("DOMContentLoaded", () => {
+    const btnResetFT = document.getElementById("btnResetFT");
+    const btnResetPT = document.getElementById("btnResetPT");
+    const btnResetFW = document.getElementById("btnResetFW");
+    const btnSaveFT = document.getElementById("btnSaveFT");
+    const btnSavePT = document.getElementById("btnSavePT");
+    const btnSaveFW = document.getElementById("btnSaveFW");
+
+    if (btnResetFT) btnResetFT.addEventListener("click", () => resetForm("fullTimerForm"));
+    if (btnResetPT) btnResetPT.addEventListener("click", () => resetForm("partTimerForm"));
+    if (btnResetFW) btnResetFW.addEventListener("click", () => resetForm] ? resetForm("foreignWorkerForm") : document.getElementById("btnResetFW").addEventListener("click", () => resetForm("foreignWorkerForm"))); // diselaraskan bawah
+
+    if (btnResetFW) btnResetFW.addEventListener("click", () => resetForm("foreignWorkerForm"));
+    if (btnSaveFT) btnSaveFT.addEventListener("click", saveFullTimer);
+    if (btnSavePT) btnSavePT.addEventListener("click", savePartTimer);
+    if (btnSaveFW) btnSaveFW.addEventListener("click", saveForeignWorker);
 });
 
 /* ==========================================
-   SAVE FULL TIMER
+    VALIDATION V2
 ========================================== */
 
-async function saveFullTimer(){
+function validateForm(formId) {
+    const form = document.getElementById(formId);
+    if (!form) return false;
 
-    if(!validateForm("fullTimerForm")) return;
+    const required = form.querySelectorAll("[data-required='true']");
+    let missing = [];
 
-    const data={
+    required.forEach(field => {
+        field.style.borderColor = "#D9D9D9";
+        if (field.value === "" || field.value === "Please Select..") {
+            field.style.border = "2px solid #DC2626";
+            const labelEl = field.closest("div")?.querySelector("label");
+            const label = labelEl ? labelEl.innerText : "Field";
+            missing.push(label);
+        }
+    });
 
-        employeeType:"Full Timer",
+    if (missing.length) {
+        showValidation(missing);
+        return false;
+    }
 
-        unit:document.getElementById("ft_unit").value,
+    return true;
+}
 
-        employeeId:document.getElementById("ft_employeeId").value,
+/* ==========================================
+    SAVE FULL TIMER
+========================================== */
 
-        employeeName:document.getElementById("ft_employeeName").value,
+function saveFullTimer() {
+    if (!validateForm("fullTimerForm")) return;
+    calculateFullTimer();
 
-        position:document.getElementById("ft_position").value,
-
-        actualDate:document.getElementById("ft_actualDate").value,
-
-        firstIn:document.getElementById("ft_firstIn").value,
-
-        lastOut:document.getElementById("ft_lastOut").value,
-
-        workHours:document.getElementById("ft_workHours").value,
-
-        appHours:document.getElementById("ft_appHours").value,
-
-        approvedOT:document.getElementById("ft_approvedOT").value,
-
-        publicHoliday:document.getElementById("ft_publicHoliday").value,
-
-        restDay:document.getElementById("ft_restDay").value,
-
-        nightShift:document.getElementById("ft_nightShift").value,
-
-        reason:document.getElementById("ft_reason").value,
-
-        reportNo:document.getElementById("ft_reportNo").value,
-
-        reasonOT:document.getElementById("ft_reasonOT").value,
-
-        remark:document.getElementById("ft_remark").value
-
+    const obj = {
+        employeeType: "Full Timer",
+        unit: document.getElementById("ft_unit")?.value || "",
+        employeeId: document.getElementById("ft_employeeId")?.value || "",
+        employeeName: document.getElementById("ft_employeeName")?.value || "",
+        position: document.getElementById("ft_position")?.value || "",
+        actualDate: document.getElementById("ft_actualDate")?.value || "",
+        firstIn: document.getElementById("ft_firstIn")?.value || "",
+        lastOut: document.getElementById("ft_lastOut")?.value || "",
+        workHours: document.getElementById("ft_workHours")?.value || "",
+        appHours: document.getElementById("ft_appHours")?.value || "",
+        approvedOT: document.getElementById("ft_approvedOT")?.value || "",
+        publicHoliday: document.getElementById("ft_publicHoliday")?.value || "",
+        restDay: document.getElementById("ft_restDay")?.value || "",
+        nightShift: document.getElementById("ft_nightShift")?.value || "",
+        reason: document.getElementById("ft_reason")?.value || "",
+        reportNo: document.getElementById("ft_reportNo")?.value || "",
+        reasonOT: document.getElementById("ft_reasonOT")?.value || "",
+        remark: document.getElementById("ft_remark")?.value || ""
     };
 
-    const result=await callAPI("saveData",data);
-
-    if(result.status){
-
-        alert(result.message);
-
-        resetForm("fullTimerForm");
-
-    }else{
-
-        alert(result.message);
-
+    if (typeof google !== 'undefined' && google.script) {
+        google.script.run
+            .withSuccessHandler(res => {
+                resetForm("fullTimerForm");
+                showSuccess(res.message);
+            })
+            .withFailureHandler(err => {
+                alert(err.message);
+            })
+            .saveData(obj);
+    } else {
+        console.log("Simulated Save Full Timer:", obj);
     }
-
 }
 
-});
+function showSuccess(message) {
+    const successText = document.getElementById("successText");
+    const successModal = document.getElementById("successModal");
+    if (successText) successText.innerHTML = message;
+    if (successModal) successModal.style.display = "flex";
+}
+
+function closeSuccess() {
+    const successModal = document.getElementById("successModal");
+    if (successModal) successModal.style.display = "none";
+}
+
+/* ==========================================
+    SAVE PART TIMER
+========================================== */
+
+function savePartTimer() {
+    if (!validateForm("partTimerForm")) return;
+    calculatePartTimer();
+
+    const obj = {
+        employeeType: "Part Timer",
+        unit: document.getElementById("pt_unit")?.value || "",
+        employeeId: document.getElementById("pt_employeeId")?.value || "",
+        employeeName: document.getElementById("pt_employeeName")?.value || "",
+        actualDate: document.getElementById("pt_actualDate")?.value || "",
+        firstIn: document.getElementById("pt_firstIn")?.value || "",
+        lastOut: document.getElementById("pt_lastOut")?.value || "",
+        workHours: document.getElementById("pt_workHours")?.value || "",
+        floorHours: document.getElementById("pt_floorHours")?.value || "",
+        firstFour: document.getElementById("pt_firstFour")?.value || "",
+        secondFour: document.getElementById("pt_secondFour")?.value || "",
+        afterEight: document.getElementById("pt_afterEight")?.value || "",
+        publicHoliday: document.getElementById("pt_publicHoliday")?.value || "",
+        restDay: document.getElementById("pt_restDay")?.value || "",
+        reason: document.getElementById("pt_reason")?.value || "",
+        reportNo: document.getElementById("pt_reportNo")?.value || "",
+        reasonOT: document.getElementById("pt_reasonOT")?.value || "",
+        remark: document.getElementById("pt_remark")?.value || ""
+    };
+
+    if (typeof google !== 'undefined' && google.script) {
+        google.script.run
+            .withSuccessHandler(res => {
+                resetForm("partTimerForm");
+                showSuccess(res.message);
+            })
+            .withFailureHandler(err => {
+                alert(err.message);
+            })
+            .saveData(obj);
+    } else {
+        console.log("Simulated Save Part Timer:", obj);
+    }
+}
+
+/* ==========================================
+    SAVE FOREIGN WORKER
+========================================== */
+
+function saveForeignWorker() {
+    if (!validateForm("foreignWorkerForm")) return;
+    calculateForeignWorker();
+
+    const obj = {
+        employeeType: "Foreign Worker",
+        om: document.getElementById("fw_om")?.value || "",
+        fm: document.getElementById("fw_fm")?.value || "",
+        unit: document.getElementById("fw_unit")?.value || "",
+        employeeId: document.getElementById("fw_employeeId")?.value || "",
+        employeeName: document.getElementById("fw_employeeName")?.value || "",
+        position: document.getElementById("fw_position")?.value || "",
+        actualDate: document.getElementById("fw_actualDate")?.value || "",
+        firstIn: document.getElementById("fw_firstIn")?.value || "",
+        lastOut: document.getElementById("fw_lastOut")?.value || "",
+        workHours: document.getElementById("fw_workHours")?.value || "",
+        appHours: document.getElementById("fw_appHours")?.value || "",
+        approvedOT: document.getElementById("fw_approvedOT")?.value || "",
+        publicHoliday: document.getElementById("fw_publicHoliday")?.value || "",
+        restDay: document.getElementById("fw_restDay")?.value || "",
+        replacementLeave: document.getElementById("fw_replacementLeave")?.value || "",
+        reason: document.getElementById("fw_reportNo")?.value || "", // diselaraskan
+        reportNo: document.getElementById("fw_reportNo")?.value || "",
+        reasonOT: document.getElementById("fw_reasonOT")?.value || "",
+        remark: document.getElementById("fw_remark")?.value || ""
+    };
+
+    if (typeof google !== 'undefined' && google.script) {
+        google.script.run
+            .withSuccessHandler(res => {
+                resetForm("foreignWorkerForm");
+                showSuccess(res.message);
+            })
+            .withFailureHandler(err => {
+                alert(err.message);
+            })
+            .saveData(obj);
+    } else {
+        console.log("Simulated Save Foreign Worker:", obj);
+    }
+}
+
+/* ==========================================
+    VALIDATION POPUP
+========================================== */
+
+function showValidation(list) {
+    let html = "<b>Please complete :</b><br><br>";
+    list.forEach(item => {
+        html += "• " + item + "<br>";
+    });
+
+    const validationList = document.getElementById("validationList");
+    const validationModal = document.getElementById("validationModal");
+
+    if (validationList) validationList.innerHTML = html;
+    if (validationModal) validationModal.style.display = "flex";
+}
+
+function closeValidation() {
+    const validationModal = document.getElementById("validationModal");
+    if (validationModal) validationModal.style.display = "none";
+}
