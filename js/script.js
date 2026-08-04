@@ -284,6 +284,7 @@ function validateForm(formId){
 document.getElementById("btnSaveFT")
 ?.addEventListener("click",saveFullTimer);
 
+});
 
 document.getElementById("btnSavePT")
 ?.addEventListener("click", () => {
@@ -366,3 +367,5 @@ async function saveFullTimer(){
     }
 
 }
+
+});
