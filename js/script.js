@@ -271,38 +271,66 @@ function resetForm(formId) {
 }
 
 /* ==========================================
-   VALIDATE FORM
+   VALIDATE FORM V2
 ========================================== */
 
-function validateForm(formId) {
+function validateForm(formId){
 
     const form = document.getElementById(formId);
 
-    if (!form) return false;
+    if(!form) return false;
 
     let valid = true;
 
-    const fields = form.querySelectorAll("[data-required='true']");
+    let missingFields = [];
 
-    fields.forEach(field => {
+    const requiredFields = form.querySelectorAll("[data-required='true']");
+
+    requiredFields.forEach(field=>{
 
         field.classList.remove("input-error");
 
         const value = (field.value || "").trim();
 
-        if (value === "") {
+        if(value===""){
+
+            valid = false;
 
             field.classList.add("input-error");
 
-            valid = false;
+            missingFields.push(field.dataset.label);
 
         }
 
     });
 
-    if (!valid) {
+    if(!valid){
 
-        showError("Please complete all required fields.");
+        Swal.fire({
+
+            icon: "error",
+
+            title: "Validation Failed",
+
+            html:
+            "<div style='text-align:left'>" +
+            "<b>Please complete the following field(s):</b><br><br>" +
+
+            missingFields.map(item=>
+
+                "&#8226; " + item
+
+            ).join("<br>") +
+
+            "</div>",
+
+            confirmButtonText:"OK",
+
+            confirmButtonColor:"#d33",
+
+            allowOutsideClick:false
+
+        });
 
     }
 
