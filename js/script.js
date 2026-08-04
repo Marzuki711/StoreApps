@@ -32,27 +32,31 @@ async function callAPI(action, data = {}) {
 
 });
 
-const result = await response.json();
+const text = await response.text();
 
-hideLoading();
+console.log("========== RESPONSE ==========");
+console.log(text);
+console.log("==============================");
 
-return result;
+try{
 
-    } catch (err) {
+    const result = JSON.parse(text);
 
-        hideLoading();
+    hideLoading();
 
-        console.error(err);
+    return result;
 
-        return {
+}catch(err){
 
-            status: false,
+    hideLoading();
 
-            message: err.message
+    return{
 
-        };
+        status:false,
 
-    }
+        message:text
+
+    };
 
 }
 
