@@ -303,6 +303,19 @@ document.getElementById("btnSaveFW")
 
 });
 
+    // Hide semua form
+    showForm("");
+
+    // Employee Type
+    document.getElementById("employeeType")
+        .addEventListener("change", function () {
+
+            showForm(this.value);
+
+        });
+
+});
+
 /* ==========================================
    SAVE FULL TIMER
 ========================================== */
