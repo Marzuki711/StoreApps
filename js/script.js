@@ -38,10 +38,6 @@ hideLoading();
 
 return result;
 
-hideLoading();
-
-return result;
-
     } catch (err) {
 
         hideLoading();
