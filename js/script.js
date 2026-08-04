@@ -1150,28 +1150,17 @@ if ("serviceWorker" in navigator) {
 function showHome(){
 
     document.getElementById("homeContainer").style.display = "block";
-
-    document.getElementById("fullTimerContainer").style.display = "none";
-    document.getElementById("partTimerContainer").style.display = "none";
-    document.getElementById("foreignWorkerContainer").style.display = "none";
+    document.getElementById("otModule").style.display = "none";
 
 }
 
-function openManualOT() {
+function openManualOT(){
 
-    // Hide Home
     document.getElementById("homeContainer").style.display = "none";
+    document.getElementById("otModule").style.display = "block";
 
-    // Show Employee Type Card
-    document.querySelector(".card").style.display = "block";
+    showForm("");
 
-    // Show Form ikut Employee Type yang dipilih
-    const employeeType = document.getElementById("employeeType").value;
-
-    if (employeeType) {
-
-        showForm(employeeType);
-
-    }
+}
 
 }
