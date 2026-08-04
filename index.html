@@ -1,15 +1,50 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="UTF-8">
-<title>Manual OT Claim</title>
+    <meta charset="UTF-8">
+    <title>Manual OT Claim API Test</title>
 </head>
 
 <body>
 
-<h1>GitHub Pages Test</h1>
+<h1>Manual OT Claim</h1>
 
-<p>Jika anda nampak halaman ini, GitHub Pages berfungsi.</p>
+<button onclick="testAPI()">
+    Test API
+</button>
+
+<p id="result"></p>
+
+<script>
+
+const WEB_APP_URL =
+"https://script.google.com/macros/s/AKfycbxU7UJJZZm-VAX7jgkba9d0QfZ93hvJs_Z9OIcIeo0H1Aza7OQUacHjo1L_RzQc9DIj4g/exec";
+
+function testAPI(){
+
+    fetch(WEB_APP_URL,{
+        method:"POST"
+    })
+
+    .then(response=>response.json())
+
+    .then(data=>{
+
+        document.getElementById("result").innerHTML=data.message;
+
+    })
+
+    .catch(error=>{
+
+        document.getElementById("result").innerHTML=error;
+
+    });
+
+}
+
+</script>
 
 </body>
+
 </html>
