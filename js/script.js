@@ -965,9 +965,13 @@ let searchTimer;
 
 function autoSearchEmployee(employeeId){
 
+    console.log("Auto Search:", employeeId);
+
     clearTimeout(searchTimer);
 
     searchTimer = setTimeout(() => {
+
+        console.log("Calling API...");
 
         searchEmployee(employeeId);
 
@@ -978,9 +982,13 @@ function autoSearchEmployee(employeeId){
 document.getElementById("ft_employeeId")
 ?.addEventListener("input", function(){
 
+    console.log("Typing:", this.value);
+
     const id = this.value.trim();
 
     if(id.length >= 8){
+
+        console.log("Searching:", id);
 
         autoSearchEmployee(id);
 
