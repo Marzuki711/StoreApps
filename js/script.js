@@ -57,6 +57,66 @@ async function callAPI(action, data = {}) {
 }
 
 /* ==========================================
+   SWEET ALERT
+========================================== */
+
+function showSuccess(message){
+
+    Swal.fire({
+
+        icon: "success",
+
+        title: "SUCCESS",
+
+        text: message,
+
+        confirmButtonText: "OK",
+
+        confirmButtonColor: "#198754",
+
+        allowOutsideClick: false
+
+    });
+
+}
+
+function showError(message){
+
+    Swal.fire({
+
+        icon: "error",
+
+        title: "VALIDATION",
+
+        text: message,
+
+        confirmButtonText: "OK",
+
+        confirmButtonColor: "#dc3545"
+
+    });
+
+}
+
+function showWarning(message){
+
+    Swal.fire({
+
+        icon: "warning",
+
+        title: "WARNING",
+
+        text: message,
+
+        confirmButtonText: "OK",
+
+        confirmButtonColor: "#ffc107"
+
+    });
+
+}
+
+/* ==========================================
    LOADING
 ========================================== */
 
@@ -242,7 +302,7 @@ function validateForm(formId) {
 
     if (!valid) {
 
-        alert("Please complete all required fields.");
+        showError("Please complete all required fields.");
 
     }
 
@@ -466,7 +526,7 @@ async function saveFullTimer() {
 
     if (result && result.status) {
 
-        alert(result.message || "Saved Successfully");
+        showSuccess("Data Saved Successfully");
 
         resetForm("fullTimerForm");
 
@@ -536,7 +596,7 @@ async function savePartTimer() {
 
     } else {
 
-        alert(result?.message || "Save Failed");
+        showError(result.message); || "Save Failed");
 
     }
 
