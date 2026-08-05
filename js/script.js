@@ -896,6 +896,7 @@ document.addEventListener("DOMContentLoaded", async () => {
    document.getElementById("loginContainer").style.display = "block";
    document.getElementById("homeContainer").style.display = "none";
    document.getElementById("otModule").style.display = "none";
+   document.querySelector(".topbar").style.display = "none";
 
    
     // ==========================
@@ -1146,6 +1147,8 @@ function showHome(){
     // Hide OT
 
     document.getElementById("otModule").style.display = "none";
+
+    document.querySelector(".topbar").style.display = "flex";
 
 }
 
