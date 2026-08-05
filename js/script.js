@@ -883,10 +883,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
    document
    .getElementById("btnLogin")
-   ?.addEventListener(
-   "click",
-   loginSystem
-);
+   ?.addEventListener("click",loginSystem);
 
    document
    .getElementById("btnHome")
