@@ -898,6 +898,8 @@ document.addEventListener("DOMContentLoaded", async () => {
    document.getElementById("otModule").style.display = "none";
    document.querySelector(".topbar").style.display = "none";
 
+   document.body.style.visibility = "visible";
+
    
     // ==========================
     // EMPLOYEE TYPE
