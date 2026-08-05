@@ -1143,8 +1143,10 @@ if ("serviceWorker" in navigator) {
 
 function showHome(){
 
+    document.getElementById("loginContainer").style.display = "block";
+
     // Paparkan Home
-    document.getElementById("homeContainer").style.display = "block";
+    document.getElementById("homeContainer").style.display = "none";
 
     // Sembunyikan Modul OT
     document.getElementById("otModule").style.display = "none";
@@ -1152,7 +1154,7 @@ function showHome(){
 }
 
 function openManualOT(){
-
+     
     document.getElementById("homeContainer").style.display="none";
 
     document.getElementById("otModule").style.display="block";
