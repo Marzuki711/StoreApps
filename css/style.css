@@ -449,6 +449,8 @@ opacity:1;
 
 .topbar{
 
+    display:none;
+
     background:#fff;
 
     border-radius:18px;
