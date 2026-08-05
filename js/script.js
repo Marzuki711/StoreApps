@@ -1136,6 +1136,8 @@ if ("serviceWorker" in navigator) {
 
 function showHome(){
 
+    document.querySelector(".topbar").style.display = "flex";
+   
     // Hide Login
 
     document.getElementById("loginContainer").style.display = "none";
@@ -1147,8 +1149,6 @@ function showHome(){
     // Hide OT
 
     document.getElementById("otModule").style.display = "none";
-
-    document.querySelector(".topbar").style.display = "flex";
 
 }
 
