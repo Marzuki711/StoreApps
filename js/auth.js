@@ -1,48 +1,21 @@
-/*************************************************
- * AUTHENTICATION
- * StoreApps V1
- *************************************************/
-
-let currentUser = null;
-
-/* ==========================================
-   LOGIN
-========================================== */
-
 async function loginSystem(){
 
+    console.log("LOGIN CLICKED");
+
     const username =
-        document.getElementById("loginUsername")
-        .value
-        .trim();
+        document.getElementById("loginUsername").value.trim();
 
     const password =
-        document.getElementById("loginPassword")
-        .value;
+        document.getElementById("loginPassword").value;
 
-    if(username === ""){
-
-        showError("Please enter Username.");
-
-        return;
-
-    }
-
-    if(password === ""){
-
-        showError("Please enter Password.");
-
-        return;
-
-    }
+    console.log(username, password);
 
     const result = await callAPI("login",{
-
-        username:username,
-
-        password:password
-
+        username,
+        password
     });
+
+    console.log("LOGIN RESULT:", result);
 
     if(!result.status){
 
@@ -54,11 +27,6 @@ async function loginSystem(){
 
     currentUser = result;
 
-    // Hide Login
-    document.getElementById("loginContainer")
-        .style.display="none";
-
-    // Show Home
     showHome();
 
 }
