@@ -915,3 +915,71 @@ opacity:1;
     font-size:13px;
 
 }
+
+/* ==========================================
+   TOPBAR RIGHT
+========================================== */
+
+.topbar-right{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+/* ==========================================
+   HEADER BUTTONS
+========================================== */
+
+.top-btn{
+
+    min-width:100px;
+
+    height:42px;
+
+    border:none;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    transition:.25s ease;
+
+}
+
+.top-btn.home{
+
+    background:#F4F4F4;
+
+    color:#444;
+
+    border:1px solid #E5E5E5;
+
+}
+
+.top-btn.home:hover{
+
+    background:#E9E9E9;
+
+}
+
+.top-btn.logout{
+
+    background:#C1121F;
+
+    color:#FFFFFF;
+
+}
+
+.top-btn.logout:hover{
+
+    background:#8E0E17;
+
+}
