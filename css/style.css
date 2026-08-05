@@ -735,3 +735,181 @@ opacity:1;
     font-size:13px;
 
 }
+
+/* ==========================================
+   LOGIN PAGE
+========================================== */
+
+.login-wrapper{
+
+    width:100%;
+
+    min-height:80vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+.login-card{
+
+    width:420px;
+
+    background:#fff;
+
+    border-radius:24px;
+
+    padding:40px;
+
+    box-shadow:0 15px 40px rgba(0,0,0,.12);
+
+    text-align:center;
+
+}
+
+.login-logo{
+
+    display:flex;
+
+    justify-content:center;
+
+    margin-bottom:20px;
+
+}
+
+.login-logo-circle{
+
+    width:90px;
+
+    height:90px;
+
+    border-radius:22px;
+
+    background:linear-gradient(135deg,#C1121F,#8B0000);
+
+    color:#fff;
+
+    font-size:34px;
+
+    font-weight:bold;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    letter-spacing:2px;
+
+    box-shadow:0 10px 30px rgba(193,18,31,.35);
+
+}
+
+.login-card h1{
+
+    margin:10px 0 5px;
+
+    color:#C1121F;
+
+    font-size:34px;
+
+}
+
+.login-subtitle{
+
+    color:#777;
+
+    margin-bottom:30px;
+
+}
+
+.login-form{
+
+    text-align:left;
+
+}
+
+.login-form label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    margin-top:18px;
+
+    font-weight:600;
+
+}
+
+.login-form input{
+
+    width:100%;
+
+    padding:14px;
+
+    border:1px solid #ddd;
+
+    border-radius:12px;
+
+    font-size:15px;
+
+    transition:.25s;
+
+    box-sizing:border-box;
+
+}
+
+.login-form input:focus{
+
+    border-color:#C1121F;
+
+    outline:none;
+
+    box-shadow:0 0 0 3px rgba(193,18,31,.15);
+
+}
+
+.btn-login{
+
+    width:100%;
+
+    margin-top:28px;
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#C1121F;
+
+    color:#fff;
+
+    font-size:16px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.btn-login:hover{
+
+    background:#8B0000;
+
+}
+
+.login-version{
+
+    margin-top:28px;
+
+    color:#999;
+
+    font-size:13px;
+
+}
