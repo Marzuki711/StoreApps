@@ -877,6 +877,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
 
    document
+   .getElementById("btnLogin")
+   ?.addEventListener(
+   "click",
+   loginSystem
+);
+
+   document
    .getElementById("btnHome")
    ?.addEventListener("click",showHome);
 
