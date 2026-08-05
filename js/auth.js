@@ -27,6 +27,11 @@ async function loginSystem(){
 
     currentUser = result;
 
+    sessionStorage.setItem(
+    "currentUser",
+    JSON.stringify(result)
+);
+
     showHome();
 
 }
