@@ -774,11 +774,27 @@ opacity:1;
 
 .login-logo{
 
+    width:84px;
+
+    height:84px;
+
+    margin:0 auto 22px;
+
+    border-radius:22px;
+
+    background:#C1121F;
+
+    color:#FFFFFF;
+
     display:flex;
+
+    align-items:center;
 
     justify-content:center;
 
-    margin-bottom:20px;
+    font-size:38px;
+
+    box-shadow:0 12px 28px rgba(193,18,31,.30);
 
 }
 
