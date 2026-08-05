@@ -889,21 +889,22 @@ document.addEventListener("DOMContentLoaded", async () => {
    .getElementById("btnHome")
    ?.addEventListener("click",showHome);
 
-    // ==========================
-    // SHOW HOME
-    // ==========================
+   // ==========================
+   // FIRST SCREEN
+   // ==========================
 
-    showHome();
+   document.getElementById("loginContainer").style.display = "block";
+   document.getElementById("homeContainer").style.display = "none";
+   document.getElementById("otModule").style.display = "none";
 
+   
     // ==========================
     // EMPLOYEE TYPE
     // ==========================
 
     const employeeType = document.getElementById("employeeType");
-
     employeeType.addEventListener("change", function () {
-
-        showForm(this.value);
+    showForm(this.value);
 
     });
 
@@ -1106,12 +1107,6 @@ function formatEmployeeID(input){
 
 }
 
-if ("serviceWorker" in navigator) {
-
-    navigator.serviceWorker.register("sw.js");
-
-}
-
 /* ==========================================
    REGISTER SERVICE WORKER
 ========================================== */
@@ -1140,12 +1135,16 @@ if ("serviceWorker" in navigator) {
 
 function showHome(){
 
-    document.getElementById("loginContainer").style.display = "block";
+    // Hide Login
 
-    // Paparkan Home
-    document.getElementById("homeContainer").style.display = "none";
+    document.getElementById("loginContainer").style.display = "none";
 
-    // Sembunyikan Modul OT
+    // Show Home
+
+    document.getElementById("homeContainer").style.display = "block";
+
+    // Hide OT
+
     document.getElementById("otModule").style.display = "none";
 
 }
