@@ -1,6 +1,6 @@
 {
-  "name": "StoreHub",
-  "short_name": "StoreHub",
+  "name": "StoreApps",
+  "short_name": "Store Apps",
   "description": "Store Operations Platform",
   "start_url": "./",
   "display": "standalone",
