@@ -857,6 +857,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     // ==========================
 
     await loadComponent(
+        "components/login.html",
+        "loginContainer"
+   );
+   
+    await loadComponent(
         "components/home.html",
         "homeContainer"
     );
