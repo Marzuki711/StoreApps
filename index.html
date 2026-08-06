@@ -71,19 +71,43 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
         Home
     </button>
 
-    <button
-        id="btnChangePassword"
-        class="top-btn home">
-        Change Password
-    </button>
+    <div class="account-menu">
 
     <button
-        id="btnLogout"
-        class="top-btn logout">
-        Logout
+        id="btnAccount"
+        class="top-btn account">
+
+        <i class="fa-solid fa-user-circle"></i>
+
+        <span id="accountName">
+            Account
+        </span>
+
+        <i class="fa-solid fa-chevron-down"></i>
+
     </button>
 
-</div>
+    <div
+        id="accountDropdown"
+        class="account-dropdown">
+
+        <button id="btnChangePassword">
+
+            <i class="fa-solid fa-key"></i>
+
+            Change Password
+
+        </button>
+
+        <button id="btnLogout">
+
+            <i class="fa-solid fa-right-from-bracket"></i>
+
+            Logout
+
+        </button>
+
+    </div>
 
 </div>
 
