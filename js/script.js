@@ -1316,25 +1316,6 @@ document.addEventListener("click",function(){
 
 });
 
-function openChangePassword(){
-
-    document
-        .getElementById("accountDropdown")
-        .classList
-        .remove("show");
-
-    Swal.fire({
-
-        icon:"info",
-
-        title:"Change Password",
-
-        text:"Change Password Module Coming Soon",
-
-        confirmButtonColor:"#C1121F"
-
-    });
-
 }
 
 /* ==========================================================
