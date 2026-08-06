@@ -1311,6 +1311,25 @@ function openChangePassword(){
         .getElementById("changePasswordModal")
         .style.display="flex";
 
+    // ==========================
+    // PASSWORD SHOW / HIDE
+    // ==========================
+
+    initPasswordToggle(
+        "currentPassword",
+        "toggleCurrentPassword"
+    );
+
+    initPasswordToggle(
+        "newPassword",
+        "toggleNewPassword"
+    );
+
+    initPasswordToggle(
+        "confirmPassword",
+        "toggleConfirmPassword"
+    );
+
 }
 
 /* ==========================================================
