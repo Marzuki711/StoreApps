@@ -10,89 +10,62 @@
 
 async function callAPI(action, data = {}) {
 
-   if(!checkInternet()){
+    const controller = new AbortController();
 
-    return {
-        status:false,
-        message:"No Internet"
-    };
+    const timeout = setTimeout(() => {
 
-}
+        controller.abort();
 
-    try {
+    },10000);
 
-        showLoading();
+    try{
 
-        const formData = new URLSearchParams();
+        const formData = new FormData();
 
         formData.append(
             "payload",
             JSON.stringify({
-                action: action,
-                data: data
+                action,
+                data
             })
         );
 
-        console.log("WEB APP URL :", CONFIG.WEB_APP_URL);
-
         const response = await fetch(CONFIG.WEB_APP_URL,{
-
-        method: "POST",
-
-        body: formData,
-
-        redirect: "follow",
-
-        cache: "no-store"
-
+            method:"POST",
+            body:formData,
+            signal:controller.signal
         });
 
-        const text = await response.text();
+        clearTimeout(timeout);
 
-        console.log(response.status);
-        console.log(response.url);
+        if(!response.ok){
 
-        console.log("========== RESPONSE ==========");
-        console.log(text);
-        console.log("==============================");
+            throw new Error("HTTP "+response.status);
 
-        try {
+        }
 
-            const result = JSON.parse(text);
+        const result = await response.json();
 
-            hideLoading();
+        return result;
 
-            return result;
+    }catch(err){
 
-        } catch (err) {
+        clearTimeout(timeout);
 
-            hideLoading();
+        if(err.name==="AbortError"){
 
-            if (text.includes("<!DOCTYPE html")) {
-
-                return {
-                    status: false,
-                    message: "Unable to connect to the server. Please check your internet connection."
-                };
-
-            }
-
-            return {
-                status: false,
-                message: text
+            return{
+                status:false,
+                message:"Server Timeout"
             };
 
         }
 
-    } catch (err) {
+        return{
 
-        hideLoading();
+            status:false,
+            message:err.message
 
-        console.error(err);
-
-        return {
-            status: false,
-            message: err.message
         };
 
     }
