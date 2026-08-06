@@ -982,20 +982,6 @@ opacity:1;
 
 }
 
-/* ==========================================
-   MOBILE RESPONSIVE
-========================================== */
-
-@media screen and (max-width:768px){
-
-    .container{
-
-        width:95%;
-
-        padding:10px;
-
-    }
-
 /* ==========================================================
    PREMIUM ACCOUNT MENU
 ========================================================== */
@@ -1145,6 +1131,20 @@ opacity:1;
     border-top:1px solid #EEEEEE;
 
 }
+
+/* ==========================================
+   MOBILE RESPONSIVE
+========================================== */
+
+@media screen and (max-width:768px){
+
+    .container{
+
+        width:95%;
+
+        padding:10px;
+
+    }
 
 /* ==========================
    MOBILE TOPBAR
