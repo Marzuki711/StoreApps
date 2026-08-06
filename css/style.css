@@ -1312,3 +1312,59 @@ opacity:1;
     color:#C1121F;
 
 }
+
+/* ==========================================
+   SEARCH EMPLOYEE
+========================================== */
+
+.search-box{
+
+    display:flex;
+
+    gap:10px;
+
+    align-items:center;
+
+}
+
+.search-box input{
+
+    flex:1;
+
+}
+
+.btn-search{
+
+    min-width:110px;
+
+    height:48px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#C1121F;
+
+    color:#fff;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.btn-search:hover{
+
+    background:#A30F19;
+
+}
+
+.btn-search i{
+
+    margin-right:6px;
+
+}
