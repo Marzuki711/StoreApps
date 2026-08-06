@@ -23,12 +23,29 @@ data-label="Unit">
 
 <label>Employee ID</label>
 
+<div class="search-box">
+
 <input
 type="text"
 id="pt_employeeId"
 class="form-control"
 data-required="true"
-data-label="Employee ID">
+data-label="Employee ID"
+maxlength="8"
+inputmode="numeric"
+pattern="[0-9]*"
+placeholder="Enter Employee ID">
+
+<button
+type="button"
+id="btnSearchPT"
+class="btn-search">
+
+<i class="fa-solid fa-magnifying-glass"></i>
+
+Search
+
+</button>
 
 </div>
 
