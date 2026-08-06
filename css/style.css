@@ -1270,3 +1270,45 @@ opacity:1;
     background:#D1D5DB;
 
 }
+
+/* ==========================================
+   PASSWORD SHOW / HIDE
+========================================== */
+
+.password-box{
+
+    position:relative;
+
+}
+
+.password-box input{
+
+    padding-right:50px;
+
+}
+
+.password-toggle{
+
+    position:absolute;
+
+    right:18px;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+    cursor:pointer;
+
+    color:#9CA3AF;
+
+    font-size:18px;
+
+    transition:.25s;
+
+}
+
+.password-toggle:hover{
+
+    color:#C1121F;
+
+}
