@@ -272,6 +272,82 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
 
 </div>
 
+<!-- ==========================
+     CHANGE PASSWORD MODAL
+========================== -->
+
+<div id="changePasswordModal" class="modal">
+
+    <div class="modal-box change-password-box">
+
+        <div class="modal-icon">
+
+            <i class="fa-solid fa-key"></i>
+
+        </div>
+
+        <div class="modal-title">
+
+            Change Password
+
+        </div>
+
+        <div class="modal-text">
+
+            Please enter your password details.
+
+        </div>
+
+        <div class="login-form">
+
+            <label>Current Password</label>
+
+            <input
+                type="password"
+                id="currentPassword"
+                placeholder="Current Password">
+
+            <label>New Password</label>
+
+            <input
+                type="password"
+                id="newPassword"
+                placeholder="New Password">
+
+            <label>Confirm Password</label>
+
+            <input
+                type="password"
+                id="confirmPassword"
+                placeholder="Confirm Password">
+
+        </div>
+
+        <div style="display:flex;gap:12px;margin-top:30px;">
+
+            <button
+                class="btn btn-secondary"
+                onclick="closeChangePassword()">
+
+                Cancel
+
+            </button>
+
+            <button
+                class="btn btn-success"
+                id="btnSavePassword"
+                onclick="changePassword()">
+
+                Save
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
 </div> <!-- container -->
 
 <script src="js/config.js?v=3.2"></script>
