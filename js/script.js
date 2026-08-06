@@ -51,7 +51,7 @@ async function callAPI(action, data = {}) {
 
         return {
             status: false,
-            message: "Server configuration error. Please contact the administrator."
+            message: "Unable to connect to the server. Please check your internet connection."
         };
 
     }
