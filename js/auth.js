@@ -20,9 +20,13 @@ async function loginSystem(){
 
     }
 
+    // ==========================
+    // CHECK INTERNET
+    // ==========================
+
     if(!checkInternet()){
 
-    return;
+        return;
 
     }
 
@@ -45,16 +49,55 @@ async function loginSystem(){
     // LOGIN API
     // ==========================
 
-    const result = await callAPI("login",{
-        username,
-        password
-    });
+    let result;
+
+    try{
+
+        result = await callAPI("login",{
+            username,
+            password
+        });
+
+    }catch(err){
+
+        hideLoading();
+
+        btn.disabled = false;
+
+        btn.innerHTML = "LOGIN";
+
+        showError("Unable to connect to server.");
+
+        return;
+
+    }
 
     console.log("LOGIN RESULT:", result);
 
+    // ==========================
+    // NO RESPONSE
+    // ==========================
+
+    if(!result){
+
+        hideLoading();
+
+        btn.disabled = false;
+
+        btn.innerHTML = "LOGIN";
+
+        showError("No response from server.");
+
+        return;
+
+    }
+
+    // ==========================
+    // RESTORE BUTTON
+    // ==========================
+
     hideLoading();
 
-    // Restore button
     btn.disabled = false;
 
     btn.innerHTML = "LOGIN";
