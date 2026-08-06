@@ -1142,20 +1142,19 @@ if ("serviceWorker" in navigator) {
 
 function showHome(){
 
-    document.querySelector(".topbar").style.display = "flex";
-   
-    // Hide Login
+    const topbar = document.querySelector(".topbar");
+
+    topbar.style.display = "flex";
+
+    if(window.innerWidth <= 768){
+        topbar.style.flexDirection = "column";
+    }else{
+        topbar.style.flexDirection = "row";
+    }
 
     document.getElementById("loginContainer").style.display = "none";
-
-    // Show Home
-
     document.getElementById("homeContainer").style.display = "block";
-
-    // Hide OT
-
     document.getElementById("otModule").style.display = "none";
-
 }
 
 function openManualOT(){
