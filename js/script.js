@@ -10,6 +10,15 @@
 
 async function callAPI(action, data = {}) {
 
+   if(!checkInternet()){
+
+    return {
+        status:false,
+        message:"No Internet"
+    };
+
+}
+
     try {
 
         showLoading();
@@ -261,6 +270,24 @@ function hideLoading() {
         loading.style.display = "none";
 
     }
+
+}
+
+function checkInternet() {
+
+    if (!navigator.onLine) {
+
+        Swal.fire({
+            icon: "error",
+            title: "No Internet Connection",
+            text: "Please check your internet connection and try again.",
+            confirmButtonColor: "#C1121F"
+        });
+
+        return false;
+    }
+
+    return true;
 
 }
 
