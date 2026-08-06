@@ -37,30 +37,34 @@ async function callAPI(action, data = {}) {
 
         try {
 
-            const result = JSON.parse(text);
+    const result = JSON.parse(text);
 
-            hideLoading();
+    hideLoading();
 
-            return result;
+    return result;
 
-        catch (err) {
+} catch (err) {
 
     hideLoading();
 
     if (text.includes("<!DOCTYPE html")) {
+
         return {
             status: false,
-            message: "Unable to connect to the server. Please check your internet connection."
+            message: "Server configuration error. Please contact the administrator."
         };
+
     }
 
     return {
         status: false,
         message: text
     };
-}
 
-}
+}   
+
+}   
+
 
 /* ==========================================
    SEARCH EMPLOYEE
