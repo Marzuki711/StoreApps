@@ -950,6 +950,15 @@ document.addEventListener("DOMContentLoaded", async () => {
    ?.addEventListener("click",openChangePassword);
 
    // ==========================
+   // PASSWORD SHOW / HIDE
+   // ==========================
+
+    initPasswordToggle(
+    "loginPassword",
+    "toggleLoginPassword"
+    );
+
+   // ==========================
    // FIRST SCREEN
    // ==========================
 
