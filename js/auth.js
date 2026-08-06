@@ -20,6 +20,12 @@ async function loginSystem(){
 
     }
 
+    if(!checkInternet()){
+
+    return;
+
+    }
+
     // ==========================
     // BUTTON LOADING
     // ==========================
