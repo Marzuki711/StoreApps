@@ -34,11 +34,21 @@ async function callAPI(action, data = {}) {
         );
 
         const response = await fetch(CONFIG.WEB_APP_URL, {
-            method: "POST",
-            body: formData
+
+        method: "POST",
+
+        body: formData,
+
+        redirect: "follow",
+
+        cache: "no-store"
+
         });
 
         const text = await response.text();
+
+        console.log(response.status);
+        console.log(response.url);
 
         console.log("========== RESPONSE ==========");
         console.log(text);
