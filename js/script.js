@@ -43,29 +43,22 @@ async function callAPI(action, data = {}) {
 
             return result;
 
-        } catch (err) {
+        catch (err) {
 
-            hideLoading();
+    hideLoading();
 
-            return {
-                status:false,
-                message:text
-            };
-
-        }
-
-    } catch (err) {
-
-        hideLoading();
-
-        console.error(err);
-
+    if (text.includes("<!DOCTYPE html")) {
         return {
-            status:false,
-            message:err.message
+            status: false,
+            message: "Server configuration error. Please contact the administrator."
         };
-
     }
+
+    return {
+        status: false,
+        message: text
+    };
+}
 
 }
 
