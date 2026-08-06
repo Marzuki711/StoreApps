@@ -1360,3 +1360,37 @@ opacity:1;
     color:#8B0000;
 
 }
+
+/* ==========================
+   SEARCH LOADING
+========================== */
+
+.search-icon.loading{
+
+    pointer-events:none;
+
+    color:#999;
+
+}
+
+.search-icon.loading i{
+
+    animation:searchSpin .8s linear infinite;
+
+}
+
+@keyframes searchSpin{
+
+    from{
+
+        transform:rotate(0deg);
+
+    }
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
