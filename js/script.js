@@ -928,6 +928,10 @@ document.addEventListener("DOMContentLoaded", async () => {
    ?.addEventListener("click",showHome);
 
    document
+   .getElementById("btnChangePassword")
+   ?.addEventListener("click",openChangePassword);
+
+   document
    .getElementById("btnLogout")
    ?.addEventListener("click",logout);
 
@@ -1267,6 +1271,17 @@ function logout(){
 
         });
 
+    });
+
+}
+
+function openChangePassword(){
+
+    Swal.fire({
+        icon:"info",
+        title:"Change Password",
+        text:"Change Password Module Coming Soon",
+        confirmButtonColor:"#C1121F"
     });
 
 }
