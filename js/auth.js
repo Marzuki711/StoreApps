@@ -8,25 +8,54 @@ async function loginSystem(){
     const password =
         document.getElementById("loginPassword").value;
 
-    console.log(username, password);
+    // ==========================
+    // VALIDATION
+    // ==========================
+
+    if(username === "" || password === ""){
+
+        showError("Please enter Username and Password.");
+
+        return;
+
+    }
+
+    // ==========================
+    // BUTTON LOADING
+    // ==========================
+
+    const btn = document.getElementById("btnLogin");
+
+    btn.disabled = true;
+
+    btn.innerHTML = `
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        Signing In...
+    `;
+
+    showLoading();
+
+    // ==========================
+    // LOGIN API
+    // ==========================
 
     const result = await callAPI("login",{
         username,
         password
     });
 
-    const btn=document.getElementById("btnLogin");
-
-    btn.disabled=true;
-
-    btn.innerHTML=`
-    <i class="fa-solid fa-spinner fa-spin"></i>
-    Signing In...
-    `;
-
-    showLoading();
-
     console.log("LOGIN RESULT:", result);
+
+    hideLoading();
+
+    // Restore button
+    btn.disabled = false;
+
+    btn.innerHTML = "LOGIN";
+
+    // ==========================
+    // LOGIN FAILED
+    // ==========================
 
     if(!result.status){
 
@@ -36,12 +65,16 @@ async function loginSystem(){
 
     }
 
+    // ==========================
+    // LOGIN SUCCESS
+    // ==========================
+
     currentUser = result;
 
     sessionStorage.setItem(
-    "currentUser",
-    JSON.stringify(result)
-);
+        "currentUser",
+        JSON.stringify(result)
+    );
 
     showHome();
 
