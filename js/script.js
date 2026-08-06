@@ -101,70 +101,147 @@ async function callAPI(action, data = {}) {
 
 
 /* ==========================================
-   SEARCH EMPLOYEE
+   SEARCH EMPLOYEE V3 STABLE
 ========================================== */
 
 async function searchEmployee(employeeId){
 
-    console.log("searchEmployee()", employeeId);
+    console.log("SEARCH :", employeeId);
 
-    if(!employeeId) return;
-
-    const result = await callAPI("searchEmployee",{
-        employeeId: employeeId
-    });
-
-    console.log("API RESULT:", result);
-
-    if(!result.status){
-
-    const employeeType = document.getElementById("employeeType").value;
-
-    if(employeeType === "Full Timer"){
-
-        document.getElementById("ft_unit").value = "";
-        document.getElementById("ft_employeeName").value = "";
-        document.getElementById("ft_position").selectedIndex = 0;
-
-    }
-
-    else if(employeeType === "Part Timer"){
-
-        document.getElementById("pt_unit").value = "";
-        document.getElementById("pt_employeeName").value = "";
-
-    }
-
-    else if(employeeType === "Foreign Worker"){
-
-        document.getElementById("fw_unit").value = "";
-        document.getElementById("fw_employeeName").value = "";
-        document.getElementById("fw_position").selectedIndex = 0;
-        document.getElementById("fw_om").value = "";
-        document.getElementById("fw_fm").value = "";
-
-    }
-
-    showError(result.message);
-
-    return;
-
-}
+    // ==========================
+    // EMPLOYEE TYPE
+    // ==========================
 
     const employeeType =
         document.getElementById("employeeType").value;
 
     // ==========================
+    // SEARCH BUTTON
+    // ==========================
+
+    let btn = null;
+
+    switch(employeeType){
+
+        case "Full Timer":
+
+            btn = document.getElementById("btnSearchFT");
+
+            break;
+
+        case "Part Timer":
+
+            btn = document.getElementById("btnSearchPT");
+
+            break;
+
+        case "Foreign Worker":
+
+            btn = document.getElementById("btnSearchFW");
+
+            break;
+
+    }
+
+    // ==========================
+    // BUTTON LOADING
+    // ==========================
+
+    if(btn){
+
+        btn.disabled = true;
+
+        btn.classList.add("loading");
+
+        btn.innerHTML = `
+            <i class="fa-solid fa-spinner fa-spin"></i>
+        `;
+
+    }
+
+    // ==========================
+    // EMPTY EMPLOYEE ID
+    // ==========================
+
+    if(employeeId===""){
+
+        restoreSearchButton(btn);
+
+        showError("Please enter Employee ID.");
+
+        return;
+
+    }
+
+    // ==========================
+    // API
+    // ==========================
+
+    let result;
+
+    try{
+
+        result = await callAPI("searchEmployee",{
+
+            employeeId:employeeId
+
+        });
+
+    }catch(err){
+
+        restoreSearchButton(btn);
+
+        console.error(err);
+
+        showError("Unable to connect to server.");
+
+        return;
+
+    }
+
+    console.log(result);
+
+    if(!result){
+
+        restoreSearchButton(btn);
+
+        showError("No response from server.");
+
+        return;
+
+    }
+
+    // ==========================
+    // NOT FOUND
+    // ==========================
+
+    if(!result.status){
+
+        clearEmployeeInfo(employeeType);
+
+        restoreSearchButton(btn);
+
+        showError(result.message);
+
+        return;
+
+    }
+
+    // ==========================
     // FULL TIMER
     // ==========================
 
-    if(employeeType === "Full Timer"){
+    if(employeeType==="Full Timer"){
 
         document.getElementById("ft_unit").value = result.unit;
+
         document.getElementById("ft_employeeName").value = result.employeeName;
+
         document.getElementById("ft_position").value = result.position;
 
         calculateFullTimer();
+
+        document.getElementById("ft_actualDate").focus();
 
     }
 
@@ -172,10 +249,13 @@ async function searchEmployee(employeeId){
     // PART TIMER
     // ==========================
 
-    else if(employeeType === "Part Timer"){
+    else if(employeeType==="Part Timer"){
 
         document.getElementById("pt_unit").value = result.unit;
+
         document.getElementById("pt_employeeName").value = result.employeeName;
+
+        document.getElementById("pt_actualDate").focus();
 
     }
 
@@ -183,19 +263,228 @@ async function searchEmployee(employeeId){
     // FOREIGN WORKER
     // ==========================
 
-    else if(employeeType === "Foreign Worker"){
+    else{
 
         document.getElementById("fw_unit").value = result.unit;
+
         document.getElementById("fw_employeeName").value = result.employeeName;
+
         document.getElementById("fw_position").value = result.position;
+
         document.getElementById("fw_om").value = result.om;
+
         document.getElementById("fw_fm").value = result.fm;
 
         calculateForeignWorker();
 
+        document.getElementById("fw_actualDate").focus();
+
+    }
+
+    // ==========================
+    // SUCCESS ICON
+    // ==========================
+
+    if(btn){
+
+        btn.innerHTML = `
+            <i class="fa-solid fa-check"></i>
+        `;
+
+        btn.style.color="#16A34A";
+
+    }
+
+    setTimeout(()=>{
+
+        restoreSearchButton(btn);
+
+    },800);
+
+}
+
+/* ==========================================
+   RESTORE SEARCH BUTTON
+========================================== */
+
+function restoreSearchButton(btn){
+
+    if(!btn){
+
+        return;
+
+    }
+
+    btn.disabled = false;
+
+    btn.classList.remove("loading");
+
+    btn.style.color = "";
+
+    btn.innerHTML = `
+        <i class="fa-solid fa-magnifying-glass"></i>
+    `;
+
+}
+
+/* ==========================================
+   CLEAR EMPLOYEE INFO
+========================================== */
+
+function clearEmployeeInfo(employeeType){
+
+    switch(employeeType){
+
+        case "Full Timer":
+
+            document.getElementById("ft_unit").value = "";
+
+            document.getElementById("ft_employeeName").value = "";
+
+            document.getElementById("ft_position").selectedIndex = 0;
+
+            document.getElementById("ft_employeeId").focus();
+
+            break;
+
+        case "Part Timer":
+
+            document.getElementById("pt_unit").value = "";
+
+            document.getElementById("pt_employeeName").value = "";
+
+            document.getElementById("pt_employeeId").focus();
+
+            break;
+
+        case "Foreign Worker":
+
+            document.getElementById("fw_unit").value = "";
+
+            document.getElementById("fw_employeeName").value = "";
+
+            document.getElementById("fw_position").selectedIndex = 0;
+
+            document.getElementById("fw_om").value = "";
+
+            document.getElementById("fw_fm").value = "";
+
+            document.getElementById("fw_employeeId").focus();
+
+            break;
+
     }
 
 }
+
+/* ==========================================
+   EMPLOYEE SEARCH BUTTON V3
+========================================== */
+
+// ==========================
+// FULL TIMER
+// ==========================
+
+document
+.getElementById("btnSearchFT")
+?.addEventListener("click",()=>{
+
+    searchEmployee(
+
+        document
+        .getElementById("ft_employeeId")
+        .value
+        .trim()
+
+    );
+
+});
+
+document
+.getElementById("ft_employeeId")
+?.addEventListener("keydown",(e)=>{
+
+    if(e.key==="Enter"){
+
+        e.preventDefault();
+
+        document
+        .getElementById("btnSearchFT")
+        .click();
+
+    }
+
+});
+
+// ==========================
+// PART TIMER
+// ==========================
+
+document
+.getElementById("btnSearchPT")
+?.addEventListener("click",()=>{
+
+    searchEmployee(
+
+        document
+        .getElementById("pt_employeeId")
+        .value
+        .trim()
+
+    );
+
+});
+
+document
+.getElementById("pt_employeeId")
+?.addEventListener("keydown",(e)=>{
+
+    if(e.key==="Enter"){
+
+        e.preventDefault();
+
+        document
+        .getElementById("btnSearchPT")
+        .click();
+
+    }
+
+});
+
+// ==========================
+// FOREIGN WORKER
+// ==========================
+
+document
+.getElementById("btnSearchFW")
+?.addEventListener("click",()=>{
+
+    searchEmployee(
+
+        document
+        .getElementById("fw_employeeId")
+        .value
+        .trim()
+
+    );
+
+});
+
+document
+.getElementById("fw_employeeId")
+?.addEventListener("keydown",(e)=>{
+
+    if(e.key==="Enter"){
+
+        e.preventDefault();
+
+        document
+        .getElementById("btnSearchFW")
+        .click();
+
+    }
+
+});
 
 /* ==========================================
    SWEET ALERT
@@ -816,7 +1105,7 @@ async function savePartTimer() {
 
     if (result && result.status) {
 
-        alert(result.message || "Saved Successfully");
+        showSuccess("Data Saved Successfully");
 
         resetForm("partTimerForm");
 
@@ -1166,6 +1455,10 @@ document
 
 function numberOnly(input, maxLength){
 
+    if(!input){
+        return;
+    }
+
     input.addEventListener("input", function(){
 
         // Buang semua selain nombor
@@ -1187,6 +1480,10 @@ function numberOnly(input, maxLength){
 ========================================== */
 
 function formatEmployeeID(input){
+
+    if(!input){
+        return;
+    }
 
     input.addEventListener("blur", function(){
 
