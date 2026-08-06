@@ -129,6 +129,15 @@ async function loginSystem(){
 
 }
 
+document.addEventListener("DOMContentLoaded",()=>{
+
+    initPasswordToggle(
+        "loginPassword",
+        "toggleLoginPassword"
+    );
+
+});
+
 /* ==========================================
    CHANGE PASSWORD
 ========================================== */
