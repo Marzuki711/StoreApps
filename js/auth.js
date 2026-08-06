@@ -15,6 +15,17 @@ async function loginSystem(){
         password
     });
 
+    const btn=document.getElementById("btnLogin");
+
+    btn.disabled=true;
+
+    btn.innerHTML=`
+    <i class="fa-solid fa-spinner fa-spin"></i>
+    Signing In...
+    `;
+
+    showLoading();
+
     console.log("LOGIN RESULT:", result);
 
     if(!result.status){
