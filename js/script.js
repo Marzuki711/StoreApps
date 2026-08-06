@@ -273,18 +273,19 @@ function hideLoading() {
 
 }
 
-function checkInternet() {
+function checkInternet(){
 
-    if (!navigator.onLine) {
+    if(!navigator.onLine){
 
         Swal.fire({
-            icon: "error",
-            title: "No Internet Connection",
-            text: "Please check your internet connection and try again.",
-            confirmButtonColor: "#C1121F"
+            icon:"error",
+            title:"No Internet Connection",
+            text:"Please check your internet connection and try again.",
+            confirmButtonColor:"#C1121F"
         });
 
         return false;
+
     }
 
     return true;
