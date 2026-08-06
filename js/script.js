@@ -1281,12 +1281,14 @@ function logout(){
 
 function openChangePassword(){
 
-    Swal.fire({
-        icon:"info",
-        title:"Change Password",
-        text:"Change Password Module Coming Soon",
-        confirmButtonColor:"#C1121F"
-    });
+    document
+        .getElementById("accountDropdown")
+        ?.classList
+        .remove("show");
+
+    document
+        .getElementById("changePasswordModal")
+        .style.display="flex";
 
 }
 
@@ -1332,5 +1334,29 @@ function openChangePassword(){
         confirmButtonColor:"#C1121F"
 
     });
+
+}
+
+/* ==========================================================
+   CHANGE PASSWORD MODAL
+========================================================== */
+
+function closeChangePassword(){
+
+    document
+        .getElementById("changePasswordModal")
+        .style.display="none";
+
+    document
+        .getElementById("currentPassword")
+        .value="";
+
+    document
+        .getElementById("newPassword")
+        .value="";
+
+    document
+        .getElementById("confirmPassword")
+        .value="";
 
 }
