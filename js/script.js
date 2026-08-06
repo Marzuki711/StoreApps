@@ -37,31 +37,44 @@ async function callAPI(action, data = {}) {
 
         try {
 
-    const result = JSON.parse(text);
+            const result = JSON.parse(text);
 
-    hideLoading();
+            hideLoading();
 
-    return result;
+            return result;
 
-} catch (err) {
+        } catch (err) {
 
-    hideLoading();
+            hideLoading();
 
-    if (text.includes("<!DOCTYPE html")) {
+            if (text.includes("<!DOCTYPE html")) {
+
+                return {
+                    status: false,
+                    message: "Unable to connect to the server. Please check your internet connection."
+                };
+
+            }
+
+            return {
+                status: false,
+                message: text
+            };
+
+        }
+
+    } catch (err) {
+
+        hideLoading();
+
+        console.error(err);
 
         return {
             status: false,
-            message: "Unable to connect to the server. Please check your internet connection."
+            message: err.message
         };
 
     }
-
-    return {
-        status: false,
-        message: text
-    };
-
-}   
 
 }   
 
