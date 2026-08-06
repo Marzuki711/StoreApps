@@ -128,3 +128,107 @@ async function loginSystem(){
     showHome();
 
 }
+
+/* ==========================================
+   CHANGE PASSWORD
+========================================== */
+
+async function changePassword(){
+
+    const currentPassword =
+        document.getElementById("currentPassword").value.trim();
+
+    const newPassword =
+        document.getElementById("newPassword").value.trim();
+
+    const confirmPassword =
+        document.getElementById("confirmPassword").value.trim();
+
+    // ==========================
+    // VALIDATION
+    // ==========================
+
+    if(currentPassword===""){
+
+        showError("Please enter Current Password.");
+
+        return;
+
+    }
+
+    if(newPassword===""){
+
+        showError("Please enter New Password.");
+
+        return;
+
+    }
+
+    if(confirmPassword===""){
+
+        showError("Please confirm your New Password.");
+
+        return;
+
+    }
+
+    if(newPassword!==confirmPassword){
+
+        showError("New Password and Confirm Password do not match.");
+
+        return;
+
+    }
+
+    if(newPassword.length<6){
+
+        showError("Password must be at least 6 characters.");
+
+        return;
+
+    }
+
+    if(currentPassword===newPassword){
+
+        showError("New Password cannot be the same as Current Password.");
+
+        return;
+
+    }
+
+    const btn=document.getElementById("btnSavePassword");
+
+    btn.disabled=true;
+
+    btn.innerHTML=`
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        Saving...
+    `;
+
+    const result=await callAPI("changePassword",{
+
+        username:currentUser.username,
+
+        currentPassword,
+
+        newPassword
+
+    });
+
+    btn.disabled=false;
+
+    btn.innerHTML="Save";
+
+    if(!result.status){
+
+        showError(result.message);
+
+        return;
+
+    }
+
+    showSuccess(result.message);
+
+    closeChangePassword();
+
+}
