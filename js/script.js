@@ -33,7 +33,9 @@ async function callAPI(action, data = {}) {
             })
         );
 
-        const response = await fetch(CONFIG.WEB_APP_URL, {
+        console.log("WEB APP URL :", CONFIG.WEB_APP_URL);
+
+        const response = await fetch(CONFIG.WEB_APP_URL,{
 
         method: "POST",
 
