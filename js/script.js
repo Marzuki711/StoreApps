@@ -928,12 +928,16 @@ document.addEventListener("DOMContentLoaded", async () => {
    ?.addEventListener("click",showHome);
 
    document
-   .getElementById("btnChangePassword")
-   ?.addEventListener("click",openChangePassword);
-
-   document
    .getElementById("btnLogout")
    ?.addEventListener("click",logout);
+
+   document
+   .getElementById("btnAccount")
+   ?.addEventListener("click",toggleAccountMenu);
+
+   document
+   .getElementById("btnChangePassword")
+   ?.addEventListener("click",openChangePassword);
 
    // ==========================
    // FIRST SCREEN
@@ -1282,6 +1286,51 @@ function openChangePassword(){
         title:"Change Password",
         text:"Change Password Module Coming Soon",
         confirmButtonColor:"#C1121F"
+    });
+
+}
+
+/* ==========================================================
+   ACCOUNT MENU
+========================================================== */
+
+function toggleAccountMenu(e){
+
+    e.stopPropagation();
+
+    document
+        .getElementById("accountDropdown")
+        .classList
+        .toggle("show");
+
+}
+
+document.addEventListener("click",function(){
+
+    document
+        .getElementById("accountDropdown")
+        ?.classList
+        .remove("show");
+
+});
+
+function openChangePassword(){
+
+    document
+        .getElementById("accountDropdown")
+        .classList
+        .remove("show");
+
+    Swal.fire({
+
+        icon:"info",
+
+        title:"Change Password",
+
+        text:"Change Password Module Coming Soon",
+
+        confirmButtonColor:"#C1121F"
+
     });
 
 }
