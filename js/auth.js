@@ -196,28 +196,61 @@ async function changePassword(){
 
     }
 
-    const btn=document.getElementById("btnSavePassword");
+    const btn =
+        document.getElementById("btnSavePassword");
 
-    btn.disabled=true;
+    btn.disabled = true;
 
-    btn.innerHTML=`
+    btn.innerHTML = `
         <i class="fa-solid fa-spinner fa-spin"></i>
         Saving...
     `;
 
-    const result=await callAPI("changePassword",{
+    showLoading();
 
-        username:currentUser.username,
+    let result;
 
-        currentPassword,
+    try{
 
-        newPassword
+        result = await callAPI("changePassword",{
 
-    });
+            username: currentUser.username,
 
-    btn.disabled=false;
+            currentPassword,
 
-    btn.innerHTML="Save";
+            newPassword
+
+        });
+
+    }catch(err){
+
+        hideLoading();
+
+        btn.disabled = false;
+
+        btn.innerHTML = "Save";
+
+        console.error(err);
+
+        showError("Unable to connect to server.");
+
+        return;
+
+    }
+
+    hideLoading();
+
+    btn.disabled = false;
+
+    btn.innerHTML = "Save";
+
+    if(!result){
+
+        showError("No response from server.");
+
+        return;
+
+    }
 
     if(!result.status){
 
