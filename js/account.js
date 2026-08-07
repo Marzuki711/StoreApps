@@ -73,6 +73,8 @@ function openChangePassword(){
     document
         .getElementById("changePasswordModal")
         .style.display="flex";
+
+   }
    
 /* ==========================================================
    CHANGE PASSWORD MODAL
