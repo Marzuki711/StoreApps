@@ -20,34 +20,6 @@ async function searchEmployee(employeeId){
         document.getElementById("employeeType").value;
 
     // ==========================
-    // SEARCH BUTTON
-    // ==========================
-
-    let btn = null;
-
-    switch(employeeType){
-
-        case "Full Timer":
-
-            btn = document.getElementById("btnSearchFT");
-
-            break;
-
-        case "Part Timer":
-
-            btn = document.getElementById("btnSearchPT");
-
-            break;
-
-        case "Foreign Worker":
-
-            btn = document.getElementById("btnSearchFW");
-
-            break;
-
-    }
-
-    // ==========================
     // BUTTON LOADING
     // ==========================
 
