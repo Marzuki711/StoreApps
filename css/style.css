@@ -1395,3 +1395,117 @@ opacity:1;
 
 }
 
+
+
+
+
+/* =====================================================
+   V5 PREMIUM FORM LAYOUT
+=====================================================*/
+
+.card{
+    border-radius:18px;
+    padding:28px;
+    box-shadow:0 10px 30px rgba(15,23,42,.08);
+}
+
+.form-header{
+    margin-bottom:22px;
+    border-bottom:1px solid #eceff4;
+    padding-bottom:14px;
+}
+
+.form-header h2{
+    font-size:30px;
+    color:#111827;
+    margin:0;
+    font-weight:700;
+}
+
+.form-subtitle{
+    margin-top:6px;
+    color:#6B7280;
+    font-size:14px;
+}
+
+.row{
+    display:grid !important;
+    grid-template-columns:repeat(12,minmax(0,1fr));
+    gap:18px;
+    margin-bottom:18px;
+}
+
+.col-12{grid-column:span 12;}
+.col-8{grid-column:span 8;}
+.col-7{grid-column:span 7;}
+.col-6{grid-column:span 6;}
+.col-5{grid-column:span 5;}
+.col-4{grid-column:span 4;}
+.col-3{grid-column:span 3;}
+
+label{
+    font-size:13px;
+    color:#374151;
+    margin-bottom:8px;
+}
+
+.form-control,
+input,
+select,
+textarea{
+    width:100%;
+    min-height:46px;
+    border:1px solid #D1D5DB;
+    border-radius:12px;
+    padding:12px 14px;
+    background:#fff;
+    transition:.25s;
+}
+
+textarea{
+    min-height:120px;
+}
+
+.form-control:focus,
+input:focus,
+select:focus,
+textarea:focus{
+    border-color:#C1121F;
+    box-shadow:0 0 0 3px rgba(193,18,31,.12);
+}
+
+.search-box{
+    position:relative;
+}
+
+.search-icon{
+    right:12px;
+}
+
+.btn{
+    height:48px;
+    border-radius:12px;
+    font-weight:700;
+}
+
+.btn-block{
+    width:100%;
+}
+
+@media(max-width:768px){
+
+.row{
+grid-template-columns:1fr;
+}
+
+.col-3,
+.col-4,
+.col-5,
+.col-6,
+.col-7,
+.col-8,
+.col-12{
+grid-column:span 1;
+}
+
+}
