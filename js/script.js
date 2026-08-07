@@ -1333,8 +1333,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("btnSaveFW")
         ?.addEventListener("click",saveForeignWorker);
 
-    }
-
 });
 
 /* ==========================================
