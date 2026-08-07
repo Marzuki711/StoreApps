@@ -84,16 +84,27 @@ function closeChangePassword(){
         .getElementById("changePasswordModal")
         .style.display="none";
 
-    document
-        .getElementById("currentPassword")
-        .value="";
+    document.getElementById("currentPassword").value="";
+    document.getElementById("newPassword").value="";
+    document.getElementById("confirmPassword").value="";
+
+    ["currentPassword","newPassword","confirmPassword"].forEach(id=>{
+
+        const input=document.getElementById(id);
+
+        if(input){
+            input.type="password";
+        }
+
+    });
 
     document
-        .getElementById("newPassword")
-        .value="";
+        .querySelectorAll("#changePasswordModal .password-toggle")
+        .forEach(icon=>{
 
-    document
-        .getElementById("confirmPassword")
-        .value="";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+
+        });
 
 }
