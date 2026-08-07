@@ -132,3 +132,28 @@ function initPasswordToggle(inputId, iconId){
     };
 
 }
+
+/* ==========================================================
+   ACCOUNT MENU
+========================================================== */
+
+function toggleAccountMenu(e){
+
+    e.stopPropagation();
+
+    document
+        .getElementById("accountDropdown")
+        .classList
+        .toggle("show");
+
+}
+
+document.addEventListener("click",function(){
+
+    document
+        .getElementById("accountDropdown")
+        ?.classList
+        .remove("show");
+
+});
+
