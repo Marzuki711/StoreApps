@@ -570,26 +570,32 @@ function checkInternet(){
    LOAD HTML COMPONENT
 ========================================== */
 
+const componentCache = new Map();
+
 async function loadComponent(file, target) {
 
     try {
 
-        const response = await fetch(file);
+        let html = componentCache.get(file);
 
-        if (!response.ok) {
+        if (!html) {
 
-            throw new Error(file + " not found");
+            const response = await fetch(file);
+
+            if (!response.ok) {
+                throw new Error(file + " not found");
+            }
+
+            html = await response.text();
+
+            componentCache.set(file, html);
 
         }
-
-        const html = await response.text();
 
         const container = document.getElementById(target);
 
         if (container) {
-
             container.innerHTML = html;
-
         }
 
     } catch (err) {
@@ -1168,30 +1174,34 @@ document.addEventListener("DOMContentLoaded", async () => {
     // LOAD COMPONENT
     // ==========================
 
-    await loadComponent(
+    await Promise.all([
+
+    loadComponent(
         "components/login.html",
         "loginContainer"
-   );
-   
-    await loadComponent(
+    ),
+
+    loadComponent(
         "components/home.html",
         "homeContainer"
-    );
+    ),
 
-    await loadComponent(
+    loadComponent(
         "components/fulltimer.html",
         "fullTimerContainer"
-    );
+    ),
 
-    await loadComponent(
+    loadComponent(
         "components/parttimer.html",
         "partTimerContainer"
-    );
+    ),
 
-    await loadComponent(
+    loadComponent(
         "components/foreignworker.html",
         "foreignWorkerContainer"
-    );
+    )
+
+]);
 
    document
    .getElementById("btnLogin")
@@ -1323,102 +1333,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("btnSaveFW")
         ?.addEventListener("click",saveForeignWorker);
 
-// ==========================
-// EMPLOYEE SEARCH BUTTON
-// ==========================
-
-// ---------- Full Timer ----------
-
-document
-.getElementById("btnSearchFT")
-?.addEventListener("click",()=>{
-
-    searchEmployee(
-        document
-        .getElementById("ft_employeeId")
-        .value
-        .trim()
-    );
-
-});
-
-document
-.getElementById("ft_employeeId")
-?.addEventListener("keydown",(e)=>{
-
-    if(e.key==="Enter"){
-
-        e.preventDefault();
-
-        document
-        .getElementById("btnSearchFT")
-        .click();
-
     }
-
-});
-
-// ---------- Part Timer ----------
-
-document
-.getElementById("btnSearchPT")
-?.addEventListener("click",()=>{
-
-    searchEmployee(
-        document
-        .getElementById("pt_employeeId")
-        .value
-        .trim()
-    );
-
-});
-
-document
-.getElementById("pt_employeeId")
-?.addEventListener("keydown",(e)=>{
-
-    if(e.key==="Enter"){
-
-        e.preventDefault();
-
-        document
-        .getElementById("btnSearchPT")
-        .click();
-
-    }
-
-});
-
-// ---------- Foreign Worker ----------
-
-document
-.getElementById("btnSearchFW")
-?.addEventListener("click",()=>{
-
-    searchEmployee(
-        document
-        .getElementById("fw_employeeId")
-        .value
-        .trim()
-    );
-
-});
-
-document
-.getElementById("fw_employeeId")
-?.addEventListener("keydown",(e)=>{
-
-    if(e.key==="Enter"){
-
-        e.preventDefault();
-
-        document
-        .getElementById("btnSearchFW")
-        .click();
-
-    }
-
-});
 
 });
 
