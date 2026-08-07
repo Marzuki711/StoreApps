@@ -41,15 +41,15 @@ async function loginSystem(){
         JSON.stringify(result)
     );
 
-    showHome();
+    requestAnimationFrame(showHome);
 
     setTimeout(() => {
 
     callAPI("updateLastLogin",{
-        username:currentUser.username
-    });
+        username: currentUser.username
+    }).catch(console.error);
 
-},100);
+},300);
 
 }
 
