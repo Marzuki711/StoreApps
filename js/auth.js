@@ -218,42 +218,6 @@ async function changePassword(){
 
 }
 
-/* ==========================================
-   SHOW / HIDE PASSWORD
-========================================== */
-
-function initPasswordToggle(inputId, iconId){
-
-    const input = document.getElementById(inputId);
-    const icon  = document.getElementById(iconId);
-
-    if(!input || !icon){
-        return;
-    }
-
-    // Elak duplicate event
-    icon.onclick = function(){
-
-        if(input.type === "password"){
-
-            input.type = "text";
-
-            icon.classList.remove("fa-eye");
-            icon.classList.add("fa-eye-slash");
-
-        }else{
-
-            input.type = "password";
-
-            icon.classList.remove("fa-eye-slash");
-            icon.classList.add("fa-eye");
-
-        }
-
-    };
-
-}
-
 /* ==========================================================
    PASSWORD TOGGLE
 ========================================================== */
