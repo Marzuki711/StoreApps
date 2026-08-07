@@ -43,6 +43,14 @@ async function loginSystem(){
 
     showHome();
 
+    setTimeout(() => {
+
+    callAPI("updateLastLogin",{
+        username:currentUser.username
+    });
+
+},100);
+
 }
 
 document.addEventListener("DOMContentLoaded",()=>{
