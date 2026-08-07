@@ -791,16 +791,7 @@ if(txtFT){
    .getElementById("btnChangePassword")
    ?.addEventListener("click",openChangePassword);
 
-   // ==========================
-   // PASSWORD SHOW / HIDE
-   // ==========================
-
-    initPasswordToggle(
-    "loginPassword",
-    "toggleLoginPassword"
-    );
-
-   // ==========================
+     // ==========================
    // FIRST SCREEN
    // ==========================
 
@@ -1005,26 +996,5 @@ function openManualOT(){
     document.getElementById("employeeType").value="Full Timer";
 
     showForm("Full Timer");
-
-}
-
-   // ==========================
-    // PASSWORD SHOW / HIDE
-    // ==========================
-
-    initPasswordToggle(
-        "currentPassword",
-        "toggleCurrentPassword"
-    );
-
-    initPasswordToggle(
-        "newPassword",
-        "toggleNewPassword"
-    );
-
-    initPasswordToggle(
-        "confirmPassword",
-        "toggleConfirmPassword"
-    );
 
 }
