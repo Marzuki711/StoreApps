@@ -637,41 +637,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 ]);
 
-   // ==========================
-// SEARCH FULL TIMER
-// ==========================
-
-const btnSearchFT = document.getElementById("btnSearchFT");
-
-if(btnSearchFT){
-
-    btnSearchFT.addEventListener("click",()=>{
-
-        searchEmployee(
-            document.getElementById("ft_employeeId").value.trim()
-        );
-
-    });
-
-}
-
-const txtFT = document.getElementById("ft_employeeId");
-
-if(txtFT){
-
-    txtFT.addEventListener("keydown",(e)=>{
-
-        if(e.key==="Enter"){
-
-            e.preventDefault();
-
-            btnSearchFT.click();
-
-        }
-
-    });
-
-}
+   registerEmployeeEvents();
+   initAllPasswordToggle();
 
    document
    .getElementById("btnLogin")
