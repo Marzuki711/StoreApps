@@ -12,6 +12,21 @@ async function searchEmployee(employeeId){
 
     console.log("SEARCH :", employeeId);
 
+    const btn =
+        event?.currentTarget ||
+        document.activeElement;
+
+    if(btn){
+        btn.disabled = true;
+        btn.innerHTML =
+            '<i class="fa-solid fa-spinner fa-spin"></i>';
+    }
+
+    showLoading();
+
+   hideLoading();
+   restoreSearchButton(btn);
+
     // ==========================
     // EMPLOYEE TYPE
     // ==========================
