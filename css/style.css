@@ -1396,262 +1396,171 @@ opacity:1;
 }
 
 
+
 /* ==========================================================
-   OT CLAIM FORM LAYOUT - LOCKED FUNCTIONALITY
-   Layout only. Does NOT change IDs, names, data-* attributes,
-   buttons, events, calculations, validation or API behaviour.
+   MANUAL OT CLAIM - PREMIUM FORM LAYOUT V2
+   LOCK: UI ONLY - NO HTML / JS / API CHANGES
+========================================================== */
+#fullTimerForm,#partTimerForm,#foreignWorkerForm{width:100%;max-width:100%;padding:26px;border:1px solid #E7EAF0;box-shadow:0 8px 28px rgba(15,23,42,.08);}
+#fullTimerForm>h2,#partTimerForm>h2,#foreignWorkerForm>h2{margin:0 0 22px!important;padding-bottom:14px;border-bottom:1px solid #EEF1F5;color:#1F2937;font-size:22px;font-weight:700;letter-spacing:.2px;}
+#fullTimerForm .row,#partTimerForm .row,#foreignWorkerForm .row{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px;width:100%;margin:0 0 16px;align-items:end;}
+#fullTimerForm .row .row,#partTimerForm .row .row,#foreignWorkerForm .row .row{grid-column:1/-1;margin:0;}
+#fullTimerForm .col-12,#partTimerForm .col-12,#foreignWorkerForm .col-12,#fullTimerForm .col-6,#partTimerForm .col-6,#foreignWorkerForm .col-6,#fullTimerForm .col-5,#partTimerForm .col-5,#foreignWorkerForm .col-5,#fullTimerForm .col-7,#partTimerForm .col-7,#foreignWorkerForm .col-7,#fullTimerForm .col-4,#partTimerForm .col-4,#foreignWorkerForm .col-4,#fullTimerForm .col-3,#partTimerForm .col-3,#foreignWorkerForm .col-3{min-width:0;width:auto;flex:none;}
+#fullTimerForm .col-12,#partTimerForm .col-12,#foreignWorkerForm .col-12{grid-column:span 12;}#fullTimerForm .col-7,#partTimerForm .col-7,#foreignWorkerForm .col-7{grid-column:span 7;}#fullTimerForm .col-6,#partTimerForm .col-6,#foreignWorkerForm .col-6{grid-column:span 6;}#fullTimerForm .col-5,#partTimerForm .col-5,#foreignWorkerForm .col-5{grid-column:span 5;}#fullTimerForm .col-4,#partTimerForm .col-4,#foreignWorkerForm .col-4{grid-column:span 4;}#fullTimerForm .col-3,#partTimerForm .col-3,#foreignWorkerForm .col-3{grid-column:span 3;}
+#fullTimerForm> .row> .col-6,#partTimerForm> .row> .col-6,#foreignWorkerForm> .row> .col-6{grid-column:span 6;}
+#fullTimerForm label,#partTimerForm label,#foreignWorkerForm label{margin:0 0 7px;color:#374151;font-size:13px;line-height:1.25;}
+#fullTimerForm .form-control,#partTimerForm .form-control,#foreignWorkerForm .form-control{min-height:44px;padding:10px 12px;border:1px solid #D9DEE7;border-radius:10px;background:#fff;color:#1F2937;font-size:14px;transition:border-color .2s,box-shadow .2s,background .2s;}
+#fullTimerForm .form-control:focus,#partTimerForm .form-control:focus,#foreignWorkerForm .form-control:focus{border-color:#C1121F;box-shadow:0 0 0 3px rgba(193,18,31,.10);background:#fff;}
+#fullTimerForm .form-control[readonly],#partTimerForm .form-control[readonly],#foreignWorkerForm .form-control[readonly]{background:#F8FAFC;color:#334155;font-weight:600;}
+#fullTimerForm textarea.form-control,#partTimerForm textarea.form-control,#foreignWorkerForm textarea.form-control{min-height:96px;line-height:1.5;}
+#fullTimerForm .search-box,#partTimerForm .search-box,#foreignWorkerForm .search-box{display:flex;align-items:stretch;width:100%;}
+#fullTimerForm .search-box .search-input,#partTimerForm .search-box .search-input,#foreignWorkerForm .search-box .search-input{min-width:0;flex:1 1 auto;border-radius:10px 0 0 10px;}
+#fullTimerForm .search-box .search-icon,#partTimerForm .search-box .search-icon,#foreignWorkerForm .search-box .search-icon{flex:0 0 46px;width:46px;min-height:44px;border:1px solid #C1121F;border-left:0;border-radius:0 10px 10px 0;background:#C1121F;color:#fff;cursor:pointer;}
+#fullTimerForm #ft_workHours,#fullTimerForm #ft_appHours,#fullTimerForm #ft_approvedOT,#foreignWorkerForm #fw_workHours,#foreignWorkerForm #fw_appHours,#foreignWorkerForm #fw_approvedOT,#partTimerForm #pt_workHours,#partTimerForm #pt_floorHours,#partTimerForm #pt_firstFour,#partTimerForm #pt_secondFour,#partTimerForm #pt_afterEight{text-align:center;}
+#fullTimerForm .row.mt-4,#partTimerForm .row.mt-4,#foreignWorkerForm .row.mt-4{margin-top:8px!important;margin-bottom:0;}
+#fullTimerForm .btn,#partTimerForm .btn,#foreignWorkerForm .btn{min-height:46px;width:100%;border-radius:10px;font-size:14px;letter-spacing:.2px;}
+@media screen and (max-width:768px){#fullTimerForm,#partTimerForm,#foreignWorkerForm{padding:18px;border-radius:12px;}#fullTimerForm .row,#partTimerForm .row,#foreignWorkerForm .row{grid-template-columns:1fr;gap:12px;margin-bottom:12px;}#fullTimerForm .row .row,#partTimerForm .row .row,#foreignWorkerForm .row .row{grid-column:1;grid-template-columns:1fr;}#fullTimerForm .col-12,#partTimerForm .col-12,#foreignWorkerForm .col-12,#fullTimerForm .col-7,#partTimerForm .col-7,#foreignWorkerForm .col-7,#fullTimerForm .col-6,#partTimerForm .col-6,#foreignWorkerForm .col-6,#fullTimerForm .col-5,#partTimerForm .col-5,#foreignWorkerForm .col-5,#fullTimerForm .col-4,#partTimerForm .col-4,#foreignWorkerForm .col-4,#fullTimerForm .col-3,#partTimerForm .col-3,#foreignWorkerForm .col-3{grid-column:span 1;}}
+
+/* ==========================================================
+   MANUAL OT CLAIM - FINAL FORM REFINEMENT V4
+   LOCK: CSS ONLY - NO HTML / JS / API CHANGES
+   1. Search button = icon only, transparent background
+   2. Reason For Overtime and Remark = vertical, top-to-bottom
 ========================================================== */
 
-#fullTimerForm,
-#partTimerForm,
-#foreignWorkerForm{
+/* ---------- SEARCH EMPLOYEE: ICON ONLY ---------- */
+#fullTimerForm .search-box,
+#partTimerForm .search-box,
+#foreignWorkerForm .search-box{
+    position:relative;
+    display:block;
     width:100%;
-    max-width:100%;
-    padding:28px;
-    border-radius:16px;
-    background:#fff;
-    box-shadow:0 6px 22px rgba(0,0,0,.08);
 }
 
-#fullTimerForm h2,
-#partTimerForm h2,
-#foreignWorkerForm h2{
-    margin:0 0 24px !important;
-    padding-bottom:14px;
-    border-bottom:1px solid #e5e7eb;
-    color:#1f2937;
-    font-size:22px;
-    font-weight:700;
+#fullTimerForm .search-box .search-input,
+#partTimerForm .search-box .search-input,
+#foreignWorkerForm .search-box .search-input{
+    width:100%;
+    padding-right:48px;
+    border-radius:10px;
 }
 
-/* The existing HTML contains nested .row elements.
-   display:contents lets the existing fields form one clean grid
-   without changing the HTML or JavaScript structure. */
-#fullTimerForm > .row,
-#fullTimerForm .row,
-#partTimerForm > .row,
-#partTimerForm .row,
-#foreignWorkerForm > .row,
-#foreignWorkerForm .row{
-    display:contents;
+#fullTimerForm .search-box .search-icon,
+#partTimerForm .search-box .search-icon,
+#foreignWorkerForm .search-box .search-icon{
+    position:absolute;
+    right:8px;
+    top:50%;
+    transform:translateY(-50%);
+    width:36px;
+    height:36px;
+    min-height:36px;
+    padding:0;
+    margin:0;
+    border:0;
+    border-radius:50%;
+    background:transparent;
+    color:#1F2937;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    font-size:18px;
+    line-height:1;
+    transition:background .2s ease,color .2s ease,transform .2s ease;
 }
 
-#fullTimerForm,
-#partTimerForm,
-#foreignWorkerForm{
-    grid-template-columns:repeat(12,minmax(0,1fr));
-    column-gap:18px;
-    row-gap:18px;
-    align-items:end;
+#fullTimerForm .search-box .search-icon:hover,
+#partTimerForm .search-box .search-icon:hover,
+#foreignWorkerForm .search-box .search-icon:hover{
+    background:#F3F4F6;
+    color:#C1121F;
 }
 
-/* The existing JS switches forms from display:none to display:block.
-   Override only the visible state so the original hidden state remains intact. */
-#fullTimerForm[style*="display: block"],
-#partTimerForm[style*="display: block"],
-#foreignWorkerForm[style*="display: block"]{
-    display:grid !important;
+#fullTimerForm .search-box .search-icon:active,
+#partTimerForm .search-box .search-icon:active,
+#foreignWorkerForm .search-box .search-icon:active{
+    transform:translateY(-50%) scale(.94);
 }
 
-#fullTimerForm h2,
-#partTimerForm h2,
-#foreignWorkerForm h2{
-    grid-column:1 / -1;
+#fullTimerForm .search-box .search-icon.loading,
+#partTimerForm .search-box .search-icon.loading,
+#foreignWorkerForm .search-box .search-icon.loading{
+    background:transparent;
+    color:#6B7280;
+    border:0;
 }
 
-/* Standard Bootstrap-style widths, kept compatible with the
-   existing HTML classes. */
-#fullTimerForm .col-6,
-#partTimerForm .col-6,
-#foreignWorkerForm .col-6{
-    grid-column:span 6;
+/* ---------- REASON FOR OVERTIME + REMARK: VERTICAL ---------- */
+#fullTimerForm .row:has(#ft_reasonOT),
+#partTimerForm .row:has(#pt_reasonOT),
+#foreignWorkerForm .row:has(#fw_reasonOT){
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    gap:14px;
+    margin-bottom:16px;
+}
+
+#fullTimerForm .row:has(#ft_reasonOT) > div,
+#partTimerForm .row:has(#pt_reasonOT) > div,
+#foreignWorkerForm .row:has(#fw_reasonOT) > div{
+    width:100%;
     min-width:0;
+    flex:0 0 100%;
 }
 
-#fullTimerForm .col-4,
-#partTimerForm .col-4,
-#foreignWorkerForm .col-4{
-    grid-column:span 4;
-    min-width:0;
+#fullTimerForm .row:has(#ft_reasonOT) label,
+#partTimerForm .row:has(#pt_reasonOT) label,
+#foreignWorkerForm .row:has(#fw_reasonOT) label{
+    display:block;
+    margin-bottom:7px;
 }
 
-#fullTimerForm .col-3,
-#partTimerForm .col-3,
-#foreignWorkerForm .col-3{
-    grid-column:span 3;
-    min-width:0;
-}
-
-/* Full Timer / Foreign Worker: make Reason + Report Number balanced. */
-#fullTimerForm .col-7,
-#foreignWorkerForm .col-7{
-    grid-column:span 8;
-    min-width:0;
-}
-
-#fullTimerForm .col-5,
-#foreignWorkerForm .col-5{
-    grid-column:span 4;
-    min-width:0;
-}
-
-/* Overtime reason + remark: keep both fields aligned from the top. */
-#fullTimerForm .col-7,
-#fullTimerForm .col-5,
-#partTimerForm .col-7,
-#partTimerForm .col-5,
-#foreignWorkerForm .col-7,
-#foreignWorkerForm .col-5{
-    align-self:start;
+#fullTimerForm #ft_reasonOT,
+#partTimerForm #pt_reasonOT,
+#foreignWorkerForm #fw_reasonOT{
+    width:100%;
 }
 
 #fullTimerForm #ft_remark,
 #partTimerForm #pt_remark,
 #foreignWorkerForm #fw_remark{
-    min-height:110px;
-}
-
-#fullTimerForm label,
-#partTimerForm label,
-#foreignWorkerForm label{
-    margin-bottom:7px;
-    color:#374151;
-    font-size:13px;
-    font-weight:600;
-}
-
-#fullTimerForm .form-control,
-#partTimerForm .form-control,
-#foreignWorkerForm .form-control{
     width:100%;
-    min-height:44px;
-    padding:10px 12px;
-    border:1px solid #d1d5db;
-    border-radius:9px;
-    background:#fff;
-    color:#111827;
-    transition:border-color .2s,box-shadow .2s;
-}
-
-#fullTimerForm .form-control:focus,
-#partTimerForm .form-control:focus,
-#foreignWorkerForm .form-control:focus{
-    border-color:#C1121F;
-    box-shadow:0 0 0 3px rgba(193,18,31,.10);
-}
-
-#fullTimerForm .form-control[readonly],
-#partTimerForm .form-control[readonly],
-#foreignWorkerForm .form-control[readonly]{
-    background:#f8fafc;
-    color:#374151;
-    font-weight:600;
-}
-
-#fullTimerForm textarea.form-control,
-#partTimerForm textarea.form-control,
-#foreignWorkerForm textarea.form-control{
     min-height:110px;
     resize:vertical;
 }
 
-/* Search input + search button remain fully functional. */
-#fullTimerForm .search-box,
-#partTimerForm .search-box,
-#foreignWorkerForm .search-box{
-    position:relative;
-    width:100%;
+/* Keep the action buttons aligned after the vertical fields */
+#fullTimerForm .row:has(#btnSaveFT),
+#partTimerForm .row:has(#btnSavePT),
+#foreignWorkerForm .row:has(#btnSaveFW){
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+    margin-top:4px!important;
 }
 
-#fullTimerForm .search-input,
-#partTimerForm .search-input,
-#foreignWorkerForm .search-input{
-    padding-right:48px;
+#fullTimerForm .row:has(#btnSaveFT) > div,
+#partTimerForm .row:has(#btnSavePT) > div,
+#foreignWorkerForm .row:has(#btnSaveFW) > div{
+    width:auto;
+    min-width:0;
 }
 
-#fullTimerForm .search-icon,
-#partTimerForm .search-icon,
-#foreignWorkerForm .search-icon{
-    position:absolute;
-    top:0;
-    right:0;
-    width:44px;
-    height:44px;
-    border:0;
-    border-radius:0 9px 9px 0;
-    background:transparent;
-    color:#C1121F;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    transition:background .2s,color .2s,transform .1s;
-}
+/* ---------- MOBILE ---------- */
+@media screen and (max-width:768px){
 
-#fullTimerForm .search-icon:hover,
-#partTimerForm .search-icon:hover,
-#foreignWorkerForm .search-icon:hover{
-    background:#f8fafc;
-    color:#8B0000;
-}
-
-#fullTimerForm .search-icon:active,
-#partTimerForm .search-icon:active,
-#foreignWorkerForm .search-icon:active{
-    transform:scale(.97);
-}
-
-/* Buttons */
-#fullTimerForm #btnSaveFT,
-#fullTimerForm #btnResetFT,
-#partTimerForm #btnSavePT,
-#partTimerForm #btnResetPT,
-#foreignWorkerForm #btnSaveFW,
-#foreignWorkerForm #btnResetFW{
-    width:100%;
-    min-height:46px;
-    border-radius:9px;
-}
-
-/* Error state remains controlled by the existing JS. */
-#fullTimerForm .input-error,
-#partTimerForm .input-error,
-#foreignWorkerForm .input-error{
-    border-color:#DC2626 !important;
-    box-shadow:0 0 0 2px rgba(220,38,38,.08);
-}
-
-/* Mobile */
-@media (max-width:768px){
-
-    #fullTimerForm,
-    #partTimerForm,
-    #foreignWorkerForm{
-        grid-template-columns:1fr;
-        padding:20px;
-        column-gap:0;
-        row-gap:16px;
+    #fullTimerForm .row:has(#ft_reasonOT),
+    #partTimerForm .row:has(#pt_reasonOT),
+    #foreignWorkerForm .row:has(#fw_reasonOT){
+        gap:12px;
     }
 
-    #fullTimerForm h2,
-    #partTimerForm h2,
-    #foreignWorkerForm h2,
-    #fullTimerForm .col-6,
-    #partTimerForm .col-6,
-    #foreignWorkerForm .col-6,
-    #fullTimerForm .col-4,
-    #partTimerForm .col-4,
-    #foreignWorkerForm .col-4,
-    #fullTimerForm .col-3,
-    #partTimerForm .col-3,
-    #foreignWorkerForm .col-3,
-    #fullTimerForm .col-7,
-    #partTimerForm .col-7,
-    #foreignWorkerForm .col-7,
-    #fullTimerForm .col-5,
-    #partTimerForm .col-5,
-    #foreignWorkerForm .col-5{
-        grid-column:1 / -1;
+    #fullTimerForm .row:has(#btnSaveFT),
+    #partTimerForm .row:has(#btnSavePT),
+    #foreignWorkerForm .row:has(#btnSaveFW){
+        grid-template-columns:1fr;
     }
 
 }
