@@ -1421,12 +1421,153 @@ opacity:1;
 #fullTimerForm .btn,#partTimerForm .btn,#foreignWorkerForm .btn{min-height:46px;width:100%;border-radius:10px;font-size:14px;letter-spacing:.2px;}
 @media screen and (max-width:768px){#fullTimerForm,#partTimerForm,#foreignWorkerForm{padding:18px;border-radius:12px;}#fullTimerForm .row,#partTimerForm .row,#foreignWorkerForm .row{grid-template-columns:1fr;gap:12px;margin-bottom:12px;}#fullTimerForm .row .row,#partTimerForm .row .row,#foreignWorkerForm .row .row{grid-column:1;grid-template-columns:1fr;}#fullTimerForm .col-12,#partTimerForm .col-12,#foreignWorkerForm .col-12,#fullTimerForm .col-7,#partTimerForm .col-7,#foreignWorkerForm .col-7,#fullTimerForm .col-6,#partTimerForm .col-6,#foreignWorkerForm .col-6,#fullTimerForm .col-5,#partTimerForm .col-5,#foreignWorkerForm .col-5,#fullTimerForm .col-4,#partTimerForm .col-4,#foreignWorkerForm .col-4,#fullTimerForm .col-3,#partTimerForm .col-3,#foreignWorkerForm .col-3{grid-column:span 1;}}
 
+
 /* ==========================================================
-   MANUAL OT CLAIM - FINAL FORM REFINEMENT V4
+   MANUAL OT CLAIM - FINAL FORM REFINEMENT V5
    LOCK: CSS ONLY - NO HTML / JS / API CHANGES
-   1. Search button = icon only, transparent background
-   2. Reason For Overtime and Remark = vertical, top-to-bottom
+
+   Root fixes:
+   1. Preserve the existing nested .row structure in the HTML.
+   2. Only the INNER row containing Reason For Overtime is stacked.
+   3. Search button is icon-only and transparent.
+   4. Remark stays inside the form and below Reason For Overtime.
 ========================================================== */
+
+/* ---------- FORM GRID / NESTED ROW STABILITY ---------- */
+#fullTimerForm,
+#partTimerForm,
+#foreignWorkerForm{
+    width:100%;
+    max-width:100%;
+    padding:26px;
+    border:1px solid #E7EAF0;
+    box-shadow:0 8px 28px rgba(15,23,42,.08);
+    overflow:visible;
+}
+
+#fullTimerForm > h2,
+#partTimerForm > h2,
+#foreignWorkerForm > h2{
+    margin:0 0 22px !important;
+    padding-bottom:14px;
+    border-bottom:1px solid #EEF1F5;
+    color:#1F2937;
+    font-size:22px;
+    font-weight:700;
+    letter-spacing:.2px;
+}
+
+/* The original HTML contains nested .row elements.
+   Keep every nested row at full width so its fields never collapse. */
+#fullTimerForm .row,
+#partTimerForm .row,
+#foreignWorkerForm .row{
+    display:grid;
+    grid-template-columns:repeat(12,minmax(0,1fr));
+    gap:16px;
+    width:100%;
+    margin:0 0 16px;
+    align-items:end;
+}
+
+#fullTimerForm .row .row,
+#partTimerForm .row .row,
+#foreignWorkerForm .row .row{
+    grid-column:1 / -1;
+    width:100%;
+    min-width:0;
+    margin:0 0 16px;
+}
+
+/* Column sizing is controlled only inside the three OT forms. */
+#fullTimerForm .col-12,
+#partTimerForm .col-12,
+#foreignWorkerForm .col-12,
+#fullTimerForm .col-7,
+#partTimerForm .col-7,
+#foreignWorkerForm .col-7,
+#fullTimerForm .col-6,
+#partTimerForm .col-6,
+#foreignWorkerForm .col-6,
+#fullTimerForm .col-5,
+#partTimerForm .col-5,
+#foreignWorkerForm .col-5,
+#fullTimerForm .col-4,
+#partTimerForm .col-4,
+#foreignWorkerForm .col-4,
+#fullTimerForm .col-3,
+#partTimerForm .col-3,
+#foreignWorkerForm .col-3{
+    min-width:0;
+    width:auto;
+    flex:none;
+}
+
+#fullTimerForm .col-12,
+#partTimerForm .col-12,
+#foreignWorkerForm .col-12{grid-column:span 12;}
+
+#fullTimerForm .col-7,
+#partTimerForm .col-7,
+#foreignWorkerForm .col-7{grid-column:span 7;}
+
+#fullTimerForm .col-6,
+#partTimerForm .col-6,
+#foreignWorkerForm .col-6{grid-column:span 6;}
+
+#fullTimerForm .col-5,
+#partTimerForm .col-5,
+#foreignWorkerForm .col-5{grid-column:span 5;}
+
+#fullTimerForm .col-4,
+#partTimerForm .col-4,
+#foreignWorkerForm .col-4{grid-column:span 4;}
+
+#fullTimerForm .col-3,
+#partTimerForm .col-3,
+#foreignWorkerForm .col-3{grid-column:span 3;}
+
+#fullTimerForm label,
+#partTimerForm label,
+#foreignWorkerForm label{
+    margin:0 0 7px;
+    color:#374151;
+    font-size:13px;
+    line-height:1.25;
+}
+
+#fullTimerForm .form-control,
+#partTimerForm .form-control,
+#foreignWorkerForm .form-control{
+    width:100%;
+    min-width:0;
+    min-height:44px;
+    padding:10px 12px;
+    border:1px solid #D9DEE7;
+    border-radius:10px;
+    background:#fff;
+    color:#1F2937;
+    font-size:14px;
+    box-sizing:border-box;
+    transition:border-color .2s,box-shadow .2s,background .2s;
+}
+
+#fullTimerForm .form-control:focus,
+#partTimerForm .form-control:focus,
+#foreignWorkerForm .form-control:focus{
+    border-color:#C1121F;
+    box-shadow:0 0 0 3px rgba(193,18,31,.10);
+    background:#fff;
+    outline:none;
+}
+
+#fullTimerForm .form-control[readonly],
+#partTimerForm .form-control[readonly],
+#foreignWorkerForm .form-control[readonly]{
+    background:#F8FAFC;
+    color:#334155;
+    font-weight:600;
+}
 
 /* ---------- SEARCH EMPLOYEE: ICON ONLY ---------- */
 #fullTimerForm .search-box,
@@ -1435,13 +1576,16 @@ opacity:1;
     position:relative;
     display:block;
     width:100%;
+    min-width:0;
 }
 
 #fullTimerForm .search-box .search-input,
 #partTimerForm .search-box .search-input,
 #foreignWorkerForm .search-box .search-input{
+    display:block;
     width:100%;
-    padding-right:48px;
+    min-width:0;
+    padding-right:50px;
     border-radius:10px;
 }
 
@@ -1449,9 +1593,10 @@ opacity:1;
 #partTimerForm .search-box .search-icon,
 #foreignWorkerForm .search-box .search-icon{
     position:absolute;
-    right:8px;
+    right:6px;
     top:50%;
     transform:translateY(-50%);
+    z-index:2;
     width:36px;
     height:36px;
     min-height:36px;
@@ -1459,22 +1604,23 @@ opacity:1;
     margin:0;
     border:0;
     border-radius:50%;
-    background:transparent;
-    color:#1F2937;
+    background:transparent !important;
+    color:#1F2937 !important;
     display:flex;
     align-items:center;
     justify-content:center;
     cursor:pointer;
-    font-size:18px;
+    font-size:17px;
     line-height:1;
-    transition:background .2s ease,color .2s ease,transform .2s ease;
+    box-shadow:none !important;
+    outline:none;
 }
 
 #fullTimerForm .search-box .search-icon:hover,
 #partTimerForm .search-box .search-icon:hover,
 #foreignWorkerForm .search-box .search-icon:hover{
-    background:#F3F4F6;
-    color:#C1121F;
+    background:#F3F4F6 !important;
+    color:#C1121F !important;
 }
 
 #fullTimerForm .search-box .search-icon:active,
@@ -1483,38 +1629,45 @@ opacity:1;
     transform:translateY(-50%) scale(.94);
 }
 
+#fullTimerForm .search-box .search-icon i,
+#partTimerForm .search-box .search-icon i,
+#foreignWorkerForm .search-box .search-icon i{
+    pointer-events:none;
+}
+
 #fullTimerForm .search-box .search-icon.loading,
 #partTimerForm .search-box .search-icon.loading,
 #foreignWorkerForm .search-box .search-icon.loading{
-    background:transparent;
-    color:#6B7280;
-    border:0;
+    background:transparent !important;
+    color:#6B7280 !important;
+    border:0 !important;
 }
 
-/* ---------- REASON FOR OVERTIME + REMARK: VERTICAL ---------- */
-#fullTimerForm .row:has(#ft_reasonOT),
-#partTimerForm .row:has(#pt_reasonOT),
-#foreignWorkerForm .row:has(#fw_reasonOT){
+/* ---------- REASON FOR OVERTIME + REMARK ----------
+   IMPORTANT: target ONLY the INNER row.
+   The previous V4 selector targeted the outer row too,
+   which caused Unit / Employee ID and other fields to stack.
+--------------------------------------------------------- */
+#fullTimerForm .row .row:has(#ft_reasonOT),
+#partTimerForm .row .row:has(#pt_reasonOT),
+#foreignWorkerForm .row .row:has(#fw_reasonOT){
     display:flex;
     flex-direction:column;
     align-items:stretch;
     gap:14px;
-    margin-bottom:16px;
+    width:100%;
+    grid-column:1 / -1;
+    margin:0 0 16px;
 }
 
-#fullTimerForm .row:has(#ft_reasonOT) > div,
-#partTimerForm .row:has(#pt_reasonOT) > div,
-#foreignWorkerForm .row:has(#fw_reasonOT) > div{
+#fullTimerForm .row .row:has(#ft_reasonOT) > div,
+#partTimerForm .row .row:has(#pt_reasonOT) > div,
+#foreignWorkerForm .row .row:has(#fw_reasonOT) > div{
     width:100%;
     min-width:0;
+    max-width:none;
     flex:0 0 100%;
-}
-
-#fullTimerForm .row:has(#ft_reasonOT) label,
-#partTimerForm .row:has(#pt_reasonOT) label,
-#foreignWorkerForm .row:has(#fw_reasonOT) label{
-    display:block;
-    margin-bottom:7px;
+    box-sizing:border-box;
 }
 
 #fullTimerForm #ft_reasonOT,
@@ -1526,41 +1679,111 @@ opacity:1;
 #fullTimerForm #ft_remark,
 #partTimerForm #pt_remark,
 #foreignWorkerForm #fw_remark{
+    display:block;
     width:100%;
+    min-width:0;
     min-height:110px;
+    box-sizing:border-box;
     resize:vertical;
 }
 
-/* Keep the action buttons aligned after the vertical fields */
-#fullTimerForm .row:has(#btnSaveFT),
-#partTimerForm .row:has(#btnSavePT),
-#foreignWorkerForm .row:has(#btnSaveFW){
+/* Part Timer and Foreign Worker already have separate rows
+   for Reason For Overtime and Remark. Keep both full width. */
+#partTimerForm .row:has(> .col-12 > #pt_reasonOT),
+#foreignWorkerForm .row:has(> .col-12 > #fw_reasonOT),
+#partTimerForm .row:has(> .col-12 > #pt_remark),
+#foreignWorkerForm .row:has(> .col-12 > #fw_remark){
+    width:100%;
+}
+
+/* ---------- ACTION BUTTONS ---------- */
+#fullTimerForm .row .row:has(#btnSaveFT),
+#partTimerForm .row .row:has(#btnSavePT),
+#foreignWorkerForm .row .row:has(#btnSaveFW){
     display:grid;
     grid-template-columns:repeat(2,minmax(0,1fr));
     gap:12px;
-    margin-top:4px!important;
+    width:100%;
+    margin-top:4px !important;
+    margin-bottom:0;
 }
 
-#fullTimerForm .row:has(#btnSaveFT) > div,
-#partTimerForm .row:has(#btnSavePT) > div,
-#foreignWorkerForm .row:has(#btnSaveFW) > div{
+#fullTimerForm .row .row:has(#btnSaveFT) > div,
+#partTimerForm .row .row:has(#btnSavePT) > div,
+#foreignWorkerForm .row .row:has(#btnSaveFW) > div{
     width:auto;
     min-width:0;
+    max-width:none;
+}
+
+#fullTimerForm .btn,
+#partTimerForm .btn,
+#foreignWorkerForm .btn{
+    width:100%;
+    min-height:46px;
+    border-radius:10px;
+    font-size:14px;
+    letter-spacing:.2px;
 }
 
 /* ---------- MOBILE ---------- */
 @media screen and (max-width:768px){
 
-    #fullTimerForm .row:has(#ft_reasonOT),
-    #partTimerForm .row:has(#pt_reasonOT),
-    #foreignWorkerForm .row:has(#fw_reasonOT){
+    #fullTimerForm,
+    #partTimerForm,
+    #foreignWorkerForm{
+        padding:18px;
+        border-radius:12px;
+    }
+
+    #fullTimerForm .row,
+    #partTimerForm .row,
+    #foreignWorkerForm .row{
+        grid-template-columns:1fr;
+        gap:12px;
+        margin-bottom:12px;
+    }
+
+    #fullTimerForm .row .row,
+    #partTimerForm .row .row,
+    #foreignWorkerForm .row .row{
+        grid-column:1;
+        grid-template-columns:1fr;
+        width:100%;
+    }
+
+    #fullTimerForm .col-12,
+    #partTimerForm .col-12,
+    #foreignWorkerForm .col-12,
+    #fullTimerForm .col-7,
+    #partTimerForm .col-7,
+    #foreignWorkerForm .col-7,
+    #fullTimerForm .col-6,
+    #partTimerForm .col-6,
+    #foreignWorkerForm .col-6,
+    #fullTimerForm .col-5,
+    #partTimerForm .col-5,
+    #foreignWorkerForm .col-5,
+    #fullTimerForm .col-4,
+    #partTimerForm .col-4,
+    #foreignWorkerForm .col-4,
+    #fullTimerForm .col-3,
+    #partTimerForm .col-3,
+    #foreignWorkerForm .col-3{
+        grid-column:span 1;
+        width:100%;
+    }
+
+    #fullTimerForm .row .row:has(#ft_reasonOT),
+    #partTimerForm .row .row:has(#pt_reasonOT),
+    #foreignWorkerForm .row .row:has(#fw_reasonOT){
+        grid-column:1;
         gap:12px;
     }
 
-    #fullTimerForm .row:has(#btnSaveFT),
-    #partTimerForm .row:has(#btnSavePT),
-    #foreignWorkerForm .row:has(#btnSaveFW){
+    #fullTimerForm .row .row:has(#btnSaveFT),
+    #partTimerForm .row .row:has(#btnSavePT),
+    #foreignWorkerForm .row .row:has(#btnSaveFW){
         grid-template-columns:1fr;
     }
-
 }
