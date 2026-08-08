@@ -40,6 +40,13 @@ async function initializeApplication(){
         console.log("COMPONENTS LOADED");
 
         /* ==========================
+           PASSWORD SHOW / HIDE
+           PRESERVE ORIGINAL FUNCTION
+        ========================== */
+
+        initAllPasswordToggle();
+
+        /* ==========================
            BUTTON EVENTS
         ========================== */
 
