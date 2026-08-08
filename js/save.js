@@ -182,13 +182,13 @@ async function saveForeignWorker() {
 
     if (result && result.status) {
 
-        alert(result.message || "Saved Successfully");
+    showSuccess(result.message || "Saved Successfully");
 
-        resetForm("foreignWorkerForm");
+    resetForm("foreignWorkerForm");
 
-    } else {
+} else {
 
-        alert(result?.message || "Save Failed");
+    showError(result?.message || "Save Failed");
 
     }
 
