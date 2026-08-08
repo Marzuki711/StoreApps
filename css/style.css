@@ -1789,58 +1789,113 @@ opacity:1;
 }
 
 /* ==========================================================
-   V6 - CONSISTENT SUCCESS / ERROR POPUP
-   NOTE: Native browser alert() cannot be styled by CSS.
-   This styling applies to the existing SweetAlert2 popup
-   used by showSuccess()/showError().
+   MOBILE FORM FIX V7
+   LOCK: CSS ONLY
 ========================================================== */
+@media screen and (max-width:768px){
+    html,body{width:100%;max-width:100%;overflow-x:hidden;}
+    *,*::before,*::after{box-sizing:border-box;}
 
-.swal2-popup{
-    width:min(92vw, 576px) !important;
-    padding:38px 36px 30px !important;
-    border-radius:14px !important;
-    font-family:"Segoe UI",Arial,sans-serif !important;
-}
-
-.swal2-title{
-    font-size:30px !important;
-    font-weight:700 !important;
-    color:#4b4b4b !important;
-    margin:18px 0 8px !important;
-}
-
-.swal2-html-container,
-.swal2-content{
-    font-size:18px !important;
-    color:#666 !important;
-}
-
-.swal2-confirm{
-    min-width:64px !important;
-    height:46px !important;
-    padding:0 22px !important;
-    border-radius:5px !important;
-    font-size:16px !important;
-    font-weight:600 !important;
-    box-shadow:none !important;
-}
-
-.swal2-icon{
-    margin:0 auto !important;
-}
-
-@media(max-width:600px){
-    .swal2-popup{
-        width:calc(100vw - 30px) !important;
-        padding:30px 20px 24px !important;
+    .container{
+        width:100%;max-width:100%;margin:0;
+        padding:12px 10px 24px;
     }
 
-    .swal2-title{
-        font-size:24px !important;
+    #fullTimerForm,#partTimerForm,#foreignWorkerForm{
+        width:100%;max-width:100%;margin:0;
+        padding:18px 14px;border-radius:16px;
+        overflow:hidden;
     }
 
-    .swal2-html-container,
-    .swal2-content{
-        font-size:16px !important;
+    #fullTimerForm h2,#partTimerForm h2,#foreignWorkerForm h2{
+        font-size:24px;line-height:1.2;
+        margin:0 0 18px;padding-bottom:14px;
+    }
+
+    #fullTimerForm .row,#partTimerForm .row,#foreignWorkerForm .row{
+        display:grid;
+        grid-template-columns:minmax(0,1fr)!important;
+        width:100%;max-width:100%;
+        gap:12px;margin:0 0 12px;
+    }
+
+    #fullTimerForm .col-12,#fullTimerForm .col-7,#fullTimerForm .col-6,
+    #fullTimerForm .col-5,#fullTimerForm .col-4,#fullTimerForm .col-3,
+    #partTimerForm .col-12,#partTimerForm .col-7,#partTimerForm .col-6,
+    #partTimerForm .col-5,#partTimerForm .col-4,#partTimerForm .col-3,
+    #foreignWorkerForm .col-12,#foreignWorkerForm .col-7,#foreignWorkerForm .col-6,
+    #foreignWorkerForm .col-5,#foreignWorkerForm .col-4,#foreignWorkerForm .col-3{
+        grid-column:1/-1!important;
+        width:100%!important;min-width:0!important;max-width:100%!important;
+        margin:0!important;
+    }
+
+    #fullTimerForm label,#partTimerForm label,#foreignWorkerForm label{
+        display:block;width:100%;margin:0 0 6px;
+        font-size:13px;line-height:1.25;
+    }
+
+    #fullTimerForm .form-control,#fullTimerForm input,#fullTimerForm select,#fullTimerForm textarea,
+    #partTimerForm .form-control,#partTimerForm input,#partTimerForm select,#partTimerForm textarea,
+    #foreignWorkerForm .form-control,#foreignWorkerForm input,#foreignWorkerForm select,#foreignWorkerForm textarea{
+        width:100%!important;max-width:100%!important;min-width:0!important;
+        min-height:48px;height:48px;margin:0;padding:0 13px;
+        font-size:15px;border-radius:10px;box-sizing:border-box;
+    }
+
+    #fullTimerForm textarea,#partTimerForm textarea,#foreignWorkerForm textarea{
+        min-height:110px;height:110px;padding:12px 13px;resize:vertical;
+    }
+
+    #fullTimerForm .search-box,#partTimerForm .search-box,#foreignWorkerForm .search-box{
+        position:relative;width:100%;max-width:100%;min-width:0;
+    }
+
+    #fullTimerForm .search-input,#partTimerForm .search-input,#foreignWorkerForm .search-input{
+        width:100%!important;padding-right:48px!important;
+    }
+
+    #fullTimerForm .search-icon,#partTimerForm .search-icon,#foreignWorkerForm .search-icon{
+        position:absolute;right:7px;top:50%;
+        width:38px;height:38px;transform:translateY(-50%);
+        padding:0;border:0;background:transparent;
+        color:#C1121F;font-size:18px;z-index:5;
+    }
+
+    #fullTimerForm .row:has(#ft_reasonOT),
+    #partTimerForm .row:has(#pt_reasonOT),
+    #foreignWorkerForm .row:has(#fw_reasonOT),
+    #fullTimerForm .row:has(#ft_remark),
+    #partTimerForm .row:has(#pt_remark),
+    #foreignWorkerForm .row:has(#fw_remark){
+        grid-template-columns:minmax(0,1fr)!important;
+    }
+
+    #fullTimerForm .btn,#partTimerForm .btn,#foreignWorkerForm .btn{
+        width:100%!important;min-width:0;height:48px;min-height:48px;margin:0;
+    }
+
+    #fullTimerForm .row.mt-4,#partTimerForm .row.mt-4,#foreignWorkerForm .row.mt-4{
+        grid-template-columns:minmax(0,1fr)!important;
+        gap:10px;margin-top:14px!important;
+    }
+
+    #fullTimerForm #ft_workHours,#fullTimerForm #ft_appHours,#fullTimerForm #ft_approvedOT,
+    #partTimerForm #pt_workHours,#partTimerForm #pt_floorHours,#partTimerForm #pt_firstFour,
+    #partTimerForm #pt_secondFour,#partTimerForm #pt_afterEight,
+    #foreignWorkerForm #fw_workHours,#foreignWorkerForm #fw_appHours,#foreignWorkerForm #fw_approvedOT{
+        text-align:left;
+    }
+}
+
+@media screen and (max-width:480px){
+    #fullTimerForm,#partTimerForm,#foreignWorkerForm{
+        padding:16px 12px;border-radius:14px;
+    }
+    #fullTimerForm h2,#partTimerForm h2,#foreignWorkerForm h2{font-size:22px;}
+    #fullTimerForm .form-control,#fullTimerForm input,#fullTimerForm select,#fullTimerForm textarea,
+    #partTimerForm .form-control,#partTimerForm input,#partTimerForm select,#partTimerForm textarea,
+    #foreignWorkerForm .form-control,#foreignWorkerForm input,#foreignWorkerForm select,#foreignWorkerForm textarea{
+        font-size:14px;
     }
 }
