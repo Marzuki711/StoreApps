@@ -1,418 +1,411 @@
+/*************************************************
+ * Manual OT Claim System
+ * script-init.js
+ *
+ * APPLICATION INITIALIZATION
+ *
+ * IMPORTANT:
+ * - UI functions live in ui.js
+ * - Employee search lives in script-search.js
+ * - Calculations live in calculator.js
+ * - Save functions live in save.js
+ *
+ * This file does NOT load or depend on script.js.
+ *************************************************/
+
 /* ==========================================
-   RESTORE SEARCH BUTTON
+   INITIALIZE APPLICATION
 ========================================== */
 
-function restoreSearchButton(btn){
+document.addEventListener("DOMContentLoaded", async () => {
 
-    if(!btn){
+    // ==========================
+    // LOAD COMPONENTS
+    // ==========================
 
+    await loadComponent(
+        "components/login.html",
+        "loginContainer"
+    );
+
+    await loadComponent(
+        "components/home.html",
+        "homeContainer"
+    );
+
+    await loadComponent(
+        "components/fulltimer.html",
+        "fullTimerContainer"
+    );
+
+    await loadComponent(
+        "components/parttimer.html",
+        "partTimerContainer"
+    );
+
+    await loadComponent(
+        "components/foreignworker.html",
+        "foreignWorkerContainer"
+    );
+
+    // ==========================
+    // LOGIN / HOME
+    // ==========================
+
+    document
+        .getElementById("btnLogin")
+        ?.addEventListener("click", loginSystem);
+
+    document
+        .getElementById("btnHome")
+        ?.addEventListener("click", showHome);
+
+    // ==========================
+    // SHOW HOME
+    // ==========================
+
+    showHome();
+
+    // ==========================
+    // EMPLOYEE TYPE
+    // ==========================
+
+    const employeeType =
+        document.getElementById("employeeType");
+
+    if(employeeType){
+
+        employeeType.addEventListener("change", function(){
+
+            showForm(this.value);
+
+        });
+
+    }
+
+    // ==========================
+    // NUMBER ONLY
+    // ==========================
+
+    numberOnly(
+        document.getElementById("ft_unit"),
+        4
+    );
+
+    numberOnly(
+        document.getElementById("pt_unit"),
+        4
+    );
+
+    numberOnly(
+        document.getElementById("fw_unit"),
+        4
+    );
+
+    numberOnly(
+        document.getElementById("ft_employeeId"),
+        8
+    );
+
+    numberOnly(
+        document.getElementById("pt_employeeId"),
+        8
+    );
+
+    numberOnly(
+        document.getElementById("fw_employeeId"),
+        8
+    );
+
+    // ==========================
+    // FORMAT EMPLOYEE ID
+    // ==========================
+
+    formatEmployeeID(
+        document.getElementById("ft_employeeId")
+    );
+
+    formatEmployeeID(
+        document.getElementById("pt_employeeId")
+    );
+
+    formatEmployeeID(
+        document.getElementById("fw_employeeId")
+    );
+
+    // ==========================
+    // FULL TIMER CALCULATION
+    // ==========================
+
+    document
+        .getElementById("ft_position")
+        ?.addEventListener(
+            "change",
+            calculateFullTimer
+        );
+
+    document
+        .getElementById("ft_firstIn")
+        ?.addEventListener(
+            "change",
+            calculateFullTimer
+        );
+
+    document
+        .getElementById("ft_lastOut")
+        ?.addEventListener(
+            "change",
+            calculateFullTimer
+        );
+
+    // ==========================
+    // PART TIMER CALCULATION
+    // ==========================
+
+    document
+        .getElementById("pt_firstIn")
+        ?.addEventListener(
+            "change",
+            calculatePartTimer
+        );
+
+    document
+        .getElementById("pt_lastOut")
+        ?.addEventListener(
+            "change",
+            calculatePartTimer
+        );
+
+    // ==========================
+    // FOREIGN WORKER CALCULATION
+    // ==========================
+
+    document
+        .getElementById("fw_firstIn")
+        ?.addEventListener(
+            "change",
+            calculateForeignWorker
+        );
+
+    document
+        .getElementById("fw_lastOut")
+        ?.addEventListener(
+            "change",
+            calculateForeignWorker
+        );
+
+    // ==========================
+    // RESET BUTTON
+    // ==========================
+
+    document
+        .getElementById("btnResetFT")
+        ?.addEventListener(
+            "click",
+            () => resetForm("fullTimerForm")
+        );
+
+    document
+        .getElementById("btnResetPT")
+        ?.addEventListener(
+            "click",
+            () => resetForm("partTimerForm")
+        );
+
+    document
+        .getElementById("btnResetFW")
+        ?.addEventListener(
+            "click",
+            () => resetForm("foreignWorkerForm")
+        );
+
+    // ==========================
+    // SAVE BUTTON
+    // ==========================
+
+    document
+        .getElementById("btnSaveFT")
+        ?.addEventListener(
+            "click",
+            saveFullTimer
+        );
+
+    document
+        .getElementById("btnSavePT")
+        ?.addEventListener(
+            "click",
+            savePartTimer
+        );
+
+    document
+        .getElementById("btnSaveFW")
+        ?.addEventListener(
+            "click",
+            saveForeignWorker
+        );
+
+});
+
+/* ==========================================
+   NUMBER ONLY
+========================================== */
+
+function numberOnly(input, maxLength){
+
+    if(!input){
         return;
-
     }
 
-    btn.disabled = false;
+    input.addEventListener("input", function(){
 
-    btn.classList.remove("loading");
+        // Buang semua selain nombor
+        this.value =
+            this.value.replace(/\D/g,"");
 
-    btn.style.color = "";
+        // Had maksimum digit
+        if(this.value.length > maxLength){
 
-    btn.innerHTML = `
-        <i class="fa-solid fa-magnifying-glass"></i>
-    `;
+            this.value =
+                this.value.substring(0,maxLength);
 
-}
-
-/* ==========================================
-   CLEAR EMPLOYEE INFO
-========================================== */
-
-function clearEmployeeInfo(employeeType){
-
-    switch(employeeType){
-
-        case "Full Timer":
-
-            document.getElementById("ft_unit").value = "";
-
-            document.getElementById("ft_employeeName").value = "";
-
-            document.getElementById("ft_position").selectedIndex = 0;
-
-            document.getElementById("ft_employeeId").focus();
-
-            break;
-
-        case "Part Timer":
-
-            document.getElementById("pt_unit").value = "";
-
-            document.getElementById("pt_employeeName").value = "";
-
-            document.getElementById("pt_employeeId").focus();
-
-            break;
-
-        case "Foreign Worker":
-
-            document.getElementById("fw_unit").value = "";
-
-            document.getElementById("fw_employeeName").value = "";
-
-            document.getElementById("fw_position").selectedIndex = 0;
-
-            document.getElementById("fw_om").value = "";
-
-            document.getElementById("fw_fm").value = "";
-
-            document.getElementById("fw_employeeId").focus();
-
-            break;
-
-    }
-
-}
-
-/* ==========================================
-   SWEET ALERT
-========================================== */
-
-function showSuccess(message){
-
-    Swal.fire({
-
-        icon: "success",
-
-        title: "SUCCESS",
-
-        text: message,
-
-        confirmButtonText: "OK",
-
-        confirmButtonColor: "#198754",
-
-        allowOutsideClick: false
-
-    });
-
-}
-
-function showError(message){
-
-    Swal.fire({
-
-        icon: "error",
-
-        title: "VALIDATION",
-
-        text: message,
-
-        confirmButtonText: "OK",
-
-        confirmButtonColor: "#dc3545"
-
-    });
-
-}
-
-function showWarning(message){
-
-    Swal.fire({
-
-        icon: "warning",
-
-        title: "WARNING",
-
-        text: message,
-
-        confirmButtonText: "OK",
-
-        confirmButtonColor: "#ffc107"
+        }
 
     });
 
 }
 
 /* ==========================================
-   LOADING
+   EMPLOYEE ID FORMAT
 ========================================== */
 
-function showLoading() {
+function formatEmployeeID(input){
 
-    const loading = document.getElementById("loading");
-
-    if (loading) {
-
-        loading.style.display = "flex";
-
+    if(!input){
+        return;
     }
 
-}
+    input.addEventListener("blur", function(){
 
-function hideLoading() {
+        let value =
+            this.value.replace(/\D/g,"");
 
-    const loading = document.getElementById("loading");
+        if(value !== ""){
 
-    if (loading) {
-
-        loading.style.display = "none";
-
-    }
-
-}
-
-function checkInternet(){
-
-    if(!navigator.onLine){
-
-        Swal.fire({
-            icon:"error",
-            title:"No Internet Connection",
-            text:"Please check your internet connection and try again.",
-            confirmButtonColor:"#C1121F"
-        });
-
-        return false;
-
-    }
-
-    return true;
-
-}
-
-/* ==========================================
-   LOAD HTML COMPONENT
-========================================== */
-
-const componentCache = new Map();
-
-async function loadComponent(file, target) {
-
-    try {
-
-        let html = componentCache.get(file);
-
-        if (!html) {
-
-            const response = await fetch(file);
-
-            if (!response.ok) {
-                throw new Error(file + " not found");
-            }
-
-            html = await response.text();
-
-            componentCache.set(file, html);
+            this.value =
+                value.padStart(8,"0");
 
         }
-
-        const container = document.getElementById(target);
-
-        if (container) {
-            container.innerHTML = html;
-        }
-
-    } catch (err) {
-
-        console.error("Component Error :", err);
-
-    }
-
-}
-
-/* ==========================================
-   SHOW / HIDE FORM
-========================================== */
-
-function showForm(type) {
-
-    const ft = document.getElementById("fullTimerForm");
-    const pt = document.getElementById("partTimerForm");
-    const fw = document.getElementById("foreignWorkerForm");
-
-    if (ft) ft.style.display = "none";
-    if (pt) pt.style.display = "none";
-    if (fw) fw.style.display = "none";
-
-    switch (type) {
-
-        case "Full Timer":
-
-            if (ft) ft.style.display = "block";
-
-            break;
-
-        case "Part Timer":
-
-            if (pt) pt.style.display = "block";
-
-            break;
-
-        case "Foreign Worker":
-
-            if (fw) fw.style.display = "block";
-
-            break;
-
-    }
-
-}
-
-/* ==========================================
-   RESET FORM
-========================================== */
-
-function resetForm(formId) {
-
-    const form = document.getElementById(formId);
-
-    if (!form) return;
-
-    // Reset Input
-    form.querySelectorAll("input").forEach(input => {
-
-        switch (input.type) {
-
-            case "text":
-            case "date":
-            case "time":
-            case "number":
-            case "email":
-                input.value = "";
-                break;
-
-            case "checkbox":
-            case "radio":
-                input.checked = false;
-                break;
-
-        }
-
-        input.classList.remove("input-error");
-
-    });
-
-    // Reset Select
-    form.querySelectorAll("select").forEach(select => {
-
-        select.selectedIndex = 0;
-
-        select.classList.remove("input-error");
-
-    });
-
-    // Reset Textarea
-    form.querySelectorAll("textarea").forEach(textarea => {
-
-        textarea.value = "";
-
-        textarea.classList.remove("input-error");
 
     });
 
 }
 
 /* ==========================================
-   VALIDATE FORM V2
+   REGISTER SERVICE WORKER
 ========================================== */
 
-function validateForm(formId){
+if("serviceWorker" in navigator){
 
-    const form = document.getElementById(formId);
+    window.addEventListener("load", () => {
 
-    if(!form) return false;
+        navigator.serviceWorker
+            .register("./sw.js")
 
-    let valid = true;
+            .then(() => {
 
-    let missingFields = [];
+                console.log("PWA Ready");
 
-    const requiredFields = form.querySelectorAll("[data-required='true']");
+            })
 
-    requiredFields.forEach(field => {
+            .catch(err => {
 
-        field.classList.remove("input-error");
+                console.log(err);
 
-        // ===============================
-        // SMART VALIDATION REPORT NUMBER
-        // ===============================
-
-        if(field.id === "ft_reportNo"){
-
-            const reason = document.getElementById("ft_reason").value;
-
-            if(reason === "Ot Capped") return;
-
-        }
-
-        if(field.id === "pt_reportNo"){
-
-            const reason = document.getElementById("pt_reason").value;
-
-            if(reason === "Ot Capped") return;
-
-        }
-
-        if(field.id === "fw_reportNo"){
-
-            const reason = document.getElementById("fw_reason").value;
-
-            if(reason === "Ot Capped") return;
-
-        }
-
-        const value = (field.value || "").trim();
-
-        if(value === ""){
-
-            valid = false;
-
-            field.classList.add("input-error");
-
-            missingFields.push(field.dataset.label);
-
-        }
+            });
 
     });
 
-    if(!valid){
+}
 
-        Swal.fire({
+/* ==========================================
+   SHOW HOME
+========================================== */
 
-            icon:"error",
+function showHome(){
 
-            title:"Validation Failed",
+    const topbar =
+        document.querySelector(".topbar");
 
-            html: `
-            <div style="text-align:left;font-size:15px;line-height:1.8">
+    if(topbar){
 
-                <b>Please complete the following field(s):</b>
+        topbar.style.display = "flex";
 
-                <br><br>
+        if(window.innerWidth <= 768){
 
-                ${missingFields.map(item => `
-                    <div style="
-                        padding:8px;
-                        margin-bottom:6px;
-                        background:#fff5f5;
-                        border-left:5px solid #dc3545;
-                        border-radius:6px;
-                    ">
-                        ❌ ${item}
-                    </div>
-                `).join("")}
+            topbar.style.flexDirection =
+                "column";
 
-            </div>
-            `,
+        }else{
 
-            confirmButtonText:"OK",
+            topbar.style.flexDirection =
+                "row";
 
-            confirmButtonColor:"#dc3545",
-
-            allowOutsideClick:false
-
-        });
+        }
 
     }
 
-    return valid;
+    const loginContainer =
+        document.getElementById("loginContainer");
+
+    const homeContainer =
+        document.getElementById("homeContainer");
+
+    const otModule =
+        document.getElementById("otModule");
+
+    if(loginContainer){
+        loginContainer.style.display = "none";
+    }
+
+    if(homeContainer){
+        homeContainer.style.display = "block";
+    }
+
+    if(otModule){
+        otModule.style.display = "none";
+    }
+
+}
+
+/* ==========================================
+   OPEN MANUAL OT
+========================================== */
+
+function openManualOT(){
+
+    const homeContainer =
+        document.getElementById("homeContainer");
+
+    const otModule =
+        document.getElementById("otModule");
+
+    const employeeType =
+        document.getElementById("employeeType");
+
+    if(homeContainer){
+        homeContainer.style.display = "none";
+    }
+
+    if(otModule){
+        otModule.style.display = "block";
+    }
+
+    if(employeeType){
+
+        employeeType.value = "Full Timer";
+
+        showForm("Full Timer");
+
+    }
 
 }
