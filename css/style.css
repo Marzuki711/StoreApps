@@ -1395,3 +1395,28 @@ opacity:1;
 
 }
 
+
+
+/* ==========================================================
+   MANUAL OT CLAIM - PREMIUM FORM LAYOUT V2
+   LOCK: UI ONLY - NO HTML / JS / API CHANGES
+========================================================== */
+#fullTimerForm,#partTimerForm,#foreignWorkerForm{width:100%;max-width:100%;padding:26px;border:1px solid #E7EAF0;box-shadow:0 8px 28px rgba(15,23,42,.08);}
+#fullTimerForm>h2,#partTimerForm>h2,#foreignWorkerForm>h2{margin:0 0 22px!important;padding-bottom:14px;border-bottom:1px solid #EEF1F5;color:#1F2937;font-size:22px;font-weight:700;letter-spacing:.2px;}
+#fullTimerForm .row,#partTimerForm .row,#foreignWorkerForm .row{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px;width:100%;margin:0 0 16px;align-items:end;}
+#fullTimerForm .row .row,#partTimerForm .row .row,#foreignWorkerForm .row .row{grid-column:1/-1;margin:0;}
+#fullTimerForm .col-12,#partTimerForm .col-12,#foreignWorkerForm .col-12,#fullTimerForm .col-6,#partTimerForm .col-6,#foreignWorkerForm .col-6,#fullTimerForm .col-5,#partTimerForm .col-5,#foreignWorkerForm .col-5,#fullTimerForm .col-7,#partTimerForm .col-7,#foreignWorkerForm .col-7,#fullTimerForm .col-4,#partTimerForm .col-4,#foreignWorkerForm .col-4,#fullTimerForm .col-3,#partTimerForm .col-3,#foreignWorkerForm .col-3{min-width:0;width:auto;flex:none;}
+#fullTimerForm .col-12,#partTimerForm .col-12,#foreignWorkerForm .col-12{grid-column:span 12;}#fullTimerForm .col-7,#partTimerForm .col-7,#foreignWorkerForm .col-7{grid-column:span 7;}#fullTimerForm .col-6,#partTimerForm .col-6,#foreignWorkerForm .col-6{grid-column:span 6;}#fullTimerForm .col-5,#partTimerForm .col-5,#foreignWorkerForm .col-5{grid-column:span 5;}#fullTimerForm .col-4,#partTimerForm .col-4,#foreignWorkerForm .col-4{grid-column:span 4;}#fullTimerForm .col-3,#partTimerForm .col-3,#foreignWorkerForm .col-3{grid-column:span 3;}
+#fullTimerForm> .row> .col-6,#partTimerForm> .row> .col-6,#foreignWorkerForm> .row> .col-6{grid-column:span 6;}
+#fullTimerForm label,#partTimerForm label,#foreignWorkerForm label{margin:0 0 7px;color:#374151;font-size:13px;line-height:1.25;}
+#fullTimerForm .form-control,#partTimerForm .form-control,#foreignWorkerForm .form-control{min-height:44px;padding:10px 12px;border:1px solid #D9DEE7;border-radius:10px;background:#fff;color:#1F2937;font-size:14px;transition:border-color .2s,box-shadow .2s,background .2s;}
+#fullTimerForm .form-control:focus,#partTimerForm .form-control:focus,#foreignWorkerForm .form-control:focus{border-color:#C1121F;box-shadow:0 0 0 3px rgba(193,18,31,.10);background:#fff;}
+#fullTimerForm .form-control[readonly],#partTimerForm .form-control[readonly],#foreignWorkerForm .form-control[readonly]{background:#F8FAFC;color:#334155;font-weight:600;}
+#fullTimerForm textarea.form-control,#partTimerForm textarea.form-control,#foreignWorkerForm textarea.form-control{min-height:96px;line-height:1.5;}
+#fullTimerForm .search-box,#partTimerForm .search-box,#foreignWorkerForm .search-box{display:flex;align-items:stretch;width:100%;}
+#fullTimerForm .search-box .search-input,#partTimerForm .search-box .search-input,#foreignWorkerForm .search-box .search-input{min-width:0;flex:1 1 auto;border-radius:10px 0 0 10px;}
+#fullTimerForm .search-box .search-icon,#partTimerForm .search-box .search-icon,#foreignWorkerForm .search-box .search-icon{flex:0 0 46px;width:46px;min-height:44px;border:1px solid #C1121F;border-left:0;border-radius:0 10px 10px 0;background:#C1121F;color:#fff;cursor:pointer;}
+#fullTimerForm #ft_workHours,#fullTimerForm #ft_appHours,#fullTimerForm #ft_approvedOT,#foreignWorkerForm #fw_workHours,#foreignWorkerForm #fw_appHours,#foreignWorkerForm #fw_approvedOT,#partTimerForm #pt_workHours,#partTimerForm #pt_floorHours,#partTimerForm #pt_firstFour,#partTimerForm #pt_secondFour,#partTimerForm #pt_afterEight{text-align:center;}
+#fullTimerForm .row.mt-4,#partTimerForm .row.mt-4,#foreignWorkerForm .row.mt-4{margin-top:8px!important;margin-bottom:0;}
+#fullTimerForm .btn,#partTimerForm .btn,#foreignWorkerForm .btn{min-height:46px;width:100%;border-radius:10px;font-size:14px;letter-spacing:.2px;}
+@media screen and (max-width:768px){#fullTimerForm,#partTimerForm,#foreignWorkerForm{padding:18px;border-radius:12px;}#fullTimerForm .row,#partTimerForm .row,#foreignWorkerForm .row{grid-template-columns:1fr;gap:12px;margin-bottom:12px;}#fullTimerForm .row .row,#partTimerForm .row .row,#foreignWorkerForm .row .row{grid-column:1;grid-template-columns:1fr;}#fullTimerForm .col-12,#partTimerForm .col-12,#foreignWorkerForm .col-12,#fullTimerForm .col-7,#partTimerForm .col-7,#foreignWorkerForm .col-7,#fullTimerForm .col-6,#partTimerForm .col-6,#foreignWorkerForm .col-6,#fullTimerForm .col-5,#partTimerForm .col-5,#foreignWorkerForm .col-5,#fullTimerForm .col-4,#partTimerForm .col-4,#foreignWorkerForm .col-4,#fullTimerForm .col-3,#partTimerForm .col-3,#foreignWorkerForm .col-3{grid-column:span 1;}}
