@@ -41,6 +41,8 @@ function logout(){
 
         document.getElementById("otModule").style.display="none";
 
+        document.getElementById("dailySalesContainer")?.style.setProperty("display","none");
+
         document.getElementById("loginContainer").style.display="block";
 
         document.getElementById("loginUsername").value="";
