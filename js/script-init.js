@@ -33,8 +33,7 @@ async function initializeApplication(){
             loadComponent("components/home.html","homeContainer"),
             loadComponent("components/fulltimer.html","fullTimerContainer"),
             loadComponent("components/parttimer.html","partTimerContainer"),
-            loadComponent("components/foreignworker.html","foreignWorkerContainer"),
-            loadComponent("components/daily-sales.html","dailySalesContainer")
+            loadComponent("components/foreignworker.html","foreignWorkerContainer")
 
         ]);
 
@@ -125,13 +124,6 @@ async function initializeApplication(){
 
         if(otModule){
             otModule.style.display="none";
-        }
-
-        const dailySalesContainer =
-            document.getElementById("dailySalesContainer");
-
-        if(dailySalesContainer){
-            dailySalesContainer.style.display="none";
         }
 
         if(topbar){
@@ -381,9 +373,6 @@ function showHome(){
     const otModule =
         document.getElementById("otModule");
 
-    const dailySalesContainer =
-        document.getElementById("dailySalesContainer");
-
     if(loginContainer){
         loginContainer.style.display = "none";
     }
@@ -395,6 +384,9 @@ function showHome(){
     if(otModule){
         otModule.style.display = "none";
     }
+
+    const dailySalesContainer =
+        document.getElementById("dailySalesContainer");
 
     if(dailySalesContainer){
         dailySalesContainer.style.display = "none";
@@ -423,6 +415,13 @@ function openManualOT(){
 
     if(otModule){
         otModule.style.display = "block";
+    }
+
+    const dailySalesContainer =
+        document.getElementById("dailySalesContainer");
+
+    if(dailySalesContainer){
+        dailySalesContainer.style.display = "none";
     }
 
     if(employeeType){
