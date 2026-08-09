@@ -33,11 +33,29 @@ async function initializeApplication(){
             loadComponent("components/home.html","homeContainer"),
             loadComponent("components/fulltimer.html","fullTimerContainer"),
             loadComponent("components/parttimer.html","partTimerContainer"),
-            loadComponent("components/foreignworker.html","foreignWorkerContainer")
+            loadComponent("components/foreignworker.html","foreignWorkerContainer"),
+            loadComponent("components/user-management","userManagementContainer"),
+            loadComponent("components/daily-sales.html","dailySalesContainer")
 
         ]);
 
         console.log("COMPONENTS LOADED");
+
+        /* ==========================
+           USER MANAGEMENT UI
+           Component must be bound AFTER
+           it has been loaded into the DOM.
+        ========================== */
+
+        if(typeof initUserManagementUI === "function"){
+            initUserManagementUI();
+        }
+
+        /* Re-apply permissions because User Management
+           is a dynamically loaded component. */
+        if(typeof applyRoleAccess === "function"){
+            applyRoleAccess();
+        }
 
         /* ==========================
            PASSWORD SHOW / HIDE
@@ -124,6 +142,12 @@ async function initializeApplication(){
 
         if(otModule){
             otModule.style.display="none";
+        }
+
+        const dailySalesContainer=document.getElementById("dailySalesContainer");
+
+        if(dailySalesContainer){
+            dailySalesContainer.style.display="none";
         }
 
         if(topbar){
@@ -388,10 +412,104 @@ function showHome(){
     const dailySalesContainer =
         document.getElementById("dailySalesContainer");
 
+    const userManagementContainer =
+        document.getElementById("userManagementContainer");
+
     if(dailySalesContainer){
         dailySalesContainer.style.display = "none";
     }
 
+    if(userManagementContainer){
+        userManagementContainer.style.display = "none";
+    }
+
+}
+
+/* ==========================================
+   OPEN USER MANAGEMENT
+========================================== */
+
+function openUserManagement(){
+
+    if(typeof requirePermission === "function" && !requirePermission("user_management")){
+        return;
+    }
+
+    const loginContainer = document.getElementById("loginContainer");
+    const homeContainer = document.getElementById("homeContainer");
+    const otModule = document.getElementById("otModule");
+    const userManagementContainer = document.getElementById("userManagementContainer");
+
+    if(loginContainer) loginContainer.style.display = "none";
+    if(homeContainer) homeContainer.style.display = "none";
+    if(otModule) otModule.style.display = "none";
+    if(userManagementContainer) userManagementContainer.style.display = "block";
+
+    const toggle = document.getElementById("saSidebarToggle");
+    if(toggle) toggle.checked = false;
+
+    if(typeof umLoadUsers === "function"){
+        umLoadUsers();
+    }
+}
+
+/* ==========================================
+   CLOSE USER MANAGEMENT
+========================================== */
+
+function closeUserManagement(){
+
+    const userManagementContainer = document.getElementById("userManagementContainer");
+    const homeContainer = document.getElementById("homeContainer");
+    const otModule = document.getElementById("otModule");
+
+    if(userManagementContainer) userManagementContainer.style.display = "none";
+    if(otModule) otModule.style.display = "none";
+    if(homeContainer) homeContainer.style.display = "block";
+
+    if(typeof applyRoleAccess === "function") applyRoleAccess();
+}
+
+/* ==========================================
+   OPEN DAILY SALES
+========================================== */
+
+async function openDailySales(){
+
+    if(typeof requirePermission === "function" &&
+       !requirePermission("daily_sales")){
+        return;
+    }
+
+    const loginContainer = document.getElementById("loginContainer");
+    const homeContainer = document.getElementById("homeContainer");
+    const otModule = document.getElementById("otModule");
+    const userManagementContainer = document.getElementById("userManagementContainer");
+    const dailySalesContainer = document.getElementById("dailySalesContainer");
+
+    if(loginContainer) loginContainer.style.display = "none";
+    if(homeContainer) homeContainer.style.display = "none";
+    if(otModule) otModule.style.display = "none";
+    if(userManagementContainer) userManagementContainer.style.display = "none";
+    if(dailySalesContainer) dailySalesContainer.style.display = "block";
+
+    const toggle = document.getElementById("saSidebarToggle");
+    if(toggle) toggle.checked = false;
+
+    if(typeof dsLoad === "function") await dsLoad();
+}
+
+/* ==========================================
+   CLOSE DAILY SALES
+========================================== */
+
+function closeDailySales(){
+
+    const dailySalesContainer = document.getElementById("dailySalesContainer");
+
+    if(dailySalesContainer) dailySalesContainer.style.display = "none";
+
+    showHome();
 }
 
 /* ==========================================
@@ -415,13 +533,6 @@ function openManualOT(){
 
     if(otModule){
         otModule.style.display = "block";
-    }
-
-    const dailySalesContainer =
-        document.getElementById("dailySalesContainer");
-
-    if(dailySalesContainer){
-        dailySalesContainer.style.display = "none";
     }
 
     if(employeeType){
