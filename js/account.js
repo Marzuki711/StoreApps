@@ -40,7 +40,6 @@ function logout(){
         document.getElementById("homeContainer").style.display="none";
 
         document.getElementById("otModule").style.display="none";
-
         document.getElementById("dailySalesContainer")?.style.setProperty("display","none");
 
         document.getElementById("loginContainer").style.display="block";
