@@ -36,12 +36,27 @@ async function loginSystem(){
 
     currentUser = result;
 
-    sessionStorage.setItem(
-        "currentUser",
-        JSON.stringify(result)
-    );
+sessionStorage.setItem(
+    "currentUser",
+    JSON.stringify(result)
+);
 
-    requestAnimationFrame(showHome);
+/* ==========================================
+   APPLY USER ROLE
+========================================== */
+
+    applyRoleAccess();
+
+    requestAnimationFrame(() => {
+
+        showHome();
+
+        /* Load Home Sales Dashboard only after successful login. */
+        if(typeof initHomeSalesDashboard === "function"){
+            initHomeSalesDashboard();
+        }
+
+    });
 
     setTimeout(() => {
 
