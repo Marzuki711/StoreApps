@@ -144,11 +144,23 @@ async function initializeApplication(){
             otModule.style.display="none";
         }
 
-        const dailySalesContainer=document.getElementById("dailySalesContainer");
+        /* User Management must never appear on the login screen. */
+        const userManagementContainer =
+            document.getElementById("userManagementContainer");
 
-        if(dailySalesContainer){
-            dailySalesContainer.style.display="none";
+        if(userManagementContainer){
+            userManagementContainer.style.display="none";
         }
+
+        const userManagementModule =
+            document.getElementById("userManagementModule");
+
+        if(userManagementModule){
+            userManagementModule.style.display="none";
+        }
+
+        const dailySalesContainer = document.getElementById("dailySalesContainer");
+        if(dailySalesContainer){ dailySalesContainer.style.display="none"; }
 
         if(topbar){
             topbar.style.display="none";
@@ -397,6 +409,9 @@ function showHome(){
     const otModule =
         document.getElementById("otModule");
 
+    const userManagementContainer =
+        document.getElementById("userManagementContainer");
+
     if(loginContainer){
         loginContainer.style.display = "none";
     }
@@ -409,18 +424,19 @@ function showHome(){
         otModule.style.display = "none";
     }
 
-    const dailySalesContainer =
-        document.getElementById("dailySalesContainer");
-
-    const userManagementContainer =
-        document.getElementById("userManagementContainer");
-
-    if(dailySalesContainer){
-        dailySalesContainer.style.display = "none";
-    }
-
+    /* Home must always close User Management. */
     if(userManagementContainer){
         userManagementContainer.style.display = "none";
+    }
+
+    const dailySalesContainer = document.getElementById("dailySalesContainer");
+    if(dailySalesContainer){ dailySalesContainer.style.display = "none"; }
+
+    /* Home Sales Dashboard loads only for authenticated users. */
+    if(typeof getCurrentUser === "function" && getCurrentUser()){
+        if(typeof initHomeSalesDashboard === "function"){
+            initHomeSalesDashboard();
+        }
     }
 
 }
@@ -439,11 +455,13 @@ function openUserManagement(){
     const homeContainer = document.getElementById("homeContainer");
     const otModule = document.getElementById("otModule");
     const userManagementContainer = document.getElementById("userManagementContainer");
+    const dailySalesContainer = document.getElementById("dailySalesContainer");
 
     if(loginContainer) loginContainer.style.display = "none";
     if(homeContainer) homeContainer.style.display = "none";
     if(otModule) otModule.style.display = "none";
     if(userManagementContainer) userManagementContainer.style.display = "block";
+    if(dailySalesContainer) dailySalesContainer.style.display = "none";
 
     const toggle = document.getElementById("saSidebarToggle");
     if(toggle) toggle.checked = false;
@@ -462,54 +480,14 @@ function closeUserManagement(){
     const userManagementContainer = document.getElementById("userManagementContainer");
     const homeContainer = document.getElementById("homeContainer");
     const otModule = document.getElementById("otModule");
+    const dailySalesContainer = document.getElementById("dailySalesContainer");
 
     if(userManagementContainer) userManagementContainer.style.display = "none";
+    if(dailySalesContainer) dailySalesContainer.style.display = "none";
     if(otModule) otModule.style.display = "none";
     if(homeContainer) homeContainer.style.display = "block";
 
     if(typeof applyRoleAccess === "function") applyRoleAccess();
-}
-
-/* ==========================================
-   OPEN DAILY SALES
-========================================== */
-
-async function openDailySales(){
-
-    if(typeof requirePermission === "function" &&
-       !requirePermission("daily_sales")){
-        return;
-    }
-
-    const loginContainer = document.getElementById("loginContainer");
-    const homeContainer = document.getElementById("homeContainer");
-    const otModule = document.getElementById("otModule");
-    const userManagementContainer = document.getElementById("userManagementContainer");
-    const dailySalesContainer = document.getElementById("dailySalesContainer");
-
-    if(loginContainer) loginContainer.style.display = "none";
-    if(homeContainer) homeContainer.style.display = "none";
-    if(otModule) otModule.style.display = "none";
-    if(userManagementContainer) userManagementContainer.style.display = "none";
-    if(dailySalesContainer) dailySalesContainer.style.display = "block";
-
-    const toggle = document.getElementById("saSidebarToggle");
-    if(toggle) toggle.checked = false;
-
-    if(typeof dsLoad === "function") await dsLoad();
-}
-
-/* ==========================================
-   CLOSE DAILY SALES
-========================================== */
-
-function closeDailySales(){
-
-    const dailySalesContainer = document.getElementById("dailySalesContainer");
-
-    if(dailySalesContainer) dailySalesContainer.style.display = "none";
-
-    showHome();
 }
 
 /* ==========================================
@@ -524,6 +502,9 @@ function openManualOT(){
     const otModule =
         document.getElementById("otModule");
 
+    const dailySalesContainer =
+        document.getElementById("dailySalesContainer");
+
     const employeeType =
         document.getElementById("employeeType");
 
@@ -535,6 +516,10 @@ function openManualOT(){
         otModule.style.display = "block";
     }
 
+    if(dailySalesContainer){
+        dailySalesContainer.style.display = "none";
+    }
+
     if(employeeType){
 
         employeeType.value = "Full Timer";
@@ -543,4 +528,17 @@ function openManualOT(){
 
     }
 
+}
+
+
+function closeDailySales(){
+    const dailySalesContainer=document.getElementById("dailySalesContainer");
+    const homeContainer=document.getElementById("homeContainer");
+    const otModule=document.getElementById("otModule");
+    const userManagementContainer=document.getElementById("userManagementContainer");
+    if(dailySalesContainer) dailySalesContainer.style.display="none";
+    if(otModule) otModule.style.display="none";
+    if(userManagementContainer) userManagementContainer.style.display="none";
+    if(homeContainer) homeContainer.style.display="block";
+    if(typeof applyRoleAccess==="function") applyRoleAccess();
 }

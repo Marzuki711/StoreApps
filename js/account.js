@@ -48,13 +48,28 @@ function logout(){
 
         document.getElementById("otModule").style.display="none";
 
-        const dailySalesContainer = document.getElementById("dailySalesContainer");
+        /* ==========================================
+           HIDE USER MANAGEMENT ON LOGOUT
+           ========================================== */
 
-        if(dailySalesContainer){
-            dailySalesContainer.style.display="none";
+        const userManagementContainer =
+            document.getElementById("userManagementContainer");
+
+        if(userManagementContainer){
+            userManagementContainer.style.display="none";
         }
 
-        document.getElementById("loginContainer").style.display="block";
+        const userManagementModule =
+            document.getElementById("userManagementModule");
+
+        if(userManagementModule){
+            userManagementModule.style.display="none";
+        }
+
+        const dailySalesContainer = document.getElementById("dailySalesContainer");
+         if(dailySalesContainer){ dailySalesContainer.style.display="none"; }
+
+         document.getElementById("loginContainer").style.display="block";
 
         document.getElementById("loginUsername").value="";
 
