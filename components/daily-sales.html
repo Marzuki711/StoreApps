@@ -65,7 +65,7 @@
                            type="date"
                            tabindex="-1"
                            aria-hidden="true"
-                           onchange="syncDailySalesBusinessDate(this.value)"
+                           onchange="if(this.value){var p=this.value.split('-');var t=document.getElementById('dsBusinessDate');if(t&&p.length===3){t.value=p[2]+'/'+p[1]+'/'+p[0];t.dispatchEvent(new Event('input',{bubbles:true}));t.dispatchEvent(new Event('change',{bubbles:true}));}}"
                            style="position:absolute;right:7px;top:6px;width:32px;height:32px;opacity:0;cursor:pointer;">
                     <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none;color:#0F172A;">
                         <i class="fa-regular fa-calendar"></i>
@@ -235,25 +235,4 @@
             </table>
         </div>
     </div>
-
-<script>
-/* LOCKED FIX: Business Date calendar -> textbox only. */
-function syncDailySalesBusinessDate(value) {
-    if (!value) return;
-
-    const parts = String(value).split("-");
-    if (parts.length !== 3) return;
-
-    const yyyy = parts[0];
-    const mm = parts[1];
-    const dd = parts[2];
-
-    const textbox = document.getElementById("dsBusinessDate");
-    if (textbox) {
-        textbox.value = dd + "/" + mm + "/" + yyyy;
-        textbox.dispatchEvent(new Event("input", { bubbles: true }));
-        textbox.dispatchEvent(new Event("change", { bubbles: true }));
-    }
-}
-</script>
 </div>
