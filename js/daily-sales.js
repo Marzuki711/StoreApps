@@ -434,6 +434,33 @@ function dsYesterdayISO() {
 }
 
 
+/* DATE ONLY FIX — display DD/MM/YYYY, keep API ISO */
+function dsDateISOToDisplay(iso) {
+    const m = String(iso || "").match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    return m ? `${m[3]}/${m[2]}/${m[1]}` : String(iso || "");
+}
+
+function dsDateDisplayToISO(value) {
+    const m = String(value || "").trim().match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+    if (!m) return "";
+
+    const day = Number(m[1]);
+    const month = Number(m[2]);
+    const year = Number(m[3]);
+    const d = new Date(year, month - 1, day);
+
+    if (
+        d.getFullYear() !== year ||
+        d.getMonth() !== month - 1 ||
+        d.getDate() !== day
+    ) {
+        return "";
+    }
+
+    return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+}
+
+
 function dsEnsureDateFilter() {
 
     const search =
@@ -512,19 +539,48 @@ function dsEnsureDateFilter() {
         label.style.color =
             "#334155";
 
+        const dateWrap =
+            document.createElement(
+                "div"
+            );
+
+        dateWrap.style.position =
+            "relative";
+
+        dateWrap.style.flex =
+            "1 1 auto";
+
+        dateWrap.style.minWidth =
+            "0";
+
         const input =
             document.createElement(
                 "input"
             );
 
         input.type =
-            "date";
+            "text";
 
         input.id =
             "dsDateFilter";
 
+        input.inputMode =
+            "numeric";
+
+        input.autocomplete =
+            "off";
+
+        input.placeholder =
+            "dd/mm/yyyy";
+
+        input.maxLength =
+            10;
+
         input.style.height =
             "44px";
+
+        input.style.width =
+            "100%";
 
         input.style.boxSizing =
             "border-box";
@@ -536,7 +592,7 @@ function dsEnsureDateFilter() {
             "10px";
 
         input.style.padding =
-            "0 12px";
+            "0 42px 0 12px";
 
         input.style.background =
             "#fff";
@@ -550,18 +606,180 @@ function dsEnsureDateFilter() {
         input.style.outline =
             "none";
 
-        input.addEventListener(
+        const picker =
+            document.createElement(
+                "input"
+            );
+
+        picker.type =
+            "date";
+
+        picker.id =
+            "dsDateFilterPicker";
+
+        picker.tabIndex =
+            -1;
+
+        picker.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+        picker.style.position =
+            "absolute";
+
+        picker.style.right =
+            "7px";
+
+        picker.style.top =
+            "6px";
+
+        picker.style.width =
+            "32px";
+
+        picker.style.height =
+            "32px";
+
+        picker.style.opacity =
+            "0";
+
+        picker.style.cursor =
+            "pointer";
+
+        const icon =
+            document.createElement(
+                "span"
+            );
+
+        icon.innerHTML =
+            '<i class="fa-regular fa-calendar"></i>';
+
+        icon.style.position =
+            "absolute";
+
+        icon.style.right =
+            "12px";
+
+        icon.style.top =
+            "50%";
+
+        icon.style.transform =
+            "translateY(-50%)";
+
+        icon.style.pointerEvents =
+            "none";
+
+        icon.style.color =
+            "#0F172A";
+
+        icon.style.fontSize =
+            "15px";
+
+        picker.addEventListener(
             "change",
             async function () {
 
+                const iso =
+                    picker.value ||
+                    dsYesterdayISO();
+
+                input.value =
+                    dsDateISOToDisplay(
+                        iso
+                    );
+
                 dsSelectedDate =
-                    input.value ||
-                    dsTodayISO();
+                    iso;
 
                 await dsLoad(
-                    dsSelectedDate
+                    iso
                 );
             }
+        );
+
+        input.addEventListener(
+            "input",
+            function () {
+
+                let value =
+                    String(
+                        input.value || ""
+                    )
+                    .replace(
+                        /[^0-9]/g,
+                        ""
+                    )
+                    .slice(0, 8);
+
+                if (value.length > 4) {
+                    value =
+                        value.slice(0, 2) +
+                        "/" +
+                        value.slice(2, 4) +
+                        "/" +
+                        value.slice(4);
+                } else if (value.length > 2) {
+                    value =
+                        value.slice(0, 2) +
+                        "/" +
+                        value.slice(2);
+                }
+
+                input.value =
+                    value;
+
+                const iso =
+                    dsDateDisplayToISO(
+                        value
+                    );
+
+                if (iso) {
+                    dsSelectedDate =
+                        iso;
+
+                    picker.value =
+                        iso;
+
+                    dsLoad(
+                        iso
+                    );
+                }
+            }
+        );
+
+        input.addEventListener(
+            "click",
+            function () {
+
+                picker.value =
+                    dsSelectedDate ||
+                    dsYesterdayISO();
+
+                try {
+                    if (
+                        typeof picker.showPicker ===
+                        "function"
+                    ) {
+                        picker.showPicker();
+                    } else {
+                        picker.click();
+                    }
+                } catch (e) {
+                    picker.click();
+                }
+            }
+        );
+
+        dateWrap.appendChild(
+            input
+        );
+
+        dateWrap.appendChild(
+            icon
+        );
+
+        dateWrap.appendChild(
+            picker
         );
 
         const todayButton =
@@ -607,6 +825,11 @@ function dsEnsureDateFilter() {
                     dsYesterdayISO();
 
                 input.value =
+                    dsDateISOToDisplay(
+                        yesterday
+                    );
+
+                picker.value =
                     yesterday;
 
                 dsSelectedDate =
@@ -635,14 +858,8 @@ function dsEnsureDateFilter() {
         dateControls.style.width =
             "100%";
 
-        input.style.flex =
-            "1 1 auto";
-
-        input.style.minWidth =
-            "0";
-
         dateControls.appendChild(
-            input
+            dateWrap
         );
 
         dateControls.appendChild(
@@ -715,9 +932,24 @@ function dsEnsureDateFilter() {
 
     if (dateInput) {
 
-        dateInput.value =
+        const iso =
             dsSelectedDate ||
             dsYesterdayISO();
+
+        dateInput.value =
+            dsDateISOToDisplay(
+                iso
+            );
+
+        const picker =
+            document.getElementById(
+                "dsDateFilterPicker"
+            );
+
+        if (picker) {
+            picker.value =
+                iso;
+        }
     }
 }
 
@@ -921,6 +1153,8 @@ function dsOpenAdd() {
         "0.00%"
     );
 
+    dsInitBusinessDatePicker();
+
     const saveButton =
         document.getElementById(
             "dsSaveButton"
@@ -971,6 +1205,8 @@ function dsOpenEdit(id) {
         "dsFormTitle"
     ).textContent =
         "Edit Daily Sales";
+
+    dsInitBusinessDatePicker();
 
     dsSet(
         "dsDailySalesNo",
@@ -1161,8 +1397,13 @@ async function dsSave() {
     const storeNo =
         dsGet("dsStoreNo");
 
-    const businessDate =
+    const businessDateDisplay =
         dsGet("dsBusinessDate");
+
+    const businessDate =
+        dsBusinessDateToISO(
+            businessDateDisplay
+        );
 
     if (!storeNo) {
 
@@ -1287,10 +1528,10 @@ async function dsSave() {
             return;
         }
 
-        // Capture the saved values before closing the form.
-        const savedReport = dsBuildShareReport();
-
-        await dsShowSaveSuccessDialog(savedReport);
+        dsShowSuccess(
+            response.message ||
+            "Daily Sales saved successfully."
+        );
 
         dsCloseForm();
 
@@ -1317,141 +1558,6 @@ async function dsSave() {
     }
 }
 
-
-/* ==========================================
-   SAVE SUCCESS + SHARE REPORT
-   LOCKED DAILY SALES CORE
-========================================== */
-
-function dsFormatAmount(value) {
-
-    const n = Number(value);
-
-    return Number.isFinite(n)
-        ? n.toLocaleString("en-MY", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        })
-        : "0.00";
-}
-
-function dsBuildShareReport() {
-
-    const storeNo = dsGet("dsStoreNo");
-    const storeName = dsGet("dsStoreName");
-    const operatingHour = dsGet("dsOperatingHour");
-    const openingDate = dsGet("dsOpeningDate");
-    const businessDate = dsGet("dsBusinessDate");
-    const totalSales = dsNum("dsTotalSales");
-    const budgetSales = dsNum("dsBudgetSales");
-    const merchandise = dsNum("dsTotalMerchandiseSales");
-    const services = dsNum("dsServices");
-    const food = dsNum("dsFood");
-    const beverage = dsNum("dsBeverage");
-    const generalMerchandise = dsNum("dsGeneralMerchandise");
-    const tobacco = dsNum("dsTobacco");
-    const supply = dsNum("dsSupply");
-    const foodService = dsNum("dsFoodService");
-    const alcoholic = dsNum("dsAlcoholic");
-    const customer = dsNum("dsTotalCustomer");
-    const transactionSize = dsNum("dsTransactionSize");
-    const percentage = dsNum("dsPercentage");
-
-    const displayStore = storeNo
-        ? `#${String(storeNo).replace(/^#/, "")} ${storeName}`.trim()
-        : storeName;
-
-    /*
-     * SHARE REPORT TEMPLATE — LOCKED
-     *
-     * Only this report text format is changed.
-     * Daily Sales calculation, save, API, validation,
-     * search, reset and all other functions remain unchanged.
-     *
-     * Required format:
-     * - blank line between the major sections
-     * - NO blank line between "Breakdown by PSA :" and item 1
-     * - PSA items numbered 1-8
-     * - NO extra spaces after the item number
-     * - real newline characters are used
-     */
-
-    return [
-        `Store No : *${displayStore}*`,
-        `Operating Hour : *${operatingHour}*`,
-        `Reopening Date : *${openingDate}*`,
-        "",
-        `Business Date : *${businessDate}*`,
-        `Total Sales : *RM${dsFormatAmount(totalSales)}*`,
-        `Budget Sales : *RM${dsFormatAmount(budgetSales)}*`,
-        `Total Merchandise Sales : *RM${dsFormatAmount(merchandise)}*`,
-        "",
-        "Breakdown by PSA :",
-        `1. Services : ${dsFormatAmount(services)}`,
-        `2. Food : ${dsFormatAmount(food)}`,
-        `3. Beverages : ${dsFormatAmount(beverage)}`,
-        `4. General Merchandise : ${dsFormatAmount(generalMerchandise)}`,
-        `5. Tobacco/Alcoholic : ${dsFormatAmount(tobacco)}`,
-        `6. Supply : ${dsFormatAmount(supply)}`,
-        `7. Food Service : ${dsFormatAmount(foodService)} *(${percentage.toFixed(2)}%)*`,
-        `8. Alcoholic : ${dsFormatAmount(alcoholic)}`,
-        "",
-        `Total Customer : ${customer.toLocaleString("en-MY")}`,
-        `Transaction Size : ${transactionSize.toFixed(2)}`
-    ].join("\n");
-}
-
-async function dsShareReport(report) {
-
-    try {
-        if (navigator.share) {
-            await navigator.share({
-                title: "Daily Sales Report",
-                text: report
-            });
-            return;
-        }
-    } catch (error) {
-        if (error && error.name === "AbortError") return;
-        console.warn("Native share unavailable:", error);
-    }
-
-    const whatsappUrl =
-        "https://wa.me/?text=" + encodeURIComponent(report);
-
-    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
-}
-
-async function dsShowSaveSuccessDialog(report) {
-
-    if (typeof Swal !== "undefined") {
-
-        const result = await Swal.fire({
-            icon: "success",
-            title: "Save Successfully",
-            text: "Daily Sales has been saved successfully.",
-            showCancelButton: true,
-            confirmButtonText: "OK",
-            cancelButtonText: "Share Report",
-            reverseButtons: true,
-            allowOutsideClick: false
-        });
-
-        if (result.dismiss === Swal.DismissReason.cancel) {
-            await dsShareReport(report);
-        }
-
-        return;
-    }
-
-    const share = window.confirm(
-        "Save Successfully\\n\\nPress OK to continue, or Cancel to Share Report."
-    );
-
-    if (!share) {
-        await dsShareReport(report);
-    }
-}
 
 /* ==========================================
    CALCULATIONS
@@ -1552,14 +1658,177 @@ function dsMoney(value) {
 
 function dsToInputDate(value) {
 
-    const match =
-        String(value || "").match(
+    const raw =
+        String(value || "").trim();
+
+    if (!raw) {
+        return "";
+    }
+
+    let match =
+        raw.match(
+            /^(\d{4})-(\d{2})-(\d{2})$/
+        );
+
+    if (match) {
+        return (
+            match[3] + "/" +
+            match[2] + "/" +
+            match[1]
+        );
+    }
+
+    match =
+        raw.match(
             /^(\d{2})\/(\d{2})\/(\d{4})$/
         );
 
-    return match
-        ? `${match[3]}-${match[2]}-${match[1]}`
-        : String(value || "");
+    if (match) {
+        return (
+            match[2] + "/" +
+            match[1] + "/" +
+            match[3]
+        );
+    }
+
+    return raw;
+}
+
+function dsBusinessDateToISO(value) {
+
+    const match =
+        String(value || "")
+            .trim()
+            .match(
+                /^(\d{2})\/(\d{2})\/(\d{4})$/
+            );
+
+    if (!match) {
+        return "";
+    }
+
+    const day = Number(match[1]);
+    const month = Number(match[2]);
+    const year = Number(match[3]);
+    const date = new Date(year, month - 1, day);
+
+    if (
+        date.getFullYear() !== year ||
+        date.getMonth() !== month - 1 ||
+        date.getDate() !== day
+    ) {
+        return "";
+    }
+
+    return (
+        String(year).padStart(4, "0") +
+        "-" +
+        String(month).padStart(2, "0") +
+        "-" +
+        String(day).padStart(2, "0")
+    );
+}
+
+function dsInitBusinessDatePicker() {
+
+    const input =
+        document.getElementById(
+            "dsBusinessDate"
+        );
+
+    const picker =
+        document.getElementById(
+            "dsBusinessDatePicker"
+        );
+
+    if (!input || !picker || input.dataset.dateReady === "1") {
+        return;
+    }
+
+    input.dataset.dateReady = "1";
+
+    input.addEventListener(
+        "input",
+        function () {
+
+            let value =
+                String(input.value || "")
+                    .replace(/[^0-9]/g, "")
+                    .slice(0, 8);
+
+            if (value.length > 4) {
+                value =
+                    value.slice(0, 2) +
+                    "/" +
+                    value.slice(2, 4) +
+                    "/" +
+                    value.slice(4);
+            } else if (value.length > 2) {
+                value =
+                    value.slice(0, 2) +
+                    "/" +
+                    value.slice(2);
+            }
+
+            input.value = value;
+
+            const iso =
+                dsBusinessDateToISO(value);
+
+            if (iso) {
+                picker.value = iso;
+            }
+        }
+    );
+
+    picker.addEventListener(
+        "change",
+        function () {
+
+            const iso =
+                picker.value || "";
+
+            const m =
+                iso.match(
+                    /^(\d{4})-(\d{2})-(\d{2})$/
+                );
+
+            if (m) {
+                input.value =
+                    m[3] + "/" +
+                    m[2] + "/" +
+                    m[1];
+            }
+        }
+    );
+
+    input.addEventListener(
+        "click",
+        function () {
+
+            const iso =
+                dsBusinessDateToISO(
+                    input.value
+                );
+
+            if (iso) {
+                picker.value = iso;
+            }
+
+            try {
+                if (
+                    typeof picker.showPicker ===
+                    "function"
+                ) {
+                    picker.showPicker();
+                } else {
+                    picker.click();
+                }
+            } catch (e) {
+                picker.click();
+            }
+        }
+    );
 }
 
 
