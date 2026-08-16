@@ -42,6 +42,102 @@ function homeYesterdayISO(){
     ].join("-");
 }
 
+function homePreviousWeekISO(iso){
+    const parts = String(iso || "").split("-").map(Number);
+    if(parts.length !== 3 || parts.some(Number.isNaN)) return "";
+
+    const d = new Date(parts[0], parts[1] - 1, parts[2]);
+    d.setDate(d.getDate() - 7);
+
+    return [
+        d.getFullYear(),
+        String(d.getMonth()+1).padStart(2,"0"),
+        String(d.getDate()).padStart(2,"0")
+    ].join("-");
+}
+
+function homeWeeklyDates(endISO){
+    const parts = String(endISO || "").split("-").map(Number);
+    if(parts.length !== 3 || parts.some(Number.isNaN)) return [];
+
+    const end = new Date(parts[0], parts[1] - 1, parts[2]);
+    const dates = [];
+
+    for(let i = 6; i >= 0; i--){
+        const d = new Date(end);
+        d.setDate(end.getDate() - i);
+        dates.push([
+            d.getFullYear(),
+            String(d.getMonth()+1).padStart(2,"0"),
+            String(d.getDate()).padStart(2,"0")
+        ].join("-"));
+    }
+
+    return dates;
+}
+
+function homeWeeklyApsdFromResponses(responses,totalStores){
+    const storeCount = Number(totalStores) || 0;
+    if(!storeCount) return { sales:0, customer:0 };
+
+    let sales = 0;
+    let customer = 0;
+
+    (Array.isArray(responses) ? responses : []).forEach(response => {
+        const rows =
+            response && response.status && Array.isArray(response.rows)
+                ? response.rows
+                : [];
+
+        rows.forEach(row => {
+            sales +=
+                Number(String(row.totalMerchandiseSales ?? "").replace(/,/g,"")) || 0;
+            customer +=
+                Number(String(row.totalCustomer ?? "").replace(/,/g,"")) || 0;
+        });
+    });
+
+    // APSD is based on ALL stores and ALL 7 days in the period.
+    // A store that has not submitted contributes zero for that day;
+    // the denominator remains total stores x 7.
+    const denominator = storeCount * 7;
+
+    return {
+        sales: sales / denominator,
+        customer: customer / denominator
+    };
+}
+
+function homeSetWeeklyApsdPeriod(id,startISO,endISO){
+    homeSetText(
+        id,
+        homeDisplayDate(startISO) + " – " + homeDisplayDate(endISO)
+    );
+}
+
+function homeSetWeeklyApsdChange(id,current,previous){
+    homeSetWowChange(id,current,previous);
+}
+
+function homeSetWowChange(id, current, previous){
+    const el = document.getElementById(id);
+    if(!el) return;
+
+    const now = Number(current) || 0;
+    const old = Number(previous) || 0;
+    const pct = old !== 0 ? ((now - old) / Math.abs(old)) * 100 : (now > 0 ? 100 : 0);
+    const direction = pct > 0.004 ? "up" : pct < -0.004 ? "down" : "flat";
+
+    el.className = "sa-wow-change is-" + direction;
+    el.innerHTML =
+        (direction === "up"
+            ? '<i class="fa-solid fa-arrow-trend-up"></i>'
+            : direction === "down"
+                ? '<i class="fa-solid fa-arrow-trend-down"></i>'
+                : '<i class="fa-solid fa-minus"></i>') +
+        '<strong>' + Math.abs(pct).toFixed(2) + '%</strong>';
+}
+
 
 /* DASHBOARD DATE FORMAT LOCK — only display/input conversion */
 function homeISOToDDMMYYYY(iso){
@@ -102,7 +198,7 @@ function homeOpenDashboardDatePicker(){
 function homeMoney(value){
     const n = Number(String(value ?? "").replace(/,/g,"")) || 0;
 
-    return "RM " + n.toLocaleString("en-MY",{
+    return n.toLocaleString("en-MY",{
         minimumFractionDigits:2,
         maximumFractionDigits:2
     });
@@ -197,10 +293,20 @@ function homeSetDashboardDate(date){
 
 function homeResetDashboard(){
     const values = {
-        homeTotalSales:"RM 0.00",
-        homeApsdSales:"RM 0.00",
+        homeTotalSales:"0.00",
+        homeApsdSales:"0.00",
         homeTotalCustomer:"0",
         homeApsdCustomer:"0",
+
+        homeWowApsdSales:"0.00",
+        homeWowLastApsdSales:"0.00",
+        homeWowApsdCustomer:"0",
+        homeWowLastApsdCustomer:"0",
+
+        homeWeeklyApsdSales:"0.00",
+        homeWeeklyLastApsdSales:"0.00",
+        homeWeeklyApsdCustomer:"0",
+        homeWeeklyLastApsdCustomer:"0",
 
         homeSubmittedStores:"0",
         homeTotalStores:"0",
@@ -209,8 +315,8 @@ function homeResetDashboard(){
         homeSubmissionPct:"0%",
 
         homeBudgetPct:"0.00%",
-        homeApsdBudgetActual:"RM 0.00",
-        homeApsdBudgetTarget:"RM 0.00",
+        homeApsdBudgetActual:"0.00",
+        homeApsdBudgetTarget:"0.00",
         homeBudgetCaption:"0.00% of Budget Achieved",
 
         homeTotalRecord:"0",
@@ -232,6 +338,193 @@ function homeResetDashboard(){
     if(budget){
         budget.style.width = "0%";
     }
+}
+
+
+function homeMtdDates(endISO){
+    const parts = String(endISO || "").split("-").map(Number);
+    if(parts.length !== 3 || parts.some(Number.isNaN)) return [];
+    const end = new Date(parts[0], parts[1] - 1, parts[2]);
+    const start = new Date(parts[0], parts[1] - 1, 1);
+    const dates = [];
+    for(let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)){
+        dates.push([
+            d.getFullYear(),
+            String(d.getMonth()+1).padStart(2,"0"),
+            String(d.getDate()).padStart(2,"0")
+        ].join("-"));
+    }
+    return dates;
+}
+
+function homeParseDateISO(value){
+    const text = String(value || "").trim();
+    let m = text.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+    if(m){
+        const y=Number(m[1]), mo=Number(m[2]), d=Number(m[3]);
+        const dt=new Date(y,mo-1,d);
+        return (dt.getFullYear()===y && dt.getMonth()===mo-1 && dt.getDate()===d)
+            ? `${y}-${String(mo).padStart(2,"0")}-${String(d).padStart(2,"0")}` : "";
+    }
+    m = text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if(m){
+        const d=Number(m[1]), mo=Number(m[2]), y=Number(m[3]);
+        const dt=new Date(y,mo-1,d);
+        return (dt.getFullYear()===y && dt.getMonth()===mo-1 && dt.getDate()===d)
+            ? `${y}-${String(mo).padStart(2,"0")}-${String(d).padStart(2,"0")}` : "";
+    }
+    return "";
+}
+
+function homeCalendarDaysInclusive(startISO,endISO){
+    const a=String(startISO||"").split("-").map(Number);
+    const b=String(endISO||"").split("-").map(Number);
+    if(a.length!==3 || b.length!==3 || a.some(Number.isNaN) || b.some(Number.isNaN)) return 0;
+    const start=new Date(a[0],a[1]-1,a[2]);
+    const end=new Date(b[0],b[1]-1,b[2]);
+    const diff=Math.round((end-start)/86400000)+1;
+    return diff>0 ? diff : 0;
+}
+
+function homeStoreKey(value){
+    const digits=String(value || "").replace(/\D/g,"");
+    return digits ? digits.padStart(4,"0") : "";
+}
+
+function homeRenderMtdStorePerformance(records, selectedDate){
+    const section=document.getElementById("homeMtdStorePerformance");
+    const body=document.getElementById("homeMtdStoreBody");
+    const count=document.getElementById("homeMtdStoreCount");
+    const period=document.getElementById("homeMtdStorePeriod");
+    if(!section || !body) return;
+
+    const rows=Array.isArray(records) ? records.slice() : [];
+    rows.sort((a,b)=>{
+        const diff=(Number(b.mtdSales)||0)-(Number(a.mtdSales)||0);
+        if(diff!==0) return diff;
+        return String(a.storeNo||"").localeCompare(String(b.storeNo||""),undefined,{numeric:true,sensitivity:"base"});
+    });
+
+    if(count) count.textContent=`${rows.length} STORE${rows.length===1?"":"S"}`;
+    if(period) period.textContent=`MTD THROUGH ${homeDisplayDate(selectedDate)}`;
+
+    if(!rows.length){
+        section.style.display="none";
+        body.innerHTML="";
+        return;
+    }
+
+    section.style.display="block";
+
+    const totalSales=rows.reduce((sum,row)=>sum+(Number(row.mtdSales)||0),0);
+    const totalCustomer=rows.reduce((sum,row)=>sum+(Number(row.customer)||0),0);
+    const totalApsdSales=rows.reduce((sum,row)=>sum+(Number(row.apsdSales)||0),0);
+    const totalApsdBudget=rows.reduce((sum,row)=>sum+(Number(row.apsdBudget)||0),0);
+    const totalVariance=totalApsdSales-totalApsdBudget;
+    const storeCount=rows.length;
+    const avgSales=storeCount ? totalSales/storeCount : 0;
+    const avgCustomer=storeCount ? totalCustomer/storeCount : 0;
+    const avgApsdSales=storeCount ? totalApsdSales/storeCount : 0;
+    const avgApsdBudget=storeCount ? totalApsdBudget/storeCount : 0;
+    const avgVariance=avgApsdSales-avgApsdBudget;
+
+    const renderStatus=(variance)=>{
+        const numeric=Number(variance);
+        const status=Number.isFinite(numeric) ? (numeric<0 ? "Not Achieved" : "Achieved") : "";
+        const statusClass=numeric<0 ? "is-not-achieved" : "is-achieved";
+        return `<span class="sa-mtd-status ${statusClass}">${status}</span>`;
+    };
+
+    const renderVariance=(variance)=>{
+        const numeric=Number(variance)||0;
+        const varianceClass=numeric<0 ? "is-negative" : "is-positive";
+        return `<td class="sa-mtd-number ${varianceClass}">${homeMoney(numeric)}</td>`;
+    };
+
+    const dataRows=rows.map(row=>{
+        const variance=Number(row.variance);
+        return `
+            <tr>
+                <td class="sa-mtd-unit">${String(row.storeNo||"")}</td>
+                <td>${String(row.storeName||"")}</td>
+                <td class="sa-mtd-number">${homeMoney(row.mtdSales)}</td>
+                <td class="sa-mtd-number">${Number(row.customer||0).toLocaleString("en-US")}</td>
+                <td class="sa-mtd-number">${homeMoney(row.apsdSales)}</td>
+                <td class="sa-mtd-number">${homeMoney(row.apsdBudget)}</td>
+                ${renderVariance(variance)}
+                <td>${renderStatus(variance)}</td>
+            </tr>`;
+    }).join("");
+
+    const totalStatus=renderStatus(totalVariance);
+    const avgStatus=renderStatus(avgVariance);
+
+    body.innerHTML=dataRows + `
+        <tr class="sa-mtd-summary sa-mtd-total-row">
+            <td class="sa-mtd-unit">${storeCount} STORE${storeCount===1?"":"S"}</td>
+            <td class="sa-mtd-summary-label">Total MTD</td>
+            <td class="sa-mtd-number">${homeMoney(totalSales)}</td>
+            <td class="sa-mtd-number">${totalCustomer.toLocaleString("en-US")}</td>
+            <td class="sa-mtd-number">${homeMoney(totalApsdSales)}</td>
+            <td class="sa-mtd-number">${homeMoney(totalApsdBudget)}</td>
+            ${renderVariance(totalVariance)}
+            <td>${totalStatus}</td>
+        </tr>
+        <tr class="sa-mtd-summary sa-mtd-avg-row">
+            <td></td>
+            <td class="sa-mtd-summary-label">Avg</td>
+            <td class="sa-mtd-number">${homeMoney(avgSales)}</td>
+            <td class="sa-mtd-number">${avgCustomer.toLocaleString("en-US",{maximumFractionDigits:0})}</td>
+            <td class="sa-mtd-number">${homeMoney(avgApsdSales)}</td>
+            <td class="sa-mtd-number">${homeMoney(avgApsdBudget)}</td>
+            ${renderVariance(avgVariance)}
+            <td>${avgStatus}</td>
+        </tr>`;
+}
+
+async function homeLoadMtdStorePerformance(selectedDate, username, role){
+    const section=document.getElementById("homeMtdStorePerformance");
+    const body=document.getElementById("homeMtdStoreBody");
+    if(section) section.style.display="none";
+    if(body) body.innerHTML="";
+    if(!selectedDate || !Array.isArray(homeSalesStores) || !homeSalesStores.length) return;
+
+    const dates=homeMtdDates(selectedDate);
+    if(!dates.length) return;
+
+    const responses=await Promise.all(
+        dates.map(date=>callDailySalesAPI("getDailySalesList",{username,role,date}))
+    );
+
+    const salesByStore=new Map();
+    const customerByStore=new Map();
+    responses.forEach(response=>{
+        if(!response || !response.status || !Array.isArray(response.rows)) return;
+        response.rows.forEach(row=>{
+            const key=homeStoreKey(row.storeNo);
+            if(!key) return;
+            const sales=Number(String(row.totalMerchandiseSales ?? "").replace(/,/g,"")) || 0;
+            const customer=Number(String(row.totalCustomer ?? "").replace(/,/g,"")) || 0;
+            salesByStore.set(key,(salesByStore.get(key)||0)+sales);
+            customerByStore.set(key,(customerByStore.get(key)||0)+customer);
+        });
+    });
+
+    const monthStart=dates[0];
+    const records=homeSalesStores.map(store=>{
+        const key=homeStoreKey(store.storeNo);
+        const mtdSales=salesByStore.get(key)||0;
+        const customer=customerByStore.get(key)||0;
+        const openingISO=homeParseDateISO(store.openingDate);
+        const activeStart=(openingISO && openingISO > monthStart) ? openingISO : monthStart;
+        const activeDays=homeCalendarDaysInclusive(activeStart,selectedDate) || dates.length;
+        const apsdSales=activeDays>0 ? mtdSales/activeDays : 0;
+        const apsdBudget=Number(String(store.budgetSales ?? "").replace(/,/g,"")) || 0;
+        const variance=apsdSales-apsdBudget;
+        return {storeNo:store.storeNo||"",storeName:store.storeName||"",mtdSales,customer,apsdSales,apsdBudget,variance,activeDays};
+    });
+
+    homeRenderMtdStorePerformance(records,selectedDate);
 }
 
 async function loadHomeSalesDashboard(dateOverride=""){
@@ -265,7 +558,35 @@ async function loadHomeSalesDashboard(dateOverride=""){
 
     try{
 
-        const [storeResponse,listResponse] = await Promise.all([
+        const previousWeekDate = homePreviousWeekISO(homeSalesDate);
+
+        const currentWeekDates = homeWeeklyDates(homeSalesDate);
+        const lastWeekEndDate = previousWeekDate;
+        const lastWeekDates = homeWeeklyDates(lastWeekEndDate);
+
+        const currentWeekRequests = currentWeekDates.map(date =>
+            callDailySalesAPI(
+                "getDailySalesList",
+                {
+                    username,
+                    role,
+                    date
+                }
+            )
+        );
+
+        const lastWeekRequests = lastWeekDates.map(date =>
+            callDailySalesAPI(
+                "getDailySalesList",
+                {
+                    username,
+                    role,
+                    date
+                }
+            )
+        );
+
+        const [storeResponse,listResponse,previousListResponse,currentWeekResponses,lastWeekResponses] = await Promise.all([
 
             callDailySalesAPI(
                 "getDailySalesStores",
@@ -282,7 +603,19 @@ async function loadHomeSalesDashboard(dateOverride=""){
                     role,
                     date:homeSalesDate
                 }
-            )
+            ),
+
+            callDailySalesAPI(
+                "getDailySalesList",
+                {
+                    username,
+                    role,
+                    date:previousWeekDate
+                }
+            ),
+
+            Promise.all(currentWeekRequests),
+            Promise.all(lastWeekRequests)
 
         ]);
 
@@ -311,6 +644,27 @@ async function loadHomeSalesDashboard(dateOverride=""){
                 : [];
 
         const totalStores = homeSalesStores.length;
+
+        /*
+         * ADDITIVE WEEKLY APSD COMPARISON
+         * --------------------------------
+         * Current period = selected date and the 6 days before it.
+         * Previous period = the 7 days immediately before that.
+         * APSD uses ALL stores as the denominator, even when some
+         * stores have not submitted on one or more days.
+         * Existing Week-on-Week comparison below remains unchanged.
+         */
+        const weeklyApsd =
+            homeWeeklyApsdFromResponses(
+                currentWeekResponses,
+                totalStores
+            );
+
+        const lastWeeklyApsd =
+            homeWeeklyApsdFromResponses(
+                lastWeekResponses,
+                totalStores
+            );
 
         /*
          * One submitted store = one unique Store No.
@@ -359,6 +713,54 @@ async function loadHomeSalesDashboard(dateOverride=""){
                     ),
                 0
             );
+
+        /*
+         * Week-on-week comparison uses the same selected date
+         * against the date exactly 7 days earlier.
+         * Existing KPI calculations remain unchanged.
+         */
+        const previousRows =
+            previousListResponse?.status && Array.isArray(previousListResponse.rows)
+                ? previousListResponse.rows
+                : [];
+
+        const previousMerchandiseSales =
+            previousRows.reduce(
+                (sum,r) =>
+                    sum +
+                    (
+                        Number(
+                            String(
+                                r.totalMerchandiseSales ?? ""
+                            ).replace(/,/g,"")
+                        ) || 0
+                    ),
+                0
+            );
+
+        const previousCustomer =
+            previousRows.reduce(
+                (sum,r) =>
+                    sum +
+                    (
+                        Number(
+                            String(
+                                r.totalCustomer ?? ""
+                            ).replace(/,/g,"")
+                        ) || 0
+                    ),
+                0
+            );
+
+        const previousApsdSales =
+            totalStores
+                ? previousMerchandiseSales / totalStores
+                : 0;
+
+        const previousApsdCustomer =
+            totalStores
+                ? previousCustomer / totalStores
+                : 0;
 
         /*
          * Budget comes from the Area/store list.
@@ -424,6 +826,89 @@ async function loadHomeSalesDashboard(dateOverride=""){
         homeSetText(
             "homeApsdCustomer",
             homeNumber(apsdCustomer)
+        );
+
+        /*
+         * WEEK-ON-WEEK COMPARISON — visual/additive only.
+         */
+        homeSetText(
+            "homeWowApsdSales",
+            homeMoney(apsdSales)
+        );
+
+        homeSetText(
+            "homeWowLastApsdSales",
+            homeMoney(previousApsdSales)
+        );
+
+        homeSetText(
+            "homeWowApsdCustomer",
+            homeNumber(apsdCustomer)
+        );
+
+        homeSetText(
+            "homeWowLastApsdCustomer",
+            homeNumber(previousApsdCustomer)
+        );
+
+        homeSetWowChange(
+            "homeWowSalesChange",
+            apsdSales,
+            previousApsdSales
+        );
+
+        homeSetWowChange(
+            "homeWowCustomerChange",
+            apsdCustomer,
+            previousApsdCustomer
+        );
+
+        /*
+         * ADDITIVE WEEKLY APSD COMPARISON
+         * Do not replace/remove the existing Week-on-Week section.
+         */
+        homeSetText(
+            "homeWeeklyApsdSales",
+            homeMoney(weeklyApsd.sales)
+        );
+
+        homeSetText(
+            "homeWeeklyLastApsdSales",
+            homeMoney(lastWeeklyApsd.sales)
+        );
+
+        homeSetText(
+            "homeWeeklyApsdCustomer",
+            homeNumber(weeklyApsd.customer)
+        );
+
+        homeSetText(
+            "homeWeeklyLastApsdCustomer",
+            homeNumber(lastWeeklyApsd.customer)
+        );
+
+        homeSetWeeklyApsdChange(
+            "homeWeeklyApsdSalesChange",
+            weeklyApsd.sales,
+            lastWeeklyApsd.sales
+        );
+
+        homeSetWeeklyApsdChange(
+            "homeWeeklyApsdCustomerChange",
+            weeklyApsd.customer,
+            lastWeeklyApsd.customer
+        );
+
+        homeSetWeeklyApsdPeriod(
+            "homeWeeklyApsdThisPeriod",
+            currentWeekDates[0],
+            currentWeekDates[6]
+        );
+
+        homeSetWeeklyApsdPeriod(
+            "homeWeeklyApsdLastPeriod",
+            lastWeekDates[0],
+            lastWeekDates[6]
         );
 
         homeSetText(
@@ -531,6 +1016,13 @@ async function loadHomeSalesDashboard(dateOverride=""){
                 ) + "%";
         }
 
+        // ADDITIVE ONLY: MTD store performance list.
+        await homeLoadMtdStorePerformance(
+            homeSalesDate,
+            username,
+            role
+        );
+
     }catch(err){
 
         console.error(
@@ -581,7 +1073,7 @@ function initHomeSalesDashboard(){
             );
 
         loadHomeSalesDashboard(
-            input?.value ||
+            homeGetDashboardSelectedISO() ||
             homeSalesDate ||
             homeYesterdayISO()
         );

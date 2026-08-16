@@ -41,6 +41,39 @@ async function initializeApplication(){
 
         console.log("COMPONENTS LOADED");
 
+        /* =====================================================
+           MOBILE SIDEBAR AUTO-CLOSE — UI ONLY
+           Closes the checkbox drawer after any sidebar button
+           and when the global Home button is pressed.
+        ===================================================== */
+        if (!window.__saMobileSidebarCloseBound) {
+
+            window.__saMobileSidebarCloseBound = true;
+
+            document.addEventListener("click", function (event) {
+
+                const toggle =
+                    document.getElementById("saMenuToggle");
+
+                if (!toggle) {
+                    return;
+                }
+
+                const sidebarButton =
+                    event.target.closest(".sa-side-link");
+
+                const homeButton =
+                    event.target.closest("#btnHome");
+
+                if (sidebarButton || homeButton) {
+                    setTimeout(function () {
+                        toggle.checked = false;
+                    }, 0);
+                }
+
+            }, false);
+        }
+
         /* ==========================
            USER MANAGEMENT UI
            Component must be bound AFTER
@@ -75,6 +108,19 @@ async function initializeApplication(){
         document
             .getElementById("btnHome")
             ?.addEventListener("click",showHome);
+
+        /* MOBILE UI ONLY:
+           Home must close the dashboard sidebar drawer. */
+        document
+            .getElementById("btnHome")
+            ?.addEventListener("click",function(){
+                const toggle =
+                    document.getElementById("saMenuToggle");
+
+                if(toggle){
+                    toggle.checked = false;
+                }
+            });
 
         document
             .getElementById("btnLogout")
@@ -262,6 +308,33 @@ async function initializeApplication(){
         document.getElementById("btnSaveFW")
             ?.addEventListener("click",saveForeignWorker);
 
+        /* MOBILE SIDEBAR UI ONLY:
+           Close the real saMenuToggle after any sidebar action. */
+        const mobileSidebar =
+            document.querySelector(".sa-sidebar");
+
+        if(mobileSidebar && !mobileSidebar.dataset.autoCloseBound){
+            mobileSidebar.dataset.autoCloseBound = "1";
+
+            mobileSidebar.addEventListener("click",function(event){
+                const button =
+                    event.target.closest(".sa-side-link");
+
+                if(!button){
+                    return;
+                }
+
+                setTimeout(function(){
+                    const toggle =
+                        document.getElementById("saMenuToggle");
+
+                    if(toggle){
+                        toggle.checked = false;
+                    }
+                },0);
+            });
+        }
+
         console.log("APP INIT COMPLETE");
 
     }catch(error){
@@ -378,6 +451,11 @@ if("serviceWorker" in navigator){
 ========================================== */
 
 function showHome(){
+    const saMenuToggle = document.getElementById("saMenuToggle");
+    if (saMenuToggle) {
+        saMenuToggle.checked = false;
+    }
+
 
     const topbar =
         document.querySelector(".topbar");

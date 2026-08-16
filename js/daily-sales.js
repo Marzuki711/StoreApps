@@ -9,6 +9,8 @@
 
 let dsStores = [];
 let dsRows = [];
+// ADDITIVE: dedicated master-store cache for Store Not Submitted.
+let dsSubmissionMasterStores = [];
 let dsEditId = "";
 let dsSelectedDate = "";
 
@@ -365,6 +367,32 @@ async function dsLoad(
         dsPopulateStoreSelect();
         dsRenderTable();
 
+        // ADDITIVE ONLY: refresh the full Area/master store list for the
+        // Store Not Submitted section. This is kept separate from the
+        // existing Daily Sales list/store logic so no existing function
+        // behaviour is changed.
+        try {
+            const masterResponse =
+                await callDailySalesAPI(
+                    "getDailySalesStores",
+                    {
+                        username: username,
+                        role: user.role || ""
+                    }
+                );
+
+            if (masterResponse?.status) {
+                dsSubmissionMasterStores =
+                    Array.isArray(masterResponse.stores)
+                        ? masterResponse.stores
+                        : [];
+
+                dsRenderNotSubmittedStores();
+            }
+        } catch (_) {
+            // Existing Daily Sales loading must not be affected.
+        }
+
     } finally {
 
         dsSetListLoading(false);
@@ -433,6 +461,19 @@ function dsYesterdayISO() {
     );
 }
 
+function dsFormatDisplayDate(iso) {
+
+    const value = String(iso || "");
+    const match = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+
+    if (!match) {
+        return value;
+    }
+
+    return `${match[3]}/${match[2]}/${match[1]}`;
+}
+
+
 
 function dsEnsureDateFilter() {
 
@@ -461,9 +502,27 @@ function dsEnsureDateFilter() {
      */
     toolbar.style.display = "grid";
     toolbar.style.gridTemplateColumns =
-        "minmax(430px, 480px) minmax(360px, 1fr) auto";
+        "360px minmax(320px, 1fr) auto";
     toolbar.style.columnGap = "24px";
     toolbar.style.alignItems = "end";
+
+    /* Responsive UI only: keep date/search fully inside the card. */
+    const dsApplyDateResponsiveLayout = function () {
+        const mobile = window.innerWidth <= 700;
+        if (mobile) {
+            toolbar.style.gridTemplateColumns = "minmax(0, 1fr)";
+            toolbar.style.rowGap = "12px";
+        } else {
+            toolbar.style.gridTemplateColumns =
+                "360px minmax(320px, 1fr) auto";
+            toolbar.style.rowGap = "0";
+        }
+    };
+    dsApplyDateResponsiveLayout();
+    if (!toolbar.dataset.dsDateResponsiveBound) {
+        window.addEventListener("resize", dsApplyDateResponsiveLayout);
+        toolbar.dataset.dsDateResponsiveBound = "1";
+    }
 
     let filter =
         document.getElementById(
@@ -518,10 +577,30 @@ function dsEnsureDateFilter() {
             );
 
         input.type =
-            "date";
+            "text";
 
         input.id =
             "dsDateFilter";
+
+        input.inputMode =
+            "numeric";
+
+        input.autocomplete =
+            "off";
+
+        input.readOnly =
+            true;
+
+        input.setAttribute(
+            "aria-readonly",
+            "true"
+        );
+
+        input.placeholder =
+            "dd/mm/yyyy";
+
+        input.maxLength =
+            10;
 
         input.style.height =
             "44px";
@@ -550,71 +629,127 @@ function dsEnsureDateFilter() {
         input.style.outline =
             "none";
 
+        input.style.fontWeight =
+            "500";
+
+        input.style.cursor =
+            "pointer";
+
+        input.value =
+            dsFormatDisplayDate(
+                dsSelectedDate ||
+                dsYesterdayISO()
+            );
+
+        input.addEventListener(
+            "input",
+            function () {
+
+                const digits =
+                    String(input.value || "")
+                        .replace(/\D/g, "")
+                        .slice(0, 8);
+
+                if (digits.length > 4) {
+                    input.value =
+                        digits.slice(0, 2) + "/" +
+                        digits.slice(2, 4) + "/" +
+                        digits.slice(4);
+                } else if (digits.length > 2) {
+                    input.value =
+                        digits.slice(0, 2) + "/" +
+                        digits.slice(2);
+                } else {
+                    input.value = digits;
+                }
+            }
+        );
+
         input.addEventListener(
             "change",
             async function () {
 
-                dsSelectedDate =
-                    input.value ||
-                    dsTodayISO();
+                const m =
+                    String(input.value || "")
+                        .match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
 
-                await dsLoad(
-                    dsSelectedDate
-                );
+                if (!m) {
+                    input.value =
+                        dsFormatDisplayDate(
+                            dsSelectedDate ||
+                            dsYesterdayISO()
+                        );
+                    return;
+                }
+
+                const iso = `${m[3]}-${m[2]}-${m[1]}`;
+                const d = new Date(iso + "T00:00:00");
+
+                if (
+                    Number.isNaN(d.getTime()) ||
+                    d.getFullYear() !== Number(m[3]) ||
+                    d.getMonth() + 1 !== Number(m[2]) ||
+                    d.getDate() !== Number(m[1])
+                ) {
+                    input.value =
+                        dsFormatDisplayDate(
+                            dsSelectedDate ||
+                            dsYesterdayISO()
+                        );
+                    return;
+                }
+
+                dsSelectedDate = iso;
+                await dsLoad(iso);
             }
         );
 
-        const todayButton =
-            document.createElement(
-                "button"
-            );
+        const picker = document.createElement("input");
+        picker.type = "date";
+        picker.tabIndex = -1;
+        picker.setAttribute("aria-hidden", "true");
+        picker.style.position = "absolute";
+        picker.style.opacity = "0";
+        picker.style.pointerEvents = "none";
+        picker.style.width = "1px";
+        picker.style.height = "1px";
 
-        todayButton.type =
-            "button";
-
-        todayButton.textContent =
-            "Yesterday";
-
-        todayButton.style.height =
-            "44px";
-
-        todayButton.style.border =
-            "0";
-
-        todayButton.style.borderRadius =
-            "10px";
-
-        todayButton.style.padding =
-            "0 14px";
-
-        todayButton.style.background =
-            "#E2E8F0";
-
-        todayButton.style.color =
-            "#1E293B";
-
-        todayButton.style.fontWeight =
-            "700";
-
-        todayButton.style.cursor =
-            "pointer";
-
-        todayButton.addEventListener(
-            "click",
+        picker.addEventListener(
+            "change",
             async function () {
+                if (!picker.value) return;
+                dsSelectedDate = picker.value;
+                input.value = dsFormatDisplayDate(picker.value);
+                await dsLoad(picker.value);
+            }
+        );
 
-                const yesterday =
+        const calendarIcon =
+            document.createElement("span");
+
+        calendarIcon.className =
+            "ds-date-filter-icon";
+
+        calendarIcon.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+        calendarIcon.innerHTML =
+            '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+            '<rect x="3" y="4" width="18" height="17" rx="2"></rect>' +
+            '<path d="M16 2v4M8 2v4M3 9h18"></path>' +
+            '</svg>';
+
+        input.addEventListener(
+            "click",
+            function () {
+                picker.value =
+                    dsSelectedDate ||
                     dsYesterdayISO();
-
-                input.value =
-                    yesterday;
-
-                dsSelectedDate =
-                    yesterday;
-
-                await dsLoad(
-                    yesterday
-                );
+                if (typeof picker.showPicker === "function") {
+                    picker.showPicker();
+                }
             }
         );
 
@@ -623,30 +758,66 @@ function dsEnsureDateFilter() {
                 "div"
             );
 
-        dateControls.style.display =
-            "flex";
-
-        dateControls.style.alignItems =
-            "center";
-
-        dateControls.style.gap =
-            "8px";
+        dateControls.style.position =
+            "relative";
 
         dateControls.style.width =
             "100%";
 
-        input.style.flex =
-            "1 1 auto";
-
-        input.style.minWidth =
+        dateControls.style.minWidth =
             "0";
+
+        dateControls.style.boxSizing =
+            "border-box";
+        dateControls.style.height = "54px";
+        dateControls.style.maxWidth = "360px";
+        dateControls.style.overflow = "visible";
+
+        calendarIcon.style.position = "absolute";
+        calendarIcon.style.right = "14px";
+        calendarIcon.style.top = "50%";
+        calendarIcon.style.transform = "translateY(-50%)";
+        calendarIcon.style.width = "22px";
+        calendarIcon.style.height = "22px";
+        calendarIcon.style.display = "flex";
+        calendarIcon.style.alignItems = "center";
+        calendarIcon.style.justifyContent = "center";
+        calendarIcon.style.color = "#172033";
+        calendarIcon.style.pointerEvents = "none";
+        calendarIcon.style.zIndex = "2";
+
+        /* Keep the native picker physically inside the date field.
+           UI positioning only; picker behavior remains unchanged. */
+        picker.style.position = "absolute";
+        picker.style.right = "0";
+        picker.style.top = "0";
+        picker.style.width = "1px";
+        picker.style.height = "1px";
+        picker.style.opacity = "0";
+        picker.style.pointerEvents = "none";
+        picker.style.zIndex = "0";
+
+        input.style.width =
+            "100%";
+        input.style.height = "54px";
+        input.style.minWidth = "0";
+
+        input.style.boxSizing = "border-box";
+        input.style.padding = "0 46px 0 16px";
+        input.style.borderRadius = "14px";
+        input.style.border = "1px solid #CBD5E1";
+        input.style.background = "#fff";
 
         dateControls.appendChild(
             input
         );
 
         dateControls.appendChild(
-            todayButton
+            picker
+        );
+
+        dateControls.appendChild(
+            calendarIcon
         );
 
         filter.appendChild(
@@ -708,6 +879,80 @@ function dsEnsureDateFilter() {
         count.style.whiteSpace = "nowrap";
     }
 
+    const dsApplyDateElementResponsiveLayout = function () {
+        const mobile = window.innerWidth <= 700;
+        if (mobile) {
+            filter.style.gridColumn = "1";
+            filter.style.gridRow = "1";
+            filter.style.width = "100%";
+            filter.style.maxWidth = "100%";
+            const controls = document.getElementById("dsDateFilterWrap")?.querySelector("div");
+            if (controls) {
+                controls.style.maxWidth = "100%";
+                controls.style.width = "100%";
+            }
+            if (searchWrap) {
+                searchWrap.style.gridColumn = "1";
+                searchWrap.style.gridRow = "2";
+                searchWrap.style.width = "100%";
+            }
+            if (count) {
+                count.style.gridColumn = "1";
+                count.style.gridRow = "3";
+                count.style.justifySelf = "end";
+            }
+        } else {
+            filter.style.gridColumn = "1";
+            filter.style.gridRow = "1";
+            filter.style.width = "100%";
+            filter.style.maxWidth = "360px";
+            const controls = document.getElementById("dsDateFilterWrap")?.querySelector("div");
+            if (controls) {
+                controls.style.maxWidth = "360px";
+                controls.style.width = "100%";
+            }
+            if (searchWrap) {
+                searchWrap.style.gridColumn = "2";
+                searchWrap.style.gridRow = "1";
+            }
+            if (count) {
+                count.style.gridColumn = "3";
+                count.style.gridRow = "1";
+                count.style.justifySelf = "auto";
+            }
+        }
+    };
+    dsApplyDateElementResponsiveLayout();
+
+    /* UI ONLY: Business Date height matches Search height. */
+    const dsSyncBusinessDateHeight = function () {
+        const dateBox = document.getElementById("dsDateFilter");
+        const searchBox = document.getElementById("dsSearch");
+        const dateControls = document.getElementById("dsDateFilterWrap")?.querySelector("div");
+
+        if (!dateBox || !searchBox) return;
+
+        const h = Math.round(searchBox.getBoundingClientRect().height);
+        if (h > 0) {
+            dateBox.style.setProperty("height", h + "px", "important");
+            if (dateControls) {
+                dateControls.style.setProperty("height", h + "px", "important");
+            }
+        }
+    };
+
+    dsSyncBusinessDateHeight();
+
+    if (!toolbar.dataset.dsDateHeightMatchBound) {
+        window.addEventListener("resize", dsSyncBusinessDateHeight);
+        toolbar.dataset.dsDateHeightMatchBound = "1";
+    }
+
+    if (!toolbar.dataset.dsDateElementResponsiveBound) {
+        window.addEventListener("resize", dsApplyDateElementResponsiveLayout);
+        toolbar.dataset.dsDateElementResponsiveBound = "1";
+    }
+
     const dateInput =
         document.getElementById(
             "dsDateFilter"
@@ -716,8 +961,10 @@ function dsEnsureDateFilter() {
     if (dateInput) {
 
         dateInput.value =
-            dsSelectedDate ||
-            dsYesterdayISO();
+            dsFormatDisplayDate(
+                dsSelectedDate ||
+                dsYesterdayISO()
+            );
     }
 }
 
@@ -740,7 +987,34 @@ function dsPopulateStoreSelect() {
     select.innerHTML =
         '<option value="">Select Store No</option>';
 
-    dsStores.forEach(
+    [...dsStores]
+        .sort(
+            function (a, b) {
+                const aNo =
+                        String(a.storeNo || "")
+                            .replace(/\D/g, "");
+                    const bNo =
+                        String(b.storeNo || "")
+                            .replace(/\D/g, "");
+
+                    const aNum =
+                        aNo ? Number(aNo) : Number.MAX_SAFE_INTEGER;
+                    const bNum =
+                        bNo ? Number(bNo) : Number.MAX_SAFE_INTEGER;
+
+                    if (aNum !== bNum) {
+                        return aNum - bNum;
+                    }
+
+                    return String(a.storeNo || "")
+                        .localeCompare(
+                            String(b.storeNo || ""),
+                            undefined,
+                            { sensitivity: "base" }
+                        );
+            }
+        )
+        .forEach(
         function (store) {
 
             const option =
@@ -1148,6 +1422,82 @@ function dsToggleForm(show) {
 }
 
 
+
+/* ==========================================
+   FORM VALIDATION DIALOG
+   UI ONLY — SAVE CORE UNCHANGED
+========================================== */
+
+function dsShowValidationFailed(fields) {
+
+    if (!fields || !fields.length) {
+        return;
+    }
+
+    const items = fields.map(function (field) {
+        return `
+            <div style="
+                display:flex;
+                align-items:center;
+                gap:8px;
+                margin:5px 0;
+                padding:8px 10px;
+                background:#fff4f4;
+                border-left:3px solid #e85b76;
+                border-radius:4px;
+                color:#555;
+                font-size:13px;
+                text-align:left;
+            ">
+                <span style="
+                    color:#e85b76;
+                    font-weight:700;
+                    font-size:16px;
+                    line-height:1;
+                ">✕</span>
+                <span>${dsEsc(field)}</span>
+            </div>
+        `;
+    }).join("");
+
+    const html = `
+        <div style="text-align:left;">
+            <div style="
+                font-size:13px;
+                font-weight:600;
+                color:#555;
+                margin:0 0 14px 0;
+            ">
+                Please complete the following field(s):
+            </div>
+            ${items}
+        </div>
+    `;
+
+    if (typeof Swal !== "undefined") {
+        return Swal.fire({
+            icon: "error",
+            title: "Validation Failed",
+            html: html,
+            confirmButtonText: "OK",
+            confirmButtonColor: "#dc3545",
+            width: "390px",
+            customClass: {
+                popup: "ds-validation-popup"
+            }
+        });
+    }
+
+    alert(
+        "Validation Failed\n\n" +
+        "Please complete the following field(s):\n\n" +
+        fields.map(function(field) {
+            return "✕ " + field;
+        }).join("\n")
+    );
+}
+
+
 /* ==========================================
    SAVE DAILY SALES
 ========================================== */
@@ -1164,19 +1514,82 @@ async function dsSave() {
     const businessDate =
         dsGet("dsBusinessDate");
 
-    if (!storeNo) {
+    /*
+     * Required fields validation.
+     * Only empty fields are treated as incomplete.
+     * Numeric value 0 remains valid.
+     *
+     * Auto-generated / calculated fields are intentionally
+     * excluded because the existing system fills them.
+     */
+    const requiredFields = [
+        {
+            id: "dsStoreNo",
+            label: "Store No"
+        },
+        {
+            id: "dsBusinessDate",
+            label: "Business Date"
+        },
+        {
+            id: "dsTotalSales",
+            label: "Total Sales"
+        },
+        {
+            id: "dsTotalMerchandiseSales",
+            label: "Total Merchandise Sales"
+        },
+        {
+            id: "dsServices",
+            label: "Services"
+        },
+        {
+            id: "dsFood",
+            label: "Food"
+        },
+        {
+            id: "dsBeverage",
+            label: "Beverage"
+        },
+        {
+            id: "dsGeneralMerchandise",
+            label: "General Merchandise"
+        },
+        {
+            id: "dsTobacco",
+            label: "Tobacco"
+        },
+        {
+            id: "dsSupply",
+            label: "Supply"
+        },
+        {
+            id: "dsFoodService",
+            label: "Food Service"
+        },
+        {
+            id: "dsAlcoholic",
+            label: "Alcoholic"
+        },
+        {
+            id: "dsTotalCustomer",
+            label: "Total Customer"
+        }
+    ];
 
-        dsShowError(
-            "Please select Store No."
-        );
+    const incompleteFields =
+        requiredFields
+            .filter(function (field) {
+                return !dsGet(field.id);
+            })
+            .map(function (field) {
+                return field.label;
+            });
 
-        return;
-    }
+    if (incompleteFields.length) {
 
-    if (!businessDate) {
-
-        dsShowError(
-            "Please select Business Date."
+        dsShowValidationFailed(
+            incompleteFields
         );
 
         return;
@@ -1853,22 +2266,45 @@ function dsRenderTable() {
             .toLowerCase();
 
     const rows =
-        dsRows.filter(
-            function (row) {
+        dsRows
+            .filter(
+                function (row) {
 
-                return [
-                    row.dsId,
-                    row.dailySalesNo,
-                    row.storeNo,
-                    row.storeName,
-                    row.businessDate,
-                    row.personInCharge
-                ]
-                    .join(" ")
-                    .toLowerCase()
-                    .includes(query);
-            }
-        );
+                    return [
+                        row.storeNo,
+                        row.storeName
+                    ]
+                        .join(" ")
+                        .toLowerCase()
+                        .includes(query);
+                }
+            )
+            .sort(
+                function (a, b) {
+                    const aNo =
+                        String(a.storeNo || "")
+                            .replace(/\D/g, "");
+                    const bNo =
+                        String(b.storeNo || "")
+                            .replace(/\D/g, "");
+
+                    const aNum =
+                        aNo ? Number(aNo) : Number.MAX_SAFE_INTEGER;
+                    const bNum =
+                        bNo ? Number(bNo) : Number.MAX_SAFE_INTEGER;
+
+                    if (aNum !== bNum) {
+                        return aNum - bNum;
+                    }
+
+                    return String(a.storeNo || "")
+                        .localeCompare(
+                            String(b.storeNo || ""),
+                            undefined,
+                            { sensitivity: "base" }
+                        );
+                }
+            );
 
     if (count) {
 
@@ -1885,6 +2321,11 @@ function dsRenderTable() {
         body.innerHTML =
             '<tr><td colspan="7" class="ds-empty">No Daily Sales records found for the selected date.</td></tr>';
 
+        const emptyFoot = table?.querySelector("tfoot#dsTableFoot");
+        if (emptyFoot) emptyFoot.innerHTML = "";
+
+        // ADDITIVE: still show stores that have not submitted when there are zero rows.
+        dsRenderNotSubmittedStores();
         return;
     }
 
@@ -1972,6 +2413,248 @@ function dsRenderTable() {
                 `;
             }
         ).join("");
+
+    /*
+     * TABLE SUMMARY — display only.
+     * Existing row data/calculations remain unchanged.
+     */
+    let foot = table?.querySelector("tfoot#dsTableFoot");
+
+    if (!foot && table) {
+        foot = document.createElement("tfoot");
+        foot.id = "dsTableFoot";
+        table.appendChild(foot);
+    }
+
+    if (foot) {
+        const totalMerchandiseSales = rows.reduce(
+            (sum, row) => sum + (Number(String(row.totalMerchandiseSales ?? "").replace(/,/g, "")) || 0),
+            0
+        );
+
+        const totalCustomer = rows.reduce(
+            (sum, row) => sum + (Number(String(row.totalCustomer ?? "").replace(/,/g, "")) || 0),
+            0
+        );
+
+        const totalBudget = rows.reduce(
+            (sum, row) => sum + (Number(String(row.budgetSales ?? "").replace(/,/g, "")) || 0),
+            0
+        );
+
+        const recordCount = rows.length;
+        const avgSales = recordCount ? totalMerchandiseSales / recordCount : 0;
+        const avgCustomer = recordCount ? totalCustomer / recordCount : 0;
+        const totalPercentage = totalBudget > 0
+            ? (totalMerchandiseSales / totalBudget) * 100
+            : 0;
+
+        const avgPercentage = recordCount
+            ? rows.reduce((sum, row) => {
+                const sales = Number(String(row.totalMerchandiseSales ?? "").replace(/,/g, "")) || 0;
+                const budget = Number(String(row.budgetSales ?? "").replace(/,/g, "")) || 0;
+                return sum + (budget > 0 ? (sales / budget) * 100 : 0);
+            }, 0) / recordCount
+            : 0;
+
+        foot.innerHTML = `
+            <tr class="ds-summary-row">
+                <td colspan="3" class="ds-summary-label">
+                    <span>TOTAL / AVERAGE</span>
+                    <small>${recordCount.toLocaleString("en-MY")} stores submitted</small>
+                </td>
+                <td class="ds-number ds-summary-value">
+                    <strong>${dsMoney(totalMerchandiseSales)}</strong>
+                    <small>Avg ${dsMoney(avgSales)}</small>
+                </td>
+                <td class="ds-number ds-summary-value">
+                    <strong>${totalCustomer.toLocaleString("en-MY")}</strong>
+                    <small>Avg ${avgCustomer.toLocaleString("en-MY", { maximumFractionDigits: 2 })}</small>
+                </td>
+                <td class="ds-number ds-summary-value">
+                    <strong>${totalPercentage.toFixed(2)}%</strong>
+                    <small>Avg ${avgPercentage.toFixed(2)}%</small>
+                </td>
+                <td></td>
+            </tr>
+        `;
+    }
+
+    // ADDITIVE: render stores that have not submitted for the selected date.
+    dsRenderNotSubmittedStores();
+}
+
+/* ==========================================
+   STORE NOT SUBMITTED — ADDITIVE ONLY
+========================================== */
+
+/* ==========================================
+   STORE NOT SUBMITTED — SHARE (ADDITIVE ONLY)
+========================================== */
+
+function dsGetNotSubmittedStores_() {
+
+    const submitted = new Set(
+        (dsRows || []).map(function (row) {
+            return String(row.storeNo || "")
+                .replace(/\D/g, "")
+                .padStart(4, "0")
+                .slice(-4);
+        }).filter(Boolean)
+    );
+
+    const masterStores =
+        (Array.isArray(dsSubmissionMasterStores) && dsSubmissionMasterStores.length)
+            ? dsSubmissionMasterStores
+            : (dsStores || []);
+
+    return masterStores
+        .filter(function (store) {
+            const normalized = String(store.storeNo || "")
+                .replace(/\D/g, "")
+                .padStart(4, "0")
+                .slice(-4);
+            return normalized && !submitted.has(normalized);
+        })
+        .sort(function (a, b) {
+            const aNo = String(a.storeNo || "").replace(/\D/g, "");
+            const bNo = String(b.storeNo || "").replace(/\D/g, "");
+            return (Number(aNo || 999999) - Number(bNo || 999999));
+        });
+}
+
+async function dsShareNotSubmittedStores() {
+
+    const missing = dsGetNotSubmittedStores_();
+
+    if (!missing.length) {
+        return;
+    }
+
+    const businessDate =
+        dsFormatDisplayDate(dsSelectedDate);
+
+    const lines = [
+        "STORE NOT SUBMITTED",
+        "Business Date : " + businessDate,
+        "Total : " + missing.length + " STORE" + (missing.length === 1 ? "" : "S"),
+        "",
+        "Store Details :"
+    ];
+
+    missing.forEach(function (store, index) {
+        lines.push(
+            (index + 1) + ". " +
+            String(store.storeNo || "").trim() + " - " +
+            String(store.storeName || "").trim()
+        );
+    });
+
+    const text = lines.join("\n");
+
+    try {
+        if (navigator.share) {
+            await navigator.share({
+                title: "Store Not Submitted - " + businessDate,
+                text: text
+            });
+            return;
+        }
+    } catch (error) {
+        if (error && error.name === "AbortError") {
+            return;
+        }
+    }
+
+    try {
+        await navigator.clipboard.writeText(text);
+
+        if (typeof Swal !== "undefined") {
+            await Swal.fire({
+                icon: "success",
+                title: "Details Copied",
+                text: "Store Not Submitted details have been copied. You can paste them into WhatsApp, Email, Teams or any platform.",
+                confirmButtonText: "OK"
+            });
+        } else {
+            alert("Store Not Submitted details copied to clipboard.");
+        }
+    } catch (error) {
+        const fallback = window.prompt(
+            "Copy the Store Not Submitted details below:",
+            text
+        );
+        void fallback;
+    }
+}
+
+function dsRenderNotSubmittedStores() {
+
+    const section = document.getElementById("dsNotSubmittedSection");
+    const body = document.getElementById("dsNotSubmittedBody");
+    const count = document.getElementById("dsNotSubmittedCount");
+    const subtitle = document.getElementById("dsNotSubmittedSubtitle");
+
+    if (!section || !body) {
+        return;
+    }
+
+    const submitted = new Set(
+        (dsRows || []).map(function (row) {
+            return String(row.storeNo || "")
+                .replace(/\D/g, "")
+                .padStart(4, "0")
+                .slice(-4);
+        }).filter(Boolean)
+    );
+
+    // Prefer the dedicated full master-store list. Fall back to the
+    // existing store cache only if the additive request has not returned.
+    const masterStores =
+        (Array.isArray(dsSubmissionMasterStores) && dsSubmissionMasterStores.length)
+            ? dsSubmissionMasterStores
+            : (dsStores || []);
+
+    const missing = masterStores
+        .filter(function (store) {
+            const normalized = String(store.storeNo || "")
+                .replace(/\D/g, "")
+                .padStart(4, "0")
+                .slice(-4);
+            return normalized && !submitted.has(normalized);
+        })
+        .sort(function (a, b) {
+            const aNo = String(a.storeNo || "").replace(/\D/g, "");
+            const bNo = String(b.storeNo || "").replace(/\D/g, "");
+            return (Number(aNo || 999999) - Number(bNo || 999999));
+        });
+
+    if (!missing.length) {
+        section.hidden = true;
+        body.innerHTML = "";
+        if (count) count.textContent = "";
+        if (subtitle) subtitle.textContent = "";
+        return;
+    }
+
+    section.hidden = false;
+
+    if (count) {
+        count.textContent = `${missing.length} STORE${missing.length === 1 ? "" : "S"}`;
+    }
+
+    if (subtitle) {
+        subtitle.textContent = `Stores without Daily Sales submission for ${dsFormatDisplayDate(dsSelectedDate)}`;
+    }
+
+    body.innerHTML = missing.map(function (store) {
+        return `
+            <tr>
+                <td>${dsEsc(store.storeNo)}</td>
+                <td>${dsEsc(store.storeName)}</td>
+            </tr>
+        `;
+    }).join("");
 }
 
 /* ==========================================

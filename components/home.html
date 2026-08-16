@@ -176,9 +176,17 @@
 
 
         <!-- LOADING -->
-        <div id="homeSalesLoading" class="sa-loading">
-            <i class="fa-solid fa-spinner fa-spin"></i>
-            <span>Loading Sales Dashboard...</span>
+        <div id="homeSalesLoading" class="sa-loading" aria-live="polite">
+            <div class="sa-loading-card">
+                <span class="sa-loading-orbit" aria-hidden="true">
+                    <i class="fa-solid fa-chart-line"></i>
+                </span>
+                <span class="sa-loading-copy">
+                    <strong>Loading Sales Dashboard</strong>
+                    <small>Updating your latest sales performance</small>
+                </span>
+                <span class="sa-loading-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            </div>
         </div>
 
 
@@ -200,7 +208,7 @@
                         </span>
 
                         <strong id="homeTotalSales">
-                            RM 0.00
+                            0.00
                         </strong>
 
                         <small id="homeSalesLabel">
@@ -224,7 +232,7 @@
                         </span>
 
                         <strong id="homeApsdSales">
-                            RM 0.00
+                            0.00
                         </strong>
 
                         <small>
@@ -283,6 +291,106 @@
                 </article>
 
             </div>
+
+
+            <!-- ================= WEEK-ON-WEEK COMPARISON ================= -->
+            <section class="sa-wow-card" aria-label="Week-on-week comparison">
+                <div class="sa-wow-head">
+                    <div>
+                        <span class="sa-wow-eyebrow">PERFORMANCE TREND</span>
+                        <h3>Week-on-Week Comparison</h3>
+                        <p>Selected date compared with the same day last week.</p>
+                    </div>
+                    <div class="sa-wow-period">
+                        <span>THIS WEEK</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                        <span>LAST WEEK</span>
+                    </div>
+                </div>
+
+                <div class="sa-wow-grid">
+                    <article class="sa-wow-item sa-wow-sales">
+                        <div class="sa-wow-icon"><i class="fa-solid fa-chart-line"></i></div>
+                        <div class="sa-wow-main">
+                            <span class="sa-wow-title">APSD SALES</span>
+                            <div class="sa-wow-values">
+                                <strong id="homeWowApsdSales">0.00</strong>
+                                <span>vs <b id="homeWowLastApsdSales">0.00</b> last week</span>
+                            </div>
+                        </div>
+                        <div class="sa-wow-change" id="homeWowSalesChange">
+                            <i class="fa-solid fa-minus"></i>
+                            <strong>0.00%</strong>
+                        </div>
+                    </article>
+
+                    <article class="sa-wow-item sa-wow-customer">
+                        <div class="sa-wow-icon"><i class="fa-solid fa-users"></i></div>
+                        <div class="sa-wow-main">
+                            <span class="sa-wow-title">APSD CUSTOMER</span>
+                            <div class="sa-wow-values">
+                                <strong id="homeWowApsdCustomer">0</strong>
+                                <span>vs <b id="homeWowLastApsdCustomer">0</b> last week</span>
+                            </div>
+                        </div>
+                        <div class="sa-wow-change" id="homeWowCustomerChange">
+                            <i class="fa-solid fa-minus"></i>
+                            <strong>0.00%</strong>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+
+            <!-- ================= WEEKLY APSD COMPARISON ================= -->
+            <section class="sa-wow-card sa-weekly-apsd-card" aria-label="Weekly APSD comparison">
+                <div class="sa-wow-head">
+                    <div>
+                        <span class="sa-wow-eyebrow">WEEKLY PERFORMANCE</span>
+                        <h3>Weekly APSD Comparison</h3>
+                        <p>Average per store per day for the selected 7-day period vs the previous 7-day period.</p>
+                    </div>
+                    <div class="sa-wow-period">
+                        <span id="homeWeeklyApsdThisPeriod">THIS WEEK</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                        <span id="homeWeeklyApsdLastPeriod">LAST WEEK</span>
+                    </div>
+                </div>
+
+                <div class="sa-wow-grid">
+                    <article class="sa-wow-item sa-wow-sales">
+                        <div class="sa-wow-icon"><i class="fa-solid fa-chart-line"></i></div>
+                        <div class="sa-wow-main">
+                            <span class="sa-wow-title">APSD SALES</span>
+                            <div class="sa-wow-values">
+                                <strong id="homeWeeklyApsdSales">0.00</strong>
+                                <span>vs <b id="homeWeeklyLastApsdSales">0.00</b> last week</span>
+                            </div>
+                            <small id="homeWeeklyApsdSalesNote" class="sa-weekly-apsd-note">Per store per day</small>
+                        </div>
+                        <div class="sa-wow-change" id="homeWeeklyApsdSalesChange">
+                            <i class="fa-solid fa-minus"></i>
+                            <strong>0.00%</strong>
+                        </div>
+                    </article>
+
+                    <article class="sa-wow-item sa-wow-customer">
+                        <div class="sa-wow-icon"><i class="fa-solid fa-users"></i></div>
+                        <div class="sa-wow-main">
+                            <span class="sa-wow-title">APSD CUSTOMER</span>
+                            <div class="sa-wow-values">
+                                <strong id="homeWeeklyApsdCustomer">0</strong>
+                                <span>vs <b id="homeWeeklyLastApsdCustomer">0</b> last week</span>
+                            </div>
+                            <small id="homeWeeklyApsdCustomerNote" class="sa-weekly-apsd-note">Per store per day</small>
+                        </div>
+                        <div class="sa-wow-change" id="homeWeeklyApsdCustomerChange">
+                            <i class="fa-solid fa-minus"></i>
+                            <strong>0.00%</strong>
+                        </div>
+                    </article>
+                </div>
+            </section>
 
 
             <!-- ================= SUBMISSION / BUDGET ================= -->
@@ -362,14 +470,14 @@
 
                             <div>
                                 <strong id="homeApsdBudgetActual">
-                                    RM 0.00
+                                    0.00
                                 </strong>
                                 <span>Merchandise Sales</span>
                             </div>
 
                             <div>
                                 <strong id="homeApsdBudgetTarget">
-                                    RM 0.00
+                                    0.00
                                 </strong>
                                 <span>Budget</span>
                             </div>
@@ -446,13 +554,46 @@
                     <div>
                         <span>APSD BUDGET</span>
                         <strong id="homeApsdBudgetBottom">
-                            RM 0.00
+                            0.00
                         </strong>
                     </div>
 
                 </article>
 
             </div>
+
+            <!-- ================= MTD STORE PERFORMANCE ================= -->
+            <section id="homeMtdStorePerformance"
+                     class="sa-mtd-card"
+                     aria-label="MTD store performance"
+                     style="display:none;">
+                <div class="sa-mtd-head">
+                    <div>
+                        <span class="sa-mtd-eyebrow">STORE PERFORMANCE</span>
+                        <h3>MTD Store Performance</h3>
+                        <p id="homeMtdStorePeriod">MTD THROUGH —</p>
+                    </div>
+                    <div id="homeMtdStoreCount" class="sa-mtd-count">0 STORES</div>
+                </div>
+
+                <div class="sa-mtd-table-wrap">
+                    <table class="sa-mtd-table">
+                        <thead>
+                            <tr>
+                                <th>Store No</th>
+                                <th>Store Name</th>
+                                <th>MTD Sales</th>
+                                <th>Customer</th>
+                                <th>APSD Sales</th>
+                                <th>APSD Budget</th>
+                                <th>Variance</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="homeMtdStoreBody"></tbody>
+                    </table>
+                </div>
+            </section>
 
         </section>
 
@@ -846,17 +987,100 @@
 /* ================= LOADING ================= */
 
 .sa-loading{
-    min-height:35px;
+    min-height:54px;
     display:flex;
     align-items:center;
     justify-content:center;
-    gap:9px;
+    padding:8px 0 12px;
     color:var(--sa-muted);
+}
+
+.sa-loading-card{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    min-width:300px;
+    padding:9px 13px;
+    border:1px solid rgba(15,23,42,.08);
+    border-radius:14px;
+    background:rgba(255,255,255,.78);
+    box-shadow:0 8px 22px rgba(15,23,42,.06);
+    backdrop-filter:blur(8px);
+}
+
+.sa-loading-orbit{
+    width:30px;
+    height:30px;
+    flex:0 0 30px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    color:var(--sa-red);
+    background:#FEF2F2;
+    border:1px solid rgba(193,18,31,.10);
+    position:relative;
+}
+
+.sa-loading-orbit::after{
+    content:"";
+    position:absolute;
+    inset:-3px;
+    border:2px solid transparent;
+    border-top-color:var(--sa-red);
+    border-radius:50%;
+    animation:saLoadingSpin .9s linear infinite;
+}
+
+.sa-loading-orbit i{
+    color:var(--sa-red);
     font-size:12px;
 }
 
-.sa-loading i{
-    color:var(--sa-red);
+.sa-loading-copy{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    min-width:0;
+}
+
+.sa-loading-copy strong{
+    color:#172033;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:.01em;
+}
+
+.sa-loading-copy small{
+    color:#94A3B8;
+    font-size:9px;
+    font-weight:600;
+}
+
+.sa-loading-dots{
+    margin-left:auto;
+    display:flex;
+    align-items:center;
+    gap:4px;
+}
+
+.sa-loading-dots i{
+    width:5px;
+    height:5px;
+    border-radius:50%;
+    background:var(--sa-red);
+    animation:saLoadingPulse 1s ease-in-out infinite;
+}
+
+.sa-loading-dots i:nth-child(2){animation-delay:.15s;}
+.sa-loading-dots i:nth-child(3){animation-delay:.30s;}
+
+@keyframes saLoadingSpin{
+    to{transform:rotate(360deg);}
+}
+
+@keyframes saLoadingPulse{
+    0%,100%{opacity:.25;transform:translateY(0);}
+    50%{opacity:1;transform:translateY(-2px);}
 }
 
 
@@ -944,6 +1168,151 @@
 
 
 /* ================= MIDDLE ================= */
+
+
+/* ================= WEEK-ON-WEEK COMPARISON ================= */
+
+.sa-wow-card{
+    margin-top:14px;
+    padding:20px;
+    border:1px solid var(--sa-border);
+    border-radius:16px;
+    background:linear-gradient(135deg,#FFFFFF 0%,#F8FAFC 100%);
+    box-shadow:0 8px 24px rgba(15,23,42,.045);
+}
+
+.sa-wow-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:18px;
+    padding-bottom:15px;
+    border-bottom:1px solid #E2E8F0;
+}
+
+.sa-wow-eyebrow{
+    display:block;
+    color:var(--sa-red);
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:.08em;
+}
+
+.sa-wow-head h3{
+    margin:4px 0 3px;
+    color:#101A2D;
+    font-size:16px;
+    line-height:1.2;
+}
+
+.sa-wow-head p{
+    margin:0;
+    color:#64748B;
+    font-size:11px;
+}
+
+.sa-wow-period{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    padding:8px 11px;
+    border:1px solid #E2E8F0;
+    border-radius:10px;
+    background:#fff;
+    color:#64748B;
+    font-size:9px;
+    font-weight:900;
+    white-space:nowrap;
+}
+
+.sa-wow-period i{color:#C1121F;font-size:10px;}
+
+.sa-wow-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-top:14px;
+}
+
+.sa-wow-item{
+    min-width:0;
+    display:grid;
+    grid-template-columns:42px minmax(0,1fr) auto;
+    align-items:center;
+    gap:12px;
+    padding:14px;
+    border:1px solid #E2E8F0;
+    border-radius:13px;
+    background:#fff;
+}
+
+.sa-wow-icon{
+    width:42px;
+    height:42px;
+    display:grid;
+    place-items:center;
+    border-radius:11px;
+    background:#FFF1F2;
+    color:#C1121F;
+    font-size:16px;
+}
+
+.sa-wow-customer .sa-wow-icon{
+    background:#ECFDF5;
+    color:#16A34A;
+}
+
+.sa-wow-title{
+    display:block;
+    color:#475569;
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:.03em;
+}
+
+.sa-wow-values strong{
+    display:inline-block;
+    margin-top:4px;
+    color:#111827;
+    font-size:18px;
+    line-height:1.1;
+}
+
+.sa-wow-values span{
+    display:block;
+    margin-top:3px;
+    color:#64748B;
+    font-size:10px;
+}
+
+.sa-wow-values b{color:#334155;}
+
+.sa-wow-change{
+    min-width:78px;
+    padding:8px 9px;
+    border-radius:9px;
+    text-align:center;
+    background:#F1F5F9;
+    color:#64748B;
+}
+
+.sa-wow-change i{font-size:10px;margin-right:3px;}
+.sa-wow-change strong{font-size:11px;}
+.sa-wow-change.is-up{background:#ECFDF5;color:#15803D;}
+.sa-wow-change.is-down{background:#FEF2F2;color:#B91C1C;}
+.sa-wow-change.is-flat{background:#F1F5F9;color:#64748B;}
+
+.sa-weekly-apsd-card{
+    margin-top:14px;
+}
+
+.sa-weekly-apsd-note{
+    display:block;
+    margin-top:5px;
+    color:#94A3B8;
+    font-size:9px;
+    font-weight:700;
+}
 
 .sa-middle-grid{
     display:grid;
@@ -1141,6 +1510,46 @@
     font-size:11px;
 }
 
+
+/* ================= MTD STORE PERFORMANCE ================= */
+.sa-mtd-card{
+    margin-top:14px;
+    padding:0;
+    border:1px solid var(--sa-border);
+    border-radius:16px;
+    background:#fff;
+    overflow:hidden;
+    box-shadow:0 8px 24px rgba(15,23,42,.045);
+}
+.sa-mtd-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:18px;
+    padding:18px 20px 15px;
+    background:linear-gradient(135deg,#FFFFFF 0%,#F8FAFC 100%);
+    border-bottom:1px solid #E2E8F0;
+}
+.sa-mtd-eyebrow{display:block;color:var(--sa-red);font-size:10px;font-weight:900;letter-spacing:.08em;}
+.sa-mtd-head h3{margin:4px 0 3px;color:#101A2D;font-size:16px;line-height:1.2;}
+.sa-mtd-head p{margin:0;color:#64748B;font-size:11px;}
+.sa-mtd-count{padding:8px 12px;border-radius:999px;background:#EEF2FF;color:#334155;font-size:10px;font-weight:900;white-space:nowrap;}
+.sa-mtd-table-wrap{width:100%;overflow-x:auto;}
+.sa-mtd-table{width:100%;border-collapse:collapse;min-width:760px;font-size:11px;}
+.sa-mtd-table th{padding:12px 14px;background:#F8FAFC;color:#334155;border-bottom:1px solid #E2E8F0;text-align:left;font-weight:900;white-space:nowrap;}
+.sa-mtd-table td{padding:12px 14px;color:#334155;border-bottom:1px solid #E2E8F0;white-space:nowrap;}
+.sa-mtd-table tbody tr:last-child td{border-bottom:0;}
+.sa-mtd-table tbody tr:hover{background:#FAFBFC;}
+.sa-mtd-table .sa-mtd-number{text-align:right;font-variant-numeric:tabular-nums;}
+.sa-mtd-table .sa-mtd-unit{font-weight:800;color:#475569;}
+.sa-mtd-table .is-negative{color:#DC2626;font-weight:400;}
+.sa-mtd-table .is-positive{color:#15803D;font-weight:400;}
+.sa-mtd-status{display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;font-size:10px;font-weight:400;}
+.sa-mtd-status.is-achieved{color:#15803D;background:#ECFDF5;}
+.sa-mtd-status.is-not-achieved{color:#DC2626;background:#FEF2F2;}
+.sa-mtd-summary td:nth-last-child(2),
+.sa-mtd-summary td:last-child{font-weight:800;}
+.sa-mtd-summary .sa-mtd-status{font-weight:800;}
 
 /* ================= BOTTOM ================= */
 
@@ -1350,6 +1759,15 @@
     .sa-welcome-graphic{
         width:220px;
         height:150px;
+    }
+
+    .sa-wow-grid{
+        grid-template-columns:1fr;
+    }
+
+    .sa-wow-head{
+        align-items:flex-start;
+        flex-direction:column;
     }
 
     .sa-middle-grid{
@@ -1616,8 +2034,84 @@
     }
 }
 
+/* =========================================================
+   WEEKLY APSD PERIOD — MOBILE ONLY
+   Keep the comparison card inside the viewport.
+   No data, calculation or other card styles are changed.
+   ========================================================= */
+@media (max-width:560px){
+    .sa-weekly-apsd-card .sa-wow-period{
+        width:100% !important;
+        max-width:100% !important;
+        min-width:0 !important;
+        box-sizing:border-box !important;
+        display:grid !important;
+        grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) !important;
+        align-items:center !important;
+        justify-items:center !important;
+        gap:6px !important;
+        padding:9px 10px !important;
+        white-space:normal !important;
+        overflow:hidden !important;
+        text-align:center !important;
+        line-height:1.25 !important;
+    }
+
+    .sa-weekly-apsd-card .sa-wow-period span{
+        min-width:0 !important;
+        max-width:100% !important;
+        overflow-wrap:anywhere !important;
+        word-break:normal !important;
+        text-align:center !important;
+    }
+
+    .sa-weekly-apsd-card .sa-wow-period i{
+        flex:none !important;
+        white-space:nowrap !important;
+    }
+}
+
 </style>
 
+
+<script>
+/*
+ * MOBILE SIDEBAR AUTO-CLOSE
+ * UI-only: closes the checkbox drawer after any sidebar button is pressed.
+ * Does not change navigation targets, APIs, calculations, or data flow.
+ */
+(function () {
+    function bindSidebarAutoClose() {
+        var toggle = document.getElementById("saMenuToggle");
+        var sidebar = document.querySelector(".sa-sidebar");
+
+        if (!toggle || !sidebar || sidebar.dataset.saSidebarAutoCloseBound === "1") {
+            return;
+        }
+
+        sidebar.dataset.saSidebarAutoCloseBound = "1";
+
+        sidebar.addEventListener("click", function (event) {
+            var button = event.target.closest(".sa-side-link");
+            if (!button) return;
+
+            /*
+             * Let the existing onclick/navigation execute first,
+             * then close the mobile drawer without changing its function.
+             */
+            setTimeout(function () {
+                toggle.checked = false;
+            }, 0);
+        });
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", bindSidebarAutoClose);
+    } else {
+        bindSidebarAutoClose();
+    }
+})();
+</script>
 
 <script>
 /*
@@ -1636,7 +2130,7 @@
 
     function formatRM(value){
         var n=Number(value||0);
-        return "RM " + n.toLocaleString("en-MY",{
+        return n.toLocaleString("en-MY",{
             minimumFractionDigits:2,
             maximumFractionDigits:2
         });
@@ -1768,3 +2262,13 @@
 
 })();
 </script>
+
+<style>
+/* MTD STORE PERFORMANCE — CUSTOMER + SUMMARY ROWS */
+.sa-mtd-table{min-width:850px;}
+.sa-mtd-summary td{font-weight:900;background:#F8FAFC;border-top:1px solid #CBD5E1;}
+.sa-mtd-total-row td{padding-top:14px;padding-bottom:12px;}
+.sa-mtd-avg-row td{padding-top:10px;padding-bottom:14px;border-bottom:0!important;color:#475569;}
+.sa-mtd-summary-label{color:#101A2D!important;}
+.sa-mtd-avg-row .sa-mtd-summary-label{font-weight:800;}
+</style>
